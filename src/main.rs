@@ -5,6 +5,7 @@ fn show_help() {
     println!("Usage: rvirsh [COMMAND]");
     println!("\nCommand:");
     println!("{:<10} {}", "help", "Show this help");
+    println!("{:<10} {}", "list", "List all domains");
 }
 
 fn main() {
