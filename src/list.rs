@@ -6,8 +6,8 @@ pub fn main() {
     let conn = Connect::open(Some(URI)).unwrap();
     let doms = conn.list_all_domains(0).unwrap();
 
-    println!("Instance Name\tState");
-    println!("-----------------------");
+    println!("{:<20} {}", "Instance Name", "State");
+    println!("{:<20} {}", "--------------------", "--------");
     for dom in doms {
         let name = dom.get_name().unwrap();
         let state = if dom.is_active().unwrap() {
@@ -16,7 +16,7 @@ pub fn main() {
             "shut off"
         };
 
-        println!("{}\t{}", name, state);
+        println!("{:<20} {}", name, state);
     }
 
 }

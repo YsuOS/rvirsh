@@ -3,8 +3,8 @@ use std::env;
 
 fn show_help() {
     println!("Usage: rvirsh [COMMAND]");
-    println!("Command:");
-    println!("\thelp\tShow this help");
+    println!("\nCommand:");
+    println!("{:<10} {}", "help", "Show this help");
 }
 
 fn main() {
