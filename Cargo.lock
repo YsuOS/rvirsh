@@ -3,5 +3,45 @@
 version = 3
 
 [[package]]
+name = "libc"
+version = "0.2.155"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97b3888a4aecf77e811145cadf6eef5901f4782c53886191b2f693f24761847c"
+
+[[package]]
+name = "pkg-config"
+version = "0.3.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
+
+[[package]]
 name = "rvirsh"
 version = "0.1.0"
+dependencies = [
+ "virt",
+]
+
+[[package]]
+name = "uuid"
+version = "1.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "81dfa00651efa65069b0b6b651f4aaa31ba9e3c3ce0137aaad053604ee7e0314"
+
+[[package]]
+name = "virt"
+version = "0.4.0"
+source = "git+https://gitlab.com/ryasuoka/libvirt-rust.git?branch=dev#e3663ffe3eaac493b0fea1d4654580719f13f00f"
+dependencies = [
+ "libc",
+ "uuid",
+ "virt-sys",
+]
+
+[[package]]
+name = "virt-sys"
+version = "0.3.0"
+source = "git+https://gitlab.com/ryasuoka/libvirt-rust.git?branch=dev#e3663ffe3eaac493b0fea1d4654580719f13f00f"
+dependencies = [
+ "libc",
+ "pkg-config",
+]

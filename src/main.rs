@@ -1,3 +1,4 @@
+mod list;
 use std::env;
 
 fn show_help() {
@@ -14,5 +15,9 @@ fn main() {
         show_help();
     }
 
-    show_help();
+    let command = command.unwrap();
+    match command.as_str() {
+        "list" => list::main(),
+        _ => show_help(),
+    };
 }
