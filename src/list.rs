@@ -1,6 +1,5 @@
+use crate::URI;
 use virt::connect::Connect;
-
-const URI: &str = "qemu:///system";
 
 pub fn main() {
     let conn = Connect::open(Some(URI)).unwrap();
@@ -18,5 +17,4 @@ pub fn main() {
 
         println!("{:<20} {}", name, state);
     }
-
 }
