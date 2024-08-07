@@ -1,4 +1,5 @@
 mod list;
+mod poweroff;
 mod start;
 
 use std::env;
@@ -11,6 +12,7 @@ fn show_help() {
     println!("{:<10} {}", "help", "Show this help");
     println!("{:<10} {}", "list", "List all domains");
     println!("{:<10} {}", "start", "Start domains");
+    println!("{:<10} {}", "poweroff", "Forcefully terminate domains");
 }
 
 fn main() {
@@ -25,6 +27,7 @@ fn main() {
     match command.as_str() {
         "list" => list::main(),
         "start" => start::main(),
+        "poweroff" => poweroff::main(),
         _ => show_help(),
     };
 }
