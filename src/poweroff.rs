@@ -6,7 +6,7 @@ fn show_help() {
     println!("Usage: rvirsh poweroff <domain>");
 }
 
-fn poweroff_domain(conn: &Connect, name: &String) {
+fn poweroff_domain(conn: &Connect, name: &str) {
     let dom = Domain::lookup_by_name(conn, name).unwrap();
 
     if !dom.is_active().unwrap() {

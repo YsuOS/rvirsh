@@ -6,7 +6,7 @@ fn show_help() {
     println!("Usage: rvirsh start <domain>");
 }
 
-fn start_domain(conn: &Connect, name: &String) {
+fn start_domain(conn: &Connect, name: &str) {
     let dom = Domain::lookup_by_name(conn, name).unwrap();
     dom.create().unwrap();
 }
@@ -24,5 +24,5 @@ pub fn main() {
     let conn = Connect::open(Some(URI)).unwrap();
 
     start_domain(&conn, &dom_name);
-    println!("Domain started");
+    println!("Domain {} started", &dom_name);
 }
