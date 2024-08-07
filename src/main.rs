@@ -13,6 +13,9 @@ fn show_help() {
     println!("{:<10} {}", "list", "List all domains");
     println!("{:<10} {}", "start", "Start domains");
     println!("{:<10} {}", "poweroff", "Forcefully terminate domains");
+
+    println!("\nDepricated Command:");
+    println!("{:<10} {}", "destroy", "Use 'poweroff'");
 }
 
 fn main() {
