@@ -1,3 +1,4 @@
+mod delete;
 mod list;
 mod poweroff;
 mod snapshot_delete;
@@ -15,6 +16,10 @@ fn show_help() {
     println!("{:<width$} {}", "list", "List all domains");
     println!("{:<width$} {}", "start", "Start domain");
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
+    println!(
+        "{:<width$} {}",
+        "delete", "Undefine domain and remove its storages and snapshots"
+    );
     println!("{:<width$} {}", "vol-delete", "Delete volume");
     println!(
         "{:<width$} {}",
@@ -43,6 +48,7 @@ fn main() {
         "list" => list::main(&settings),
         "start" => start::main(&settings),
         "poweroff" => poweroff::main(&settings),
+        "delete" => delete::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
         _ => show_help(),

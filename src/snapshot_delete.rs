@@ -6,13 +6,14 @@ fn show_help() {
     println!("Usage: rvirsh snapshot-delete <domain>");
 }
 
-fn delete_all_snapshots(conn: &Connect, dom_name: &str) {
+pub fn delete_all_snapshots(conn: &Connect, dom_name: &str) {
     let dom = Domain::lookup_by_name(conn, dom_name).unwrap();
     let snapshots = dom.list_all_snapshots(0).unwrap();
 
     for snapshot in snapshots {
         snapshot.delete(0).unwrap();
     }
+    println!("All snapshots of {} is deleted", &dom_name);
 }
 
 pub fn main(settings: &Config) {
@@ -30,6 +31,4 @@ pub fn main(settings: &Config) {
     let dom_name = dom_name.unwrap();
 
     delete_all_snapshots(&conn, &dom_name);
-
-    println!("All snapshots of {} is deleted", &dom_name);
 }

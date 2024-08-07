@@ -6,7 +6,7 @@ fn show_help() {
     println!("Usage: rvirsh vol-delete <vol>");
 }
 
-fn delete_volume(conn: &Connect, pool_name: &str, vol_name: &str) {
+pub fn delete_volume(conn: &Connect, pool_name: &str, vol_name: &str) {
     let pool = StoragePool::lookup_by_name(conn, pool_name).unwrap();
     pool.refresh(0).unwrap();
 
