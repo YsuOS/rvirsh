@@ -1,4 +1,4 @@
-use crate::URI;
+use config::Config;
 use std::env;
 use virt::{connect::Connect, domain::Domain};
 
@@ -18,7 +18,7 @@ fn poweroff_domain(conn: &Connect, name: &str) {
     println!("Domain {} is powered off", name);
 }
 
-pub fn main() {
+pub fn main(settings: &Config) {
     let dom_name = env::args().nth(2);
 
     if dom_name.is_none() {
@@ -27,8 +27,10 @@ pub fn main() {
         return;
     }
 
+    let uri = settings.get_string("URI").unwrap();
+
     let dom_name = dom_name.unwrap();
-    let conn = Connect::open(Some(URI)).unwrap();
+    let conn = Connect::open(Some(&uri)).unwrap();
 
     poweroff_domain(&conn, &dom_name);
 }

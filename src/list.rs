@@ -1,8 +1,10 @@
-use crate::URI;
+use config::Config;
 use virt::connect::Connect;
 
-pub fn main() {
-    let conn = Connect::open(Some(URI)).unwrap();
+pub fn main(settings: &Config) {
+    let uri = settings.get_string("URI").unwrap();
+
+    let conn = Connect::open(Some(&uri)).unwrap();
     let doms = conn.list_all_domains(0).unwrap();
 
     println!("{:<20} {}", "Instance Name", "State");
