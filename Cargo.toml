@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 virt = { git = "https://gitlab.com/ryasuoka/libvirt-rust.git", branch="dev" }
+config = "0.14.0"
