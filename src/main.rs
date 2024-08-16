@@ -1,6 +1,7 @@
 mod list;
 mod poweroff;
 mod start;
+mod vol_delete;
 
 use config::Config;
 use std::env;
@@ -12,6 +13,7 @@ fn show_help() {
     println!("{:<10} {}", "list", "List all domains");
     println!("{:<10} {}", "start", "Start domain");
     println!("{:<10} {}", "poweroff", "Forcefully terminate domain");
+    println!("{:<10} {}", "vol-delete", "Delete volume");
 
     println!("\nDepricated Command:");
     println!("{:<10} {}", "destroy", "Use 'poweroff'");
@@ -35,6 +37,7 @@ fn main() {
         "list" => list::main(&settings),
         "start" => start::main(&settings),
         "poweroff" => poweroff::main(&settings),
+        "vol-delete" => vol_delete::main(&settings),
         _ => show_help(),
     };
 }
