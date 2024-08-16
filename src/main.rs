@@ -11,8 +11,8 @@ fn show_help() {
     println!("\nCommands:");
     println!("{:<10} {}", "help", "Show this help");
     println!("{:<10} {}", "list", "List all domains");
-    println!("{:<10} {}", "start", "Start domains");
-    println!("{:<10} {}", "poweroff", "Forcefully terminate domains");
+    println!("{:<10} {}", "start", "Start domain");
+    println!("{:<10} {}", "poweroff", "Forcefully terminate domain");
 
     println!("\nDepricated Command:");
     println!("{:<10} {}", "destroy", "Use 'poweroff'");
