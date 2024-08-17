@@ -3,6 +3,7 @@ mod list;
 mod poweroff;
 mod snapshot_delete;
 mod start;
+mod undefine;
 mod vol_delete;
 
 use config::Config;
@@ -20,6 +21,7 @@ fn show_help() {
         "{:<width$} {}",
         "delete", "Undefine domain and remove its storages and snapshots"
     );
+    println!("{:<width$} {}", "undefine", "undefine domain");
     println!("{:<width$} {}", "vol-delete", "Delete volume");
     println!(
         "{:<width$} {}",
@@ -49,6 +51,7 @@ fn main() {
         "start" => start::main(&settings),
         "poweroff" => poweroff::main(&settings),
         "delete" => delete::main(&settings),
+        "undefine" => undefine::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
         _ => show_help(),
