@@ -1,5 +1,6 @@
 mod list;
 mod poweroff;
+mod snapshot_delete;
 mod start;
 mod vol_delete;
 
@@ -15,6 +16,10 @@ fn show_help() {
     println!("{:<width$} {}", "start", "Start domain");
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
     println!("{:<width$} {}", "vol-delete", "Delete volume");
+    println!(
+        "{:<width$} {}",
+        "snapshot-delete", "Delete a domain snapshots"
+    );
 
     println!("\nDepricated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
@@ -39,6 +44,7 @@ fn main() {
         "start" => start::main(&settings),
         "poweroff" => poweroff::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
+        "snapshot-delete" => snapshot_delete::main(&settings),
         _ => show_help(),
     };
 }
