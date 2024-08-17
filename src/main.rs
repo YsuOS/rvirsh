@@ -7,16 +7,17 @@ use config::Config;
 use std::env;
 
 fn show_help() {
+    let width = 20;
     println!("Usage: rvirsh [COMMAND]");
     println!("\nCommands:");
-    println!("{:<10} {}", "help", "Show this help");
-    println!("{:<10} {}", "list", "List all domains");
-    println!("{:<10} {}", "start", "Start domain");
-    println!("{:<10} {}", "poweroff", "Forcefully terminate domain");
-    println!("{:<10} {}", "vol-delete", "Delete volume");
+    println!("{:<width$} {}", "help", "Show this help");
+    println!("{:<width$} {}", "list", "List all domains");
+    println!("{:<width$} {}", "start", "Start domain");
+    println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
+    println!("{:<width$} {}", "vol-delete", "Delete volume");
 
     println!("\nDepricated Command:");
-    println!("{:<10} {}", "destroy", "Use 'poweroff'");
+    println!("{:<width$} {}", "destroy", "Use 'poweroff'");
 }
 
 fn main() {
