@@ -5,6 +5,7 @@ mod snapshot_delete;
 mod start;
 mod undefine;
 mod vol_delete;
+mod vol_list;
 
 use config::Config;
 use std::env;
@@ -22,6 +23,7 @@ fn show_help() {
         "delete", "Run 'undefine', 'vol-delete', and 'snapshot-delete'"
     );
     println!("{:<width$} {}", "undefine", "undefine domain");
+    println!("{:<width$} {}", "vol-list", "List all volumes");
     println!("{:<width$} {}", "vol-delete", "Delete volume");
     println!(
         "{:<width$} {}",
@@ -53,6 +55,7 @@ fn main() {
         "delete" => delete::main(&settings),
         "undefine" => undefine::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
+        "vol-list" => vol_list::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
         _ => show_help(),
     };
