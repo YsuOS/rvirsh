@@ -19,7 +19,7 @@ fn show_help() {
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
     println!(
         "{:<width$} {}",
-        "delete", "Undefine domain and remove its storages and snapshots"
+        "delete", "Run 'undefine', 'vol-delete', and 'snapshot-delete'"
     );
     println!("{:<width$} {}", "undefine", "undefine domain");
     println!("{:<width$} {}", "vol-delete", "Delete volume");

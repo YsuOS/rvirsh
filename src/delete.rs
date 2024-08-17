@@ -1,20 +1,9 @@
 use config::Config;
 use std::env;
-use virt::{connect::Connect, domain::Domain};
+use virt::connect::Connect;
 
 fn show_help() {
     println!("Usage: rvirsh delete <domain>");
-}
-
-fn delete_domain(conn: &Connect, dom_name: &str) {
-    let dom = Domain::lookup_by_name(conn, dom_name).unwrap();
-
-    if dom.is_active().unwrap() {
-        dom.destroy().unwrap();
-    }
-
-    dom.undefine().unwrap();
-    println!("Domain {} is deleted", dom_name);
 }
 
 pub fn main(settings: &Config) {
@@ -33,7 +22,7 @@ pub fn main(settings: &Config) {
 
     crate::snapshot_delete::delete_all_snapshots(&conn, &dom_name);
 
-    delete_domain(&conn, &dom_name);
+    crate::undefine::undefine_domain(&conn, &dom_name);
 
     // TODO: Delete only a volume that matches the domain name
     let vol_name = dom_name.clone() + ".qcow2";
