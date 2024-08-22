@@ -6,6 +6,7 @@ mod start;
 mod undefine;
 mod vol_delete;
 mod vol_list;
+mod pool_list;
 
 use config::Config;
 use std::env;
@@ -30,6 +31,7 @@ fn show_help() {
         "{:<width$} {}",
         "snapshot-delete", "Delete a domain snapshots"
     );
+    println!("{:<width$} {}", "pool-list", "List all pools");
 
     println!("\nDepricated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
@@ -58,6 +60,7 @@ fn main() {
         "vol-delete" => vol_delete::main(&settings),
         "vol-list" => vol_list::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
+        "pool-list" => pool_list::main(&settings),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         _ => show_help(),
     };
