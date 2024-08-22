@@ -12,6 +12,7 @@ use std::env;
 
 fn show_help() {
     let width = 20;
+
     println!("Usage: rvirsh [COMMAND]");
     println!("\nCommands:");
     println!("{:<width$} {}", "help", "Show this help");
@@ -57,6 +58,7 @@ fn main() {
         "vol-delete" => vol_delete::main(&settings),
         "vol-list" => vol_list::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
+        "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         _ => show_help(),
     };
 }
