@@ -21,7 +21,7 @@ pub fn main(settings: &Config) {
     let dom_name = dom_name.unwrap();
     let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
 
-    crate::snapshot_delete::delete_all_snapshots(&conn, &dom_name);
+    crate::snapshot_delete::delete_all_snapshots(&dom);
 
     crate::undefine::undefine_domain(&dom);
 
