@@ -6,15 +6,13 @@ fn show_help() {
     println!("Usage: rvirsh undefine <domain>");
 }
 
-pub fn undefine_domain(conn: &Connect, dom_name: &str) {
-    let dom = Domain::lookup_by_name(conn, dom_name).unwrap();
-
+pub fn undefine_domain(dom: &Domain) {
     if dom.is_active().unwrap() {
         dom.destroy().unwrap();
     }
 
     dom.undefine().unwrap();
-    println!("Domain {} is undefined", dom_name);
+    println!("Domain {} is undefined", dom.get_name().unwrap());
 }
 
 pub fn main(settings: &Config) {
@@ -30,6 +28,7 @@ pub fn main(settings: &Config) {
     let conn = Connect::open(Some(&uri)).unwrap();
 
     let dom_name = dom_name.unwrap();
+    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
 
-    undefine_domain(&conn, &dom_name);
+    undefine_domain(&dom);
 }
