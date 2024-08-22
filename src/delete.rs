@@ -1,6 +1,6 @@
 use config::Config;
 use std::env;
-use virt::{connect::Connect, domain::Domain};
+use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
 fn show_help() {
     println!("Usage: rvirsh delete <domain>");
@@ -25,9 +25,12 @@ pub fn main(settings: &Config) {
 
     crate::undefine::undefine_domain(&dom);
 
+    let pool_name = settings.get_string("POOL").unwrap();
+    let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
+
     // TODO: Delete only a volume that matches the domain name
     let vol_name = dom_name.clone() + ".qcow2";
-    let pool_name = settings.get_string("POOL").unwrap();
+    let volume = StorageVol::lookup_by_name(&pool, &vol_name).unwrap();
 
-    crate::vol_delete::delete_volume(&conn, &pool_name, &vol_name);
+    crate::vol_delete::delete_volume(&pool, &volume);
 }
