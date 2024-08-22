@@ -6,16 +6,14 @@ fn show_help() {
     println!("Usage: rvirsh poweroff <domain>");
 }
 
-fn poweroff_domain(conn: &Connect, name: &str) {
-    let dom = Domain::lookup_by_name(conn, name).unwrap();
-
+fn poweroff_domain(dom: &Domain) {
     if !dom.is_active().unwrap() {
-        println!("Domain {} is inactive", name);
+        println!("Domain {} is inactive", &dom.get_name().unwrap());
         return;
     }
 
     dom.destroy().unwrap();
-    println!("Domain {} is powered off", name);
+    println!("Domain {} is powered off", &dom.get_name().unwrap());
 }
 
 pub fn main(settings: &Config) {
@@ -31,6 +29,6 @@ pub fn main(settings: &Config) {
 
     let dom_name = dom_name.unwrap();
     let conn = Connect::open(Some(&uri)).unwrap();
-
-    poweroff_domain(&conn, &dom_name);
+    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
+    poweroff_domain(&dom);
 }
