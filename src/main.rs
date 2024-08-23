@@ -43,7 +43,7 @@ fn show_help() {
         println!("{:<width$} {}", h[0], h[1]);
     }
 
-    println!("\nDepricated Command:");
+    println!("\nDeprecated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
 }
 
