@@ -13,7 +13,7 @@ pub fn main(settings: &Config) {
     println!("{:<width$} {}", "Name", "Path");
     println!(
         "{:<width$} {}",
-        "-------------------------", "-----------------------------------"
+        "-".repeat(25), "-".repeat(35)
     );
     for vol in vols {
         let name = vol.get_name().unwrap();
