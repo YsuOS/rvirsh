@@ -1,12 +1,13 @@
 mod delete;
 mod list;
+mod pool_list;
 mod poweroff;
+mod shutdown;
 mod snapshot_delete;
 mod start;
 mod undefine;
 mod vol_delete;
 mod vol_list;
-mod pool_list;
 
 use config::Config;
 use std::env;
@@ -19,6 +20,7 @@ fn show_help() {
     println!("{:<width$} {}", "help", "Show this help");
     println!("{:<width$} {}", "list", "List all domains");
     println!("{:<width$} {}", "start", "Start domain");
+    println!("{:<width$} {}", "shutdown", "Shutdown domain");
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
     println!(
         "{:<width$} {}",
@@ -54,6 +56,7 @@ fn main() {
     match command.as_str() {
         "list" => list::main(&settings),
         "start" => start::main(&settings),
+        "shutdown" => shutdown::main(&settings),
         "poweroff" => poweroff::main(&settings),
         "delete" => delete::main(&settings),
         "undefine" => undefine::main(&settings),
