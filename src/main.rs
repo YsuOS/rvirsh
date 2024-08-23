@@ -2,6 +2,7 @@ mod delete;
 mod list;
 mod pool_list;
 mod poweroff;
+mod reboot;
 mod resume;
 mod shutdown;
 mod snapshot_delete;
@@ -23,6 +24,7 @@ fn show_help() {
     println!("{:<width$} {}", "list", "List all domains");
     println!("{:<width$} {}", "start", "Start domain");
     println!("{:<width$} {}", "shutdown", "Shutdown domain");
+    println!("{:<width$} {}", "reboot", "Reboot domain");
     println!("{:<width$} {}", "suspend", "Suspend domain");
     println!("{:<width$} {}", "resume", "Resume domain");
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
@@ -61,6 +63,7 @@ fn main() {
         "list" => list::main(&settings),
         "start" => start::main(&settings),
         "shutdown" => shutdown::main(&settings),
+        "reboot" => reboot::main(&settings),
         "suspend" => suspend::main(&settings),
         "resume" => resume::main(&settings),
         "poweroff" => poweroff::main(&settings),
