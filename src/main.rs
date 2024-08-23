@@ -17,29 +17,31 @@ use std::env;
 
 fn show_help() {
     let width = 20;
+    let helps: Vec<[&str; 2]> = vec![
+        ["help", "Show this help"],
+        ["list", "List all domains"],
+        ["start", "Start domain"],
+        ["shutdown", "Shutdown domain"],
+        ["reboot", "Reboot domain"],
+        ["suspend", "Suspend domain"],
+        ["resume", "Resume domain"],
+        ["poweroff", "Forcefully terminate domain"],
+        [
+            "delete",
+            "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
+        ],
+        ["undefine", "undefine domain"],
+        ["vol-list", "List all volumes"],
+        ["vol-delete", "Delete volume"],
+        ["snapshot-delete", "Delete a domain snapshots"],
+        ["pool-list", "List all pools"],
+    ];
 
     println!("Usage: rvirsh [COMMAND]");
     println!("\nCommands:");
-    println!("{:<width$} {}", "help", "Show this help");
-    println!("{:<width$} {}", "list", "List all domains");
-    println!("{:<width$} {}", "start", "Start domain");
-    println!("{:<width$} {}", "shutdown", "Shutdown domain");
-    println!("{:<width$} {}", "reboot", "Reboot domain");
-    println!("{:<width$} {}", "suspend", "Suspend domain");
-    println!("{:<width$} {}", "resume", "Resume domain");
-    println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
-    println!(
-        "{:<width$} {}",
-        "delete", "Run 'undefine', 'vol-delete', and 'snapshot-delete'"
-    );
-    println!("{:<width$} {}", "undefine", "undefine domain");
-    println!("{:<width$} {}", "vol-list", "List all volumes");
-    println!("{:<width$} {}", "vol-delete", "Delete volume");
-    println!(
-        "{:<width$} {}",
-        "snapshot-delete", "Delete a domain snapshots"
-    );
-    println!("{:<width$} {}", "pool-list", "List all pools");
+    for h in helps {
+        println!("{:<width$} {}", h[0], h[1]);
+    }
 
     println!("\nDepricated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
