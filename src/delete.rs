@@ -23,7 +23,7 @@ pub fn main(settings: &Config) {
 
     crate::snapshot_delete::delete_all_snapshots(&dom);
 
-    crate::undefine::undefine_domain(&dom);
+    crate::domain::undefine::undefine_domain(&dom);
 
     let pool_name = settings.get_string("POOL").unwrap();
     let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();

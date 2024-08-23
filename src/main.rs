@@ -1,14 +1,7 @@
 mod delete;
-mod list;
+mod domain;
 mod pool_list;
-mod poweroff;
-mod reboot;
-mod resume;
-mod shutdown;
 mod snapshot_delete;
-mod start;
-mod suspend;
-mod undefine;
 mod vol_delete;
 mod vol_list;
 
@@ -62,15 +55,15 @@ fn main() {
 
     let command = command.unwrap();
     match command.as_str() {
-        "list" => list::main(&settings),
-        "start" => start::main(&settings),
-        "shutdown" => shutdown::main(&settings),
-        "reboot" => reboot::main(&settings),
-        "suspend" => suspend::main(&settings),
-        "resume" => resume::main(&settings),
-        "poweroff" => poweroff::main(&settings),
+        "list" => domain::list::main(&settings),
+        "start" => domain::start::main(&settings),
+        "shutdown" => domain::shutdown::main(&settings),
+        "reboot" => domain::reboot::main(&settings),
+        "suspend" => domain::suspend::main(&settings),
+        "resume" => domain::resume::main(&settings),
+        "poweroff" => domain::poweroff::main(&settings),
         "delete" => delete::main(&settings),
-        "undefine" => undefine::main(&settings),
+        "undefine" => domain::undefine::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
         "vol-list" => vol_list::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),
