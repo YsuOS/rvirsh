@@ -5,6 +5,7 @@ mod poweroff;
 mod shutdown;
 mod snapshot_delete;
 mod start;
+mod suspend;
 mod undefine;
 mod vol_delete;
 mod vol_list;
@@ -21,6 +22,7 @@ fn show_help() {
     println!("{:<width$} {}", "list", "List all domains");
     println!("{:<width$} {}", "start", "Start domain");
     println!("{:<width$} {}", "shutdown", "Shutdown domain");
+    println!("{:<width$} {}", "suspend", "Suspend domain");
     println!("{:<width$} {}", "poweroff", "Forcefully terminate domain");
     println!(
         "{:<width$} {}",
@@ -57,6 +59,7 @@ fn main() {
         "list" => list::main(&settings),
         "start" => start::main(&settings),
         "shutdown" => shutdown::main(&settings),
+        "suspend" => suspend::main(&settings),
         "poweroff" => poweroff::main(&settings),
         "delete" => delete::main(&settings),
         "undefine" => undefine::main(&settings),
