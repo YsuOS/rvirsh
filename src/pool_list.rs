@@ -11,7 +11,7 @@ pub fn main(settings: &Config) {
     println!("{:<n_width$} {:<s_width$} {}", "Name", "State", "Autostart");
     println!(
         "{:<n_width$} {:<s_width$} {}",
-        "---------------", "----------", "---------------"
+        "-".repeat(15), "-".repeat(10), "-".repeat(15)
     );
     for pool in pools {
         let name = pool.get_name().unwrap();
