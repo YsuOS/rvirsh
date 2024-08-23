@@ -54,16 +54,11 @@ fn main() {
     }
 
     let command = command.unwrap();
-    match command.as_str() {
-        "list" => domain::list::main(&settings),
-        "start" => domain::start::main(&settings),
-        "shutdown" => domain::shutdown::main(&settings),
-        "reboot" => domain::reboot::main(&settings),
-        "suspend" => domain::suspend::main(&settings),
-        "resume" => domain::resume::main(&settings),
-        "poweroff" => domain::poweroff::main(&settings),
+    let command = command.as_str();
+    match command {
+        "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "poweroff"
+        | "undefine" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
-        "undefine" => domain::undefine::main(&settings),
         "vol-delete" => vol_delete::main(&settings),
         "vol-list" => vol_list::main(&settings),
         "snapshot-delete" => snapshot_delete::main(&settings),

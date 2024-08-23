@@ -1,4 +1,3 @@
-use config::Config;
 use virt::{
     connect::Connect,
     domain::Domain,
@@ -15,14 +14,11 @@ fn get_state_str(dom: &Domain) -> &str {
     }
 }
 
-pub fn main(settings: &Config) {
-    let uri = settings.get_string("URI").unwrap();
-
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn list_domain(conn: &Connect) {
     let doms = conn.list_all_domains(0).unwrap();
 
     println!("{:<20} {}", "Instance Name", "State");
-    println!("{:<20} {}", "--------------------", "--------");
+    println!("{:<20} {}", "-".repeat(20), "-".repeat(10));
     for dom in doms {
         let name = dom.get_name().unwrap();
         let state = get_state_str(&dom);

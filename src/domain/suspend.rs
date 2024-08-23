@@ -1,12 +1,6 @@
-use config::Config;
-use std::env;
-use virt::{connect::Connect, domain::Domain};
+use virt::domain::Domain;
 
-fn show_help() {
-    println!("Usage: rvirsh suspend <domain>");
-}
-
-fn suspend_domain(dom: &Domain) {
+pub fn suspend_domain(dom: &Domain) {
     if !dom.is_active().unwrap() {
         println!("Domain {} is inactive", &dom.get_name().unwrap());
         return;
@@ -14,22 +8,4 @@ fn suspend_domain(dom: &Domain) {
 
     dom.suspend().unwrap();
     println!("Domain {} suspended", &dom.get_name().unwrap());
-}
-
-pub fn main(settings: &Config) {
-    let dom_name = env::args().nth(2);
-
-    if dom_name.is_none() {
-        eprintln!("Domain name is required");
-        show_help();
-        return;
-    }
-
-    let uri = settings.get_string("URI").unwrap();
-
-    let dom_name = dom_name.unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
-
-    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
-    suspend_domain(&dom);
 }

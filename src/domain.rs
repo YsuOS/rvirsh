@@ -1,8 +1,43 @@
-pub mod list;
-pub mod poweroff;
-pub mod reboot;
-pub mod resume;
-pub mod shutdown;
-pub mod start;
-pub mod suspend;
+mod list;
+mod poweroff;
+mod reboot;
+mod resume;
+mod shutdown;
+mod start;
+mod suspend;
 pub mod undefine;
+
+use config::Config;
+use std::env;
+use virt::{connect::Connect, domain::Domain};
+
+pub fn main(settings: &Config, cmd: &str) {
+    let uri = settings.get_string("URI").unwrap();
+    let conn = Connect::open(Some(&uri)).unwrap();
+
+    if cmd == "list" {
+        list::list_domain(&conn);
+        return;
+    }
+
+    let dom_name = env::args().nth(2);
+    if dom_name.is_none() {
+        eprintln!("Domain name is required");
+        println!("Usage: rvirsh {} <domain>", cmd);
+        return;
+    }
+
+    let dom_name = dom_name.unwrap();
+    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
+
+    match cmd {
+        "start" => start::create_domain(&dom),
+        "shutdown" => shutdown::shutdown_domain(&dom),
+        "reboot" => reboot::reboot_domain(&dom),
+        "suspend" => suspend::suspend_domain(&dom),
+        "resume" => resume::resume_domain(&dom),
+        "poweroff" => poweroff::poweroff_domain(&dom),
+        "undefine" => undefine::undefine_domain(&dom),
+        _ => eprintln!("{} is not supported", cmd),
+    }
+}
