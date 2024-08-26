@@ -3,8 +3,7 @@ mod domain;
 mod help;
 mod pool_list;
 mod snapshot_delete;
-mod vol_delete;
-mod vol_list;
+mod volume;
 
 use config::Config;
 use std::env;
@@ -28,8 +27,7 @@ fn main() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "poweroff"
         | "undefine" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
-        "vol-delete" => vol_delete::main(&settings),
-        "vol-list" => vol_list::main(&settings),
+        "vol-delete" | "vol-list" => volume::main(&settings, command),
         "snapshot-delete" => snapshot_delete::main(&settings),
         "pool-list" => pool_list::main(&settings),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),

@@ -29,5 +29,5 @@ pub fn main(settings: &Config) {
     let vol_name = dom_name.clone() + ".qcow2";
     let volume = StorageVol::lookup_by_name(&pool, &vol_name).unwrap();
 
-    crate::vol_delete::delete_volume(&pool, &volume);
+    crate::volume::vol_delete::delete_volume(&pool, &volume);
 }

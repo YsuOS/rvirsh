@@ -1,12 +1,6 @@
-use config::Config;
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::storage_pool::StoragePool;
 
-pub fn main(settings: &Config) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
-    let pool_name = settings.get_string("POOL").unwrap();
-
-    let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
+pub fn list_volume(pool: &StoragePool) {
     let vols = pool.list_all_volumes(0).unwrap();
 
     let width = 25;
