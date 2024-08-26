@@ -2,16 +2,13 @@ use config::Config;
 use std::env;
 use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
-fn show_help() {
-    println!("Usage: rvirsh delete <domain>");
-}
+use crate::help::help_domain;
 
 pub fn main(settings: &Config) {
     let dom_name = env::args().nth(2);
 
     if dom_name.is_none() {
-        eprintln!("Domain name is required");
-        show_help();
+        help_domain("delete");
         return;
     }
 

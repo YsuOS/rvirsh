@@ -1,5 +1,6 @@
 mod delete;
 mod domain;
+mod help;
 mod pool_list;
 mod snapshot_delete;
 mod vol_delete;
@@ -7,38 +8,6 @@ mod vol_list;
 
 use config::Config;
 use std::env;
-
-fn show_help() {
-    let width = 20;
-    let helps: Vec<[&str; 2]> = vec![
-        ["help", "Show this help"],
-        ["list", "List all domains"],
-        ["start", "Start domain"],
-        ["shutdown", "Shutdown domain"],
-        ["reboot", "Reboot domain"],
-        ["suspend", "Suspend domain"],
-        ["resume", "Resume domain"],
-        ["poweroff", "Forcefully terminate domain"],
-        [
-            "delete",
-            "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
-        ],
-        ["undefine", "undefine domain"],
-        ["vol-list", "List all volumes"],
-        ["vol-delete", "Delete volume"],
-        ["snapshot-delete", "Delete a domain snapshots"],
-        ["pool-list", "List all pools"],
-    ];
-
-    println!("Usage: rvirsh [COMMAND]");
-    println!("\nCommands:");
-    for h in helps {
-        println!("{:<width$} {}", h[0], h[1]);
-    }
-
-    println!("\nDeprecated Command:");
-    println!("{:<width$} {}", "destroy", "Use 'poweroff'");
-}
 
 fn main() {
     let command: Option<String> = env::args().nth(1);
@@ -50,7 +19,7 @@ fn main() {
 
     if command.is_none() {
         println!("1st argument is required");
-        show_help();
+        help::show_help();
     }
 
     let command = command.unwrap();
@@ -64,6 +33,6 @@ fn main() {
         "snapshot-delete" => snapshot_delete::main(&settings),
         "pool-list" => pool_list::main(&settings),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
-        _ => show_help(),
+        _ => help::show_help(),
     };
 }

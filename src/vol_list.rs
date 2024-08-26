@@ -11,10 +11,7 @@ pub fn main(settings: &Config) {
 
     let width = 25;
     println!("{:<width$} {}", "Name", "Path");
-    println!(
-        "{:<width$} {}",
-        "-".repeat(25), "-".repeat(35)
-    );
+    println!("{:<width$} {}", "-".repeat(25), "-".repeat(35));
     for vol in vols {
         let name = vol.get_name().unwrap();
         let path = vol.get_path().unwrap();

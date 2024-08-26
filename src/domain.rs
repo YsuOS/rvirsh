@@ -11,6 +11,8 @@ use config::Config;
 use std::env;
 use virt::{connect::Connect, domain::Domain};
 
+use crate::help::help_domain;
+
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
     let conn = Connect::open(Some(&uri)).unwrap();
@@ -22,8 +24,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     let dom_name = env::args().nth(2);
     if dom_name.is_none() {
-        eprintln!("Domain name is required");
-        println!("Usage: rvirsh {} <domain>", cmd);
+        help_domain(cmd);
         return;
     }
 
