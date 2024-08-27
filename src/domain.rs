@@ -1,3 +1,4 @@
+mod info;
 mod list;
 mod poweroff;
 mod reboot;
@@ -10,7 +11,11 @@ pub mod undefine;
 
 use config::Config;
 use std::env;
-use virt::{connect::Connect, domain::Domain};
+use virt::{
+    connect::Connect,
+    domain::Domain,
+    sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
+};
 
 use crate::help::help_domain;
 
@@ -33,6 +38,7 @@ pub fn main(settings: &Config, cmd: &str) {
     let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
 
     match cmd {
+        "info" => info::show_domain_info(&dom),
         "start" => start::create_domain(&dom),
         "shutdown" => shutdown::shutdown_domain(&dom),
         "reboot" => reboot::reboot_domain(&dom),
@@ -42,5 +48,15 @@ pub fn main(settings: &Config, cmd: &str) {
         "poweroff" => poweroff::poweroff_domain(&dom),
         "undefine" => undefine::undefine_domain(&dom),
         _ => eprintln!("{} is not supported", cmd),
+    }
+}
+
+pub fn get_state_str(dom: &Domain) -> &str {
+    match dom.get_state().unwrap() {
+        (VIR_DOMAIN_RUNNING, _) => "running",
+        (VIR_DOMAIN_PAUSED, _) => "paused",
+        (VIR_DOMAIN_SHUTOFF, _) => "shut off",
+        // TODO: support other states on demand
+        _ => "-",
     }
 }
