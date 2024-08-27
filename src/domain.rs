@@ -1,6 +1,7 @@
 mod list;
 mod poweroff;
 mod reboot;
+mod reset;
 mod resume;
 mod shutdown;
 mod start;
@@ -37,6 +38,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "reboot" => reboot::reboot_domain(&dom),
         "suspend" => suspend::suspend_domain(&dom),
         "resume" => resume::resume_domain(&dom),
+        "reset" => reset::reset_domain(&dom),
         "poweroff" => poweroff::poweroff_domain(&dom),
         "undefine" => undefine::undefine_domain(&dom),
         _ => eprintln!("{} is not supported", cmd),

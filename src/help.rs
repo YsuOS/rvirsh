@@ -8,6 +8,7 @@ pub fn show_help() {
         ["reboot", "Reboot domain"],
         ["suspend", "Suspend domain"],
         ["resume", "Resume domain"],
+        ["reset", "Reset domain"],
         ["poweroff", "Forcefully terminate domain"],
         [
             "delete",
