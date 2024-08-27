@@ -3,6 +3,11 @@ use virt::domain::Domain;
 pub fn show_domain_info(dom: &Domain) {
     let state = crate::domain::get_state_str(dom);
     let dominfo = dom.get_info().unwrap();
+    let persistent = if dom.is_persistent().unwrap() {
+        "yes"
+    } else {
+        "no"
+    };
     let autostart = if dom.get_autostart().unwrap() {
         "enable"
     } else {
@@ -27,10 +32,10 @@ pub fn show_domain_info(dom: &Domain) {
         dom.get_max_memory().unwrap()
     );
     println!("{:<20} {} KiB", "Used memory:", dominfo.memory);
+    println!("{:<20} {}", "Persistent:", persistent);
     println!("{:<20} {}", "Autostart:", autostart);
     println!("{:<20} {}", "Managed save:", managed_save);
     // TODO: Add the following columns
-    //println!("{:<20} {}", "Persistent:", todo!());
     //println!("{:<20} {}", "Security model:", todo!());
     //println!("{:<20} {}", "Security DOI:", todo!());
     //println!("{:<20} {}", "Security label:", todo!());
