@@ -16,6 +16,7 @@ pub fn show_help() {
         ["undefine", "undefine domain"],
         ["vol-list", "List all volumes"],
         ["vol-delete", "Delete volume"],
+        ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
     ];

@@ -3,6 +3,7 @@ use std::env;
 use virt::{connect::Connect, domain::Domain};
 
 pub mod snapshot_delete;
+mod snapshot_list;
 
 use crate::help::help_domain;
 
@@ -21,6 +22,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "snapshot-delete" => snapshot_delete::delete_all_snapshots(&dom),
+        "snapshot-list" => snapshot_list::list_snapshots(&dom),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
