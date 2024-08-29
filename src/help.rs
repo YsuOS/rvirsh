@@ -1,12 +1,9 @@
 pub fn show_help() {
     let width = 20;
-    let helps: Vec<[&str; 2]> = vec![
+    let main_helps: Vec<[&str; 2]> = vec![
         ["help", "Show this help"],
         ["list", "List all domains"],
-        ["dominfo", "Show domain information"],
         ["info", "Show domain various information"],
-        ["domid", "Show domain id"],
-        ["domuuid", "Show domain uuid"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],
@@ -18,18 +15,27 @@ pub fn show_help() {
             "delete",
             "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
         ],
-        ["undefine", "undefine domain"],
-        ["autostart", "Enable autostart"],
         ["vol-list", "List all volumes"],
         ["vol-delete", "Delete volume"],
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
     ];
+    let sub_helps: Vec<[&str; 2]> = vec![
+        ["autostart", "Enable autostart"],
+        ["undefine", "Undefine domain"],
+        ["dominfo", "Show domain information"],
+        ["domid", "Show domain id"],
+        ["domuuid", "Show domain uuid"],
+    ];
 
     println!("Usage: rvirsh [COMMAND]");
-    println!("\nCommands:");
-    for h in helps {
+    println!("\nMain Commands:");
+    for h in main_helps {
+        println!("{:<width$} {}", h[0], h[1]);
+    }
+    println!("\nSub Commands:");
+    for h in sub_helps {
         println!("{:<width$} {}", h[0], h[1]);
     }
 
