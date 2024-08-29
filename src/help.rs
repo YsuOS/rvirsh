@@ -5,6 +5,7 @@ pub fn show_help() {
         ["list", "List all domains"],
         ["dominfo", "Show domain information"],
         ["info", "Show domain various information"],
+        ["domid", "Show domain id"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],

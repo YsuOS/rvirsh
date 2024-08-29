@@ -1,3 +1,4 @@
+mod domid;
 mod dominfo;
 mod info;
 mod list;
@@ -40,6 +41,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "dominfo" => dominfo::show_domain_info(&dom),
+        "domid" => domid::show_domain_id(&dom),
         "info" => info::show_domain_info(&dom),
         "start" => start::create_domain(&dom),
         "shutdown" => shutdown::shutdown_domain(&dom),
