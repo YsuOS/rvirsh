@@ -3,7 +3,8 @@ pub fn show_help() {
     let helps: Vec<[&str; 2]> = vec![
         ["help", "Show this help"],
         ["list", "List all domains"],
-        ["info", "Show domain information"],
+        ["dominfo", "Show domain information"],
+        ["info", "Show domain various information"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],

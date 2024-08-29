@@ -25,7 +25,7 @@ fn main() {
     let command = command.as_str();
     match command {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
-        | "undefine" | "info" => domain::main(&settings, command),
+        | "undefine" | "dominfo" | "info" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
         "vol-delete" | "vol-list" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),

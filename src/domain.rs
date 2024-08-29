@@ -1,3 +1,4 @@
+mod dominfo;
 mod info;
 mod list;
 mod poweroff;
@@ -38,6 +39,7 @@ pub fn main(settings: &Config, cmd: &str) {
     let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
 
     match cmd {
+        "dominfo" => dominfo::show_domain_info(&dom),
         "info" => info::show_domain_info(&dom),
         "start" => start::create_domain(&dom),
         "shutdown" => shutdown::shutdown_domain(&dom),

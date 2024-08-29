@@ -35,7 +35,6 @@ pub fn show_domain_info(dom: &Domain) {
     println!("{:<20} {}", "Persistent:", persistent);
     println!("{:<20} {}", "Autostart:", autostart);
     println!("{:<20} {}", "Managed save:", managed_save);
-    // TODO: Add various domain information
     // TODO: Add the following columns
     //println!("{:<20} {}", "Security model:", todo!());
     //println!("{:<20} {}", "Security DOI:", todo!());
