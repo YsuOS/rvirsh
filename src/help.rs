@@ -19,6 +19,7 @@ pub fn show_help() {
             "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
         ],
         ["undefine", "undefine domain"],
+        ["autostart", "Enable autostart"],
         ["vol-list", "List all volumes"],
         ["vol-delete", "Delete volume"],
         ["snapshot-list", "List domain snapshots"],
