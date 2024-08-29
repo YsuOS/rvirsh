@@ -1,5 +1,6 @@
 mod domid;
 mod dominfo;
+mod domuuid;
 mod info;
 mod list;
 mod poweroff;
@@ -42,6 +43,7 @@ pub fn main(settings: &Config, cmd: &str) {
     match cmd {
         "dominfo" => dominfo::show_domain_info(&dom),
         "domid" => domid::show_domain_id(&dom),
+        "domuuid" => domuuid::show_domain_uuid(&dom),
         "info" => info::show_domain_info(&dom),
         "start" => start::create_domain(&dom),
         "shutdown" => shutdown::shutdown_domain(&dom),
