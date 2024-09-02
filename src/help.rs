@@ -27,6 +27,7 @@ pub fn show_help() {
         ["dominfo", "Show domain information"],
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
+        ["vol-info", "Show volume information"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");

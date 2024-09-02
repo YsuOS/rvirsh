@@ -1,5 +1,6 @@
 pub mod vol_delete;
 mod vol_list;
+mod vol_info;
 
 use crate::help::help_volume;
 use config::Config;
@@ -29,6 +30,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "vol-delete" => vol_delete::delete_volume(&pool, &volume),
+        "vol-info" => vol_info::show_volume_info(&pool, &volume),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
