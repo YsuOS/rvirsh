@@ -1,9 +1,6 @@
-use config::Config;
 use virt::connect::Connect;
 
-pub fn main(settings: &Config) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn list_pool(conn: &Connect) {
     let pools = conn.list_all_storage_pools(0).unwrap();
 
     let n_width = 15;

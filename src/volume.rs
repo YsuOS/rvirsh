@@ -1,6 +1,6 @@
 pub mod vol_delete;
-mod vol_list;
 mod vol_info;
+mod vol_list;
 
 use crate::help::help_volume;
 use config::Config;

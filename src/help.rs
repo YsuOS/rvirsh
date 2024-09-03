@@ -28,6 +28,7 @@ pub fn show_help() {
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
         ["vol-info", "Show volume information"],
+        ["pool-info", "Show pool information"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");
@@ -52,4 +53,8 @@ pub fn help_domain(cmd: &str) {
 pub fn help_volume(cmd: &str) {
     eprintln!("Volume name is required");
     eprintln!("Usage: rvirsh {} <volume>", cmd);
+}
+
+pub fn help_pool(cmd: &str) {
+    eprintln!("Usage: rvirsh {} <pool>", cmd);
 }

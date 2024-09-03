@@ -1,7 +1,7 @@
 mod delete;
 mod domain;
 mod help;
-mod pool_list;
+mod pool;
 mod snapshot;
 mod volume;
 
@@ -31,7 +31,7 @@ fn main() {
         "delete" => delete::main(&settings),
         "vol-delete" | "vol-list" | "vol-info" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),
-        "pool-list" => pool_list::main(&settings),
+        "pool-list" | "pool-info" => pool::main(&settings, command),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         _ => help::show_help(),
     };
