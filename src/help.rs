@@ -21,6 +21,7 @@ pub fn show_help() {
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
         ["hostname", "Show the hypervisor hostname"],
+        ["uri", "Show the hypervisor URI"],
         ["version", "Show version"],
     ];
     let sub_helps: Vec<[&str; 2]> = vec![

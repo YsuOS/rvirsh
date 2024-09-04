@@ -4,6 +4,7 @@ mod help;
 mod hostname;
 mod pool;
 mod snapshot;
+mod uri;
 mod version;
 mod volume;
 
@@ -37,6 +38,7 @@ fn main() {
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),
         "hostname" => hostname::main(&settings),
+        "uri" => uri::main(&settings),
         _ => help::show_help(),
     };
 }
