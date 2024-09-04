@@ -20,6 +20,7 @@ pub fn show_help() {
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
+        ["version", "Show version"],
     ];
     let sub_helps: Vec<[&str; 2]> = vec![
         ["autostart", "Enable autostart"],

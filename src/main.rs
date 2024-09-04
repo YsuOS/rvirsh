@@ -3,6 +3,7 @@ mod domain;
 mod help;
 mod pool;
 mod snapshot;
+mod version;
 mod volume;
 
 use config::Config;
@@ -33,6 +34,7 @@ fn main() {
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" => pool::main(&settings, command),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
+        "version" => version::main(&settings),
         _ => help::show_help(),
     };
 }
