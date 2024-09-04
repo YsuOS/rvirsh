@@ -1,6 +1,7 @@
 mod delete;
 mod domain;
 mod help;
+mod hostname;
 mod pool;
 mod snapshot;
 mod version;
@@ -35,6 +36,7 @@ fn main() {
         "pool-list" | "pool-info" => pool::main(&settings, command),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),
+        "hostname" => hostname::main(&settings),
         _ => help::show_help(),
     };
 }
