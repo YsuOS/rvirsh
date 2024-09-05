@@ -33,7 +33,7 @@ fn main() {
             domain::main(&settings, command)
         }
         "delete" => delete::main(&settings),
-        "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" => {
+        "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml" => {
             volume::main(&settings, command)
         }
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),

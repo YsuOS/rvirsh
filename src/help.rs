@@ -35,6 +35,7 @@ pub fn show_help() {
         ["vol-info", "Show volume information"],
         ["vol-key", "Show volume key"],
         ["vol-path", "Show volume path"],
+        ["vol-dumpxml", "Show volume information in XML"],
         ["pool-info", "Show pool information"],
         ["pool-uuid", "Show pool uuid"],
         ["pool-refresh", "Refresh pool"],
