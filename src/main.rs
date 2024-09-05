@@ -1,6 +1,7 @@
 mod delete;
 mod domain;
 mod help;
+mod hostinfo;
 mod hostname;
 mod pool;
 mod snapshot;
@@ -38,6 +39,8 @@ fn main() {
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),
         "hostname" => hostname::main(&settings),
+        "nodeinfo" => println!("'nodeinfo' is deprecated. use 'hostinfo'"),
+        "hostinfo" => hostinfo::main(&settings),
         "uri" => uri::main(&settings),
         _ => help::show_help(),
     };

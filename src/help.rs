@@ -21,6 +21,7 @@ pub fn show_help() {
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
         ["hostname", "Show the hypervisor hostname"],
+        ["hostinfo", "Show the host information"],
         ["uri", "Show the hypervisor URI"],
         ["version", "Show version"],
     ];
@@ -46,6 +47,7 @@ pub fn show_help() {
 
     println!("\nDeprecated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
+    println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
 }
 
 pub fn help_domain(cmd: &str) {
