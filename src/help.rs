@@ -34,6 +34,7 @@ pub fn show_help() {
         ["domuuid", "Show domain uuid"],
         ["vol-info", "Show volume information"],
         ["pool-info", "Show pool information"],
+        ["pool-refresh", "Refresh pool"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");

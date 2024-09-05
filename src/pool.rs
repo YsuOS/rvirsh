@@ -1,5 +1,6 @@
 mod pool_info;
 mod pool_list;
+pub mod pool_refresh;
 
 use crate::help::help_pool;
 use config::Config;
@@ -26,6 +27,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "pool-info" => pool_info::show_pool_info(&pool),
+        "pool-refresh" => pool_refresh::refresh_pool(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
