@@ -1,5 +1,6 @@
 pub mod vol_delete;
 mod vol_info;
+mod vol_key;
 mod vol_list;
 mod vol_path;
 
@@ -33,6 +34,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "vol-delete" => vol_delete::delete_volume(&pool, &volume),
         "vol-info" => vol_info::show_volume_info(&pool, &volume),
         "vol-path" => vol_path::show_volume_path(&pool, &volume),
+        "vol-key" => vol_key::show_volume_key(&pool, &volume),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
