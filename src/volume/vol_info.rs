@@ -8,7 +8,7 @@ use virt::{
 };
 
 pub fn show_volume_info(pool: &StoragePool, volume: &StorageVol) {
-    pool.refresh(0).unwrap();
+    crate::pool::pool_refresh::refresh_pool(pool);
 
     let volinfo = volume.get_info().unwrap();
     let kind = match volinfo.kind {
