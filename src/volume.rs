@@ -4,6 +4,7 @@ mod vol_info;
 mod vol_key;
 mod vol_list;
 mod vol_path;
+mod vol_pool;
 
 use crate::help::help_volume;
 use config::Config;
@@ -37,6 +38,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "vol-path" => vol_path::show_volume_path(&pool, &volume),
         "vol-key" => vol_key::show_volume_key(&pool, &volume),
         "vol-dumpxml" => vol_dumpxml::show_volume_dumpxml(&pool, &volume),
+        "vol-pool" => vol_pool::show_volume_pool(&volume),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
