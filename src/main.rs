@@ -33,7 +33,7 @@ fn main() {
             domain::main(&settings, command)
         }
         "delete" => delete::main(&settings),
-        "vol-delete" | "vol-list" | "vol-info" => volume::main(&settings, command),
+        "vol-delete" | "vol-list" | "vol-info" | "vol-path" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" => pool::main(&settings, command),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
