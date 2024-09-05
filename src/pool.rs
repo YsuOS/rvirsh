@@ -1,6 +1,7 @@
 mod pool_info;
 mod pool_list;
 pub mod pool_refresh;
+mod pool_uuid;
 
 use crate::help::help_pool;
 use config::Config;
@@ -28,6 +29,7 @@ pub fn main(settings: &Config, cmd: &str) {
     match cmd {
         "pool-info" => pool_info::show_pool_info(&pool),
         "pool-refresh" => pool_refresh::refresh_pool(&pool),
+        "pool-uuid" => pool_uuid::show_pool_uuid(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
