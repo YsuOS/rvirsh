@@ -27,6 +27,7 @@ pub fn show_help() {
     ];
     let sub_helps: Vec<[&str; 2]> = vec![
         ["autostart", "Enable autostart"],
+        ["noautostart", "Disable autostart"],
         ["undefine", "Undefine domain"],
         ["dominfo", "Show domain information"],
         ["domid", "Show domain id"],

@@ -4,6 +4,7 @@ mod dominfo;
 mod domuuid;
 mod info;
 mod list;
+mod noautostart;
 mod poweroff;
 mod reboot;
 mod reset;
@@ -55,6 +56,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "poweroff" => poweroff::poweroff_domain(&dom),
         "undefine" => undefine::undefine_domain(&dom),
         "autostart" => autostart::autostart_domain(&dom),
+        "noautostart" => noautostart::noautostart_domain(&dom),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
