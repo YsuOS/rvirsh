@@ -43,6 +43,7 @@ pub fn show_help() {
         ["pool-refresh", "Refresh pool"],
         ["pool-stop", "Stop pool"],
         ["pool-delete", "Delete pool"],
+        ["pool-undefine", "Undefine pool"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");

@@ -3,6 +3,7 @@ mod pool_info;
 mod pool_list;
 pub mod pool_refresh;
 mod pool_stop;
+mod pool_undefine;
 mod pool_uuid;
 
 use crate::help::help_pool;
@@ -34,6 +35,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "pool-refresh" => pool_refresh::refresh_pool(&pool),
         "pool-uuid" => pool_uuid::show_pool_uuid(&pool),
         "pool-delete" => pool_delete::delete_pool(&pool),
+        "pool-undefine" => pool_undefine::undefine_pool(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
