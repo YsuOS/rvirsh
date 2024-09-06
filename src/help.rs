@@ -68,6 +68,12 @@ pub fn help_volume(cmd: &str) {
     eprintln!("Usage: rvirsh {} <volume>", cmd);
 }
 
+// For vol-pool
+pub fn help_volume_path(cmd: &str) {
+    eprintln!("Volume path is required");
+    eprintln!("Usage: rvirsh {} <volume path>", cmd);
+}
+
 pub fn help_pool(cmd: &str) {
     eprintln!("Pool name is required");
     eprintln!("Usage: rvirsh {} <pool>", cmd);

@@ -15,6 +15,20 @@ use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol}
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
     let conn = Connect::open(Some(&uri)).unwrap();
+
+    if cmd == "vol-pool" {
+        let vol_path = env::args().nth(2);
+        if vol_path.is_none() {
+            crate::help::help_volume_path(cmd);
+            return;
+        }
+        let vol_path = vol_path.unwrap();
+
+        let volume = StorageVol::lookup_by_path(&conn, &vol_path).unwrap();
+        vol_pool::show_volume_pool(&volume);
+        return;
+    }
+
     let pool_name = settings.get_string("POOL").unwrap();
     let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
 
@@ -39,7 +53,6 @@ pub fn main(settings: &Config, cmd: &str) {
         "vol-path" => vol_path::show_volume_path(&pool, &volume),
         "vol-key" => vol_key::show_volume_key(&pool, &volume),
         "vol-dumpxml" => vol_dumpxml::show_volume_dumpxml(&pool, &volume),
-        "vol-pool" => vol_pool::show_volume_pool(&volume),
         "vol-wipe" => vol_wipe::wipe_volume(&pool, &volume),
         _ => eprintln!("{} is not supported", cmd),
     }
