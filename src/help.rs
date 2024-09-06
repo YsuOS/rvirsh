@@ -50,6 +50,7 @@ pub fn show_help() {
         ["pool-undefine", "Undefine pool"],
         ["pool-autostart", "Enable pool autostart"],
         ["pool-noautostart", "Disable pool autostart"],
+        ["pool-dumpxml", "Show pool information in XML"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");

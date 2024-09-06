@@ -1,6 +1,7 @@
 mod pool_autostart;
 mod pool_clean;
 mod pool_delete;
+mod pool_dumpxml;
 mod pool_info;
 mod pool_list;
 mod pool_noautostart;
@@ -42,6 +43,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "pool-clean" => pool_clean::clean_pool(&pool),
         "pool-autostart" => pool_autostart::autostart_pool(&pool),
         "pool-noautostart" => pool_noautostart::noautostart_pool(&pool),
+        "pool-dumpxml" => pool_dumpxml::show_pool_dumpxml(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
