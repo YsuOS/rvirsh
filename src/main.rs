@@ -37,7 +37,7 @@ fn main() {
         | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
-        | "pool-undefine" | "pool-clean" => pool::main(&settings, command),
+        | "pool-undefine" | "pool-clean" | "pool-autostart" => pool::main(&settings, command),
         "pool-destroy" => println!("'pool-destroy' is deprecated. use 'pool-stop'"),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),
