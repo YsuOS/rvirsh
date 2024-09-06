@@ -42,6 +42,7 @@ pub fn show_help() {
         ["pool-uuid", "Show pool uuid"],
         ["pool-refresh", "Refresh pool"],
         ["pool-stop", "Stop pool"],
+        ["pool-delete", "Delete pool"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");

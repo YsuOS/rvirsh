@@ -1,3 +1,4 @@
+mod pool_delete;
 mod pool_info;
 mod pool_list;
 pub mod pool_refresh;
@@ -32,6 +33,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "pool-stop" => pool_stop::stop_pool(&pool),
         "pool-refresh" => pool_refresh::refresh_pool(&pool),
         "pool-uuid" => pool_uuid::show_pool_uuid(&pool),
+        "pool-delete" => pool_delete::delete_pool(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
