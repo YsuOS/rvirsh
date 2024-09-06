@@ -69,5 +69,6 @@ pub fn help_volume(cmd: &str) {
 }
 
 pub fn help_pool(cmd: &str) {
+    eprintln!("Pool name is required");
     eprintln!("Usage: rvirsh {} <pool>", cmd);
 }
