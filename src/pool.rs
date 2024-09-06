@@ -3,6 +3,7 @@ mod pool_clean;
 mod pool_delete;
 mod pool_info;
 mod pool_list;
+mod pool_noautostart;
 pub mod pool_refresh;
 mod pool_stop;
 mod pool_undefine;
@@ -40,6 +41,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "pool-undefine" => pool_undefine::undefine_pool(&pool),
         "pool-clean" => pool_clean::clean_pool(&pool),
         "pool-autostart" => pool_autostart::autostart_pool(&pool),
+        "pool-noautostart" => pool_noautostart::noautostart_pool(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
 }

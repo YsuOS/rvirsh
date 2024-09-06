@@ -48,6 +48,8 @@ pub fn show_help() {
         ["pool-stop", "Stop pool"],
         ["pool-delete", "Delete pool"],
         ["pool-undefine", "Undefine pool"],
+        ["pool-autostart", "Enable pool autostart"],
+        ["pool-noautostart", "Disable pool autostart"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");
