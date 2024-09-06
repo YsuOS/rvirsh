@@ -20,6 +20,10 @@ pub fn show_help() {
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-list", "List all pools"],
+        [
+            "pool-clean",
+            "Run 'pool-stop', 'pool-delete', and 'pool-undefine'",
+        ],
         ["hostname", "Show the hypervisor hostname"],
         ["hostinfo", "Show the host information"],
         ["uri", "Show the hypervisor URI"],
