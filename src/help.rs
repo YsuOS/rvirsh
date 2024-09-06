@@ -41,6 +41,7 @@ pub fn show_help() {
         ["pool-info", "Show pool information"],
         ["pool-uuid", "Show pool uuid"],
         ["pool-refresh", "Refresh pool"],
+        ["pool-stop", "Stop pool"],
     ];
 
     println!("Usage: rvirsh [COMMAND]");
@@ -56,6 +57,7 @@ pub fn show_help() {
     println!("\nDeprecated Command:");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
     println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
+    println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
 }
 
 pub fn help_domain(cmd: &str) {
