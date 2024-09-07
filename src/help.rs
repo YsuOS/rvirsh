@@ -36,6 +36,7 @@ pub fn show_help() {
         ["dominfo", "Show domain information"],
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
+        ["snapshot-info", "Show snapshot information"],
         ["vol-info", "Show volume information"],
         ["vol-key", "Show volume key"],
         ["vol-path", "Show volume path"],
