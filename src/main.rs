@@ -35,9 +35,8 @@ fn main() {
         "delete" => delete::main(&settings),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
-        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent" => {
-            snapshot::main(&settings, command)
-        }
+        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
+        | "snapshot-dumpxml" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
         | "pool-undefine" | "pool-clean" | "pool-autostart" | "pool-noautostart"
         | "pool-dumpxml" => pool::main(&settings, command),

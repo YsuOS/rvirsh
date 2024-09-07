@@ -3,6 +3,7 @@ use std::env;
 use virt::{connect::Connect, domain::Domain, domain_snapshot::DomainSnapshot};
 
 pub mod snapshot_delete;
+mod snapshot_dumpxml;
 mod snapshot_info;
 mod snapshot_list;
 mod snapshot_parent;
@@ -39,10 +40,11 @@ pub fn main(settings: &Config, cmd: &str) {
     let snapshot_name = snapshot_name.unwrap();
     let snapshot = DomainSnapshot::lookup_by_name(&dom, &snapshot_name, 0).unwrap();
 
-    // snapshot-parent does not require Domain, but it is needed to specify the snapshot
+    // snapshot-(parent|dumpxml) does not require Domain, but it is needed to specify the snapshot
     match cmd {
         "snapshot-info" => snapshot_info::show_snapshot_info(&dom, &snapshot),
         "snapshot-parent" => snapshot_parent::show_snapshot_parent(&snapshot),
+        "snapshot-dumpxml" => snapshot_dumpxml::show_snapshot_dumpxml(&snapshot),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
