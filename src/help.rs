@@ -76,6 +76,10 @@ pub fn help_domain(cmd: &str) {
     eprintln!("Usage: rvirsh {} <domain>", cmd);
 }
 
+pub fn help_snapshot(cmd: &str) {
+    eprintln!("Domain name and snapshot name are required");
+    eprintln!("Usage: rvirsh {} <domain> <snapshot>", cmd);
+}
 pub fn help_volume(cmd: &str) {
     eprintln!("Volume name is required");
     eprintln!("Usage: rvirsh {} <volume>", cmd);

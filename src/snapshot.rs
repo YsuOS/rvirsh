@@ -7,7 +7,7 @@ mod snapshot_info;
 mod snapshot_list;
 mod snapshot_parent;
 
-use crate::help::help_domain;
+use crate::help::{help_domain, help_snapshot};
 
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
@@ -22,28 +22,27 @@ pub fn main(settings: &Config, cmd: &str) {
     let dom_name = dom_name.unwrap();
     let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
 
-    if cmd == "snapshot-info" || cmd == "snapshot-parent" {
-        let snapshot_name = env::args().nth(3);
-        if snapshot_name.is_none() {
-            eprintln!("snapshot name is required");
-            eprintln!("Usage: rvirsh {} <domain> <snapshot>", cmd);
-            return;
-        }
-        let snapshot_name = snapshot_name.unwrap();
-        let snapshot = DomainSnapshot::lookup_by_name(&dom, &snapshot_name, 0).unwrap();
-
-        if cmd == "snapshot-info" {
-            snapshot_info::show_snapshot_info(&dom, &snapshot);
-            return;
-        } else if cmd == "snapshot-parent" {
-            snapshot_parent::show_snapshot_parent(&snapshot);
-            return;
-        }
+    if cmd == "snapshot-delete" {
+        snapshot_delete::delete_all_snapshots(&dom);
+        return;
+    } else if cmd == "snapshot-list" {
+        snapshot_list::list_snapshots(&dom);
+        return;
     }
 
+    let snapshot_name = env::args().nth(3);
+    if snapshot_name.is_none() {
+        help_snapshot(cmd);
+        return;
+    }
+
+    let snapshot_name = snapshot_name.unwrap();
+    let snapshot = DomainSnapshot::lookup_by_name(&dom, &snapshot_name, 0).unwrap();
+
+    // snapshot-parent does not require Domain, but it is needed to specify the snapshot
     match cmd {
-        "snapshot-delete" => snapshot_delete::delete_all_snapshots(&dom),
-        "snapshot-list" => snapshot_list::list_snapshots(&dom),
+        "snapshot-info" => snapshot_info::show_snapshot_info(&dom, &snapshot),
+        "snapshot-parent" => snapshot_parent::show_snapshot_parent(&snapshot),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
