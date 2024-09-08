@@ -3,6 +3,7 @@ mod domain;
 mod help;
 mod hostinfo;
 mod hostname;
+mod net;
 mod pool;
 mod snapshot;
 mod uri;
@@ -32,6 +33,7 @@ fn main() {
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
         | "domstate" | "dumpxml" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
+        "net-list" => net::main(&settings, command),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
