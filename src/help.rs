@@ -41,6 +41,7 @@ pub fn show_help() {
         ["dumpxml", "Show domain information in XML"],
         ["net-uuid", "Show net uuid"],
         ["net-info", "Show net information"],
+        ["net-dumpxml", "Show net information in XML"],
         ["snapshot-info", "Show snapshot information"],
         ["snapshot-parent", "Get a parent of snapshot"],
         ["snapshot-dumpxml", "Show snapshot information in XML"],

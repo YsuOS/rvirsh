@@ -1,3 +1,4 @@
+mod net_dumpxml;
 mod net_info;
 mod net_list;
 mod net_uuid;
@@ -30,6 +31,7 @@ pub fn main(settings: &Config, cmd: &str) {
     match cmd {
         "net-uuid" => net_uuid::show_net_uuid(&net),
         "net-info" => net_info::show_net_info(&net),
+        "net-dumpxml" => net_dumpxml::show_net_dumpxml(&net),
         _ => eprintln!("{} is not supported", cmd),
     }
 }
