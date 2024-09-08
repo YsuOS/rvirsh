@@ -39,6 +39,8 @@ pub fn show_help() {
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
         ["dumpxml", "Show domain information in XML"],
+        ["net-autostart", "Enable net autostart"],
+        ["net-noautostart", "Disable net autostart"],
         ["net-uuid", "Show net uuid"],
         ["net-info", "Show net information"],
         ["net-dumpxml", "Show net information in XML"],

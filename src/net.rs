@@ -1,6 +1,8 @@
+mod net_autostart;
 mod net_dumpxml;
 mod net_info;
 mod net_list;
+mod net_noautostart;
 mod net_uuid;
 
 use std::env;
@@ -29,6 +31,8 @@ pub fn main(settings: &Config, cmd: &str) {
     let net = Network::lookup_by_name(&conn, &net_name).unwrap();
 
     match cmd {
+        "net-autostart" => net_autostart::autostart_net(&net),
+        "net-noautostart" => net_noautostart::noautostart_net(&net),
         "net-uuid" => net_uuid::show_net_uuid(&net),
         "net-info" => net_info::show_net_info(&net),
         "net-dumpxml" => net_dumpxml::show_net_dumpxml(&net),

@@ -33,7 +33,8 @@ fn main() {
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
         | "domstate" | "dumpxml" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
-        "net-list" | "net-uuid" | "net-info" | "net-dumpxml" => net::main(&settings, command),
+        "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
+        | "net-noautostart" => net::main(&settings, command),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
