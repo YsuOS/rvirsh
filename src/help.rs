@@ -40,6 +40,7 @@ pub fn show_help() {
         ["domuuid", "Show domain uuid"],
         ["dumpxml", "Show domain information in XML"],
         ["net-uuid", "Show net uuid"],
+        ["net-info", "Show net information"],
         ["snapshot-info", "Show snapshot information"],
         ["snapshot-parent", "Get a parent of snapshot"],
         ["snapshot-dumpxml", "Show snapshot information in XML"],

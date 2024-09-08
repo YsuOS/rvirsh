@@ -1,3 +1,4 @@
+mod net_info;
 mod net_list;
 mod net_uuid;
 
@@ -28,6 +29,23 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "net-uuid" => net_uuid::show_net_uuid(&net),
+        "net-info" => net_info::show_net_info(&net),
         _ => eprintln!("{} is not supported", cmd),
+    }
+}
+
+fn get_autostart_str(net: &Network) -> &str {
+    if net.get_autostart().unwrap() {
+        "yes"
+    } else {
+        "no"
+    }
+}
+
+fn get_persistent_str(net: &Network) -> &str {
+    if net.is_persistent().unwrap() {
+        "yes"
+    } else {
+        "no"
     }
 }

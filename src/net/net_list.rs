@@ -21,16 +21,8 @@ pub fn list_net(conn: &Connect) {
         } else {
             "inactive"
         };
-        let autostart = if net.get_autostart().unwrap() {
-            "yes"
-        } else {
-            "no"
-        };
-        let persistent = if net.is_persistent().unwrap() {
-            "yes"
-        } else {
-            "no"
-        };
+        let autostart = crate::net::get_autostart_str(&net);
+        let persistent = crate::net::get_persistent_str(&net);
         println!("{:<10} {:<8} {:<10} {}", name, state, autostart, persistent);
     }
 }
