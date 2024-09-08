@@ -39,6 +39,7 @@ pub fn show_help() {
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
         ["dumpxml", "Show domain information in XML"],
+        ["net-uuid", "Show net uuid"],
         ["snapshot-info", "Show snapshot information"],
         ["snapshot-parent", "Get a parent of snapshot"],
         ["snapshot-dumpxml", "Show snapshot information in XML"],
@@ -78,6 +79,11 @@ pub fn show_help() {
 pub fn help_domain(cmd: &str) {
     eprintln!("Domain name is required");
     eprintln!("Usage: rvirsh {} <domain>", cmd);
+}
+
+pub fn help_net(cmd: &str) {
+    eprintln!("Network name is required");
+    eprintln!("Usage: rvirsh {} <network>", cmd);
 }
 
 pub fn help_snapshot(cmd: &str) {
