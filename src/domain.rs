@@ -3,6 +3,7 @@ mod domid;
 mod dominfo;
 mod domstate;
 mod domuuid;
+mod dumpxml;
 mod info;
 mod list;
 mod noautostart;
@@ -48,6 +49,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "domstate" => domstate::show_domain_state(&dom),
         "domid" => domid::show_domain_id(&dom),
         "domuuid" => domuuid::show_domain_uuid(&dom),
+        "dumpxml" => dumpxml::show_domain_dumpxml(&dom),
         "info" => info::show_domain_info(&dom),
         "start" => start::create_domain(&dom),
         "shutdown" => shutdown::shutdown_domain(&dom),
