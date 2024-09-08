@@ -34,6 +34,7 @@ pub fn show_help() {
         ["noautostart", "Disable autostart"],
         ["undefine", "Undefine domain"],
         ["dominfo", "Show domain information"],
+        ["domstate", "Show domain state"],
         ["domid", "Show domain id"],
         ["domuuid", "Show domain uuid"],
         ["snapshot-info", "Show snapshot information"],

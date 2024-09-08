@@ -1,6 +1,7 @@
 mod autostart;
 mod domid;
 mod dominfo;
+mod domstate;
 mod domuuid;
 mod info;
 mod list;
@@ -44,6 +45,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "dominfo" => dominfo::show_domain_info(&dom),
+        "domstate" => domstate::show_domain_state(&dom),
         "domid" => domid::show_domain_id(&dom),
         "domuuid" => domuuid::show_domain_uuid(&dom),
         "info" => info::show_domain_info(&dom),

@@ -29,9 +29,8 @@ fn main() {
     let command = command.as_str();
     match command {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
-        | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart" => {
-            domain::main(&settings, command)
-        }
+        | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
+        | "domstate" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
