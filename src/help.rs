@@ -41,6 +41,7 @@ pub fn show_help() {
         ["dumpxml", "Show domain information in XML"],
         ["net-autostart", "Enable net autostart"],
         ["net-noautostart", "Disable net autostart"],
+        ["net-stop", "Stop net"],
         ["net-uuid", "Show net uuid"],
         ["net-info", "Show net information"],
         ["net-dumpxml", "Show net information in XML"],
@@ -78,6 +79,7 @@ pub fn show_help() {
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
     println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
     println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
+    println!("{:<width$} {}", "net-destroy", "Use 'net-stop'");
 }
 
 pub fn help_domain(cmd: &str) {
