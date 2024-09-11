@@ -5,6 +5,7 @@ mod net_list;
 mod net_noautostart;
 mod net_start;
 mod net_stop;
+mod net_undefine;
 mod net_uuid;
 
 use std::env;
@@ -36,6 +37,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "net-autostart" => net_autostart::autostart_net(&net),
         "net-noautostart" => net_noautostart::noautostart_net(&net),
         "net-stop" => net_stop::stop_net(&net),
+        "net-undefine" => net_undefine::undefine_net(&net),
         "net-start" => net_start::start_net(&net),
         "net-uuid" => net_uuid::show_net_uuid(&net),
         "net-info" => net_info::show_net_info(&net),

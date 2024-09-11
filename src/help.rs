@@ -43,6 +43,7 @@ pub fn show_help() {
         ["net-autostart", "Enable net autostart"],
         ["net-noautostart", "Disable net autostart"],
         ["net-stop", "Stop net"],
+        ["net-undefine", "Undefine net"],
         ["net-uuid", "Show net uuid"],
         ["net-info", "Show net information"],
         ["net-dumpxml", "Show net information in XML"],
