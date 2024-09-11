@@ -34,7 +34,7 @@ fn main() {
         | "domstate" | "dumpxml" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
-        | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" => {
+        | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean" => {
             net::main(&settings, command)
         }
         "net-destroy" => println!("'net-destroy' is deprecated. use 'net-stop'"),

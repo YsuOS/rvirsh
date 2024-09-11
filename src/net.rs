@@ -1,4 +1,5 @@
 mod net_autostart;
+mod net_clean;
 mod net_dumpxml;
 mod net_info;
 mod net_list;
@@ -38,6 +39,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "net-noautostart" => net_noautostart::noautostart_net(&net),
         "net-stop" => net_stop::stop_net(&net),
         "net-undefine" => net_undefine::undefine_net(&net),
+        "net-clean" => net_clean::clean_net(&net),
         "net-start" => net_start::start_net(&net),
         "net-uuid" => net_uuid::show_net_uuid(&net),
         "net-info" => net_info::show_net_info(&net),
