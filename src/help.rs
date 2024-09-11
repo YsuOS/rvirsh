@@ -16,6 +16,7 @@ pub fn show_help() {
             "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
         ],
         ["net-list", "List all networks"],
+        ["net-start", "Start network"],
         ["vol-list", "List all volumes"],
         ["vol-delete", "Delete volume"],
         ["snapshot-list", "List domain snapshots"],
