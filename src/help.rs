@@ -4,6 +4,7 @@ pub fn show_help() {
         ["help", "Show this help"],
         ["list", "List all domains"],
         ["info", "Show domain various information"],
+        ["define", "Define domain"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],
@@ -83,6 +84,11 @@ pub fn show_help() {
     println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
     println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
     println!("{:<width$} {}", "net-destroy", "Use 'net-stop'");
+}
+
+pub fn help_domain_xml(cmd: &str) {
+    eprintln!("XML file is required");
+    eprintln!("Usage: rvirsh {} <xml path>", cmd);
 }
 
 pub fn help_domain(cmd: &str) {

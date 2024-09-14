@@ -1,4 +1,5 @@
 mod autostart;
+mod define;
 mod domid;
 mod dominfo;
 mod domstate;
@@ -17,14 +18,14 @@ mod suspend;
 pub mod undefine;
 
 use config::Config;
-use std::env;
+use std::{env, fs::File};
 use virt::{
     connect::Connect,
     domain::Domain,
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::help::help_domain;
+use crate::help::{help_domain, help_domain_xml};
 
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
@@ -32,6 +33,16 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "list" {
         list::list_domain(&conn);
+        return;
+    } else if cmd == "define" {
+        let xml_path = env::args().nth(2);
+        if xml_path.is_none() {
+            help_domain_xml(cmd);
+            return;
+        }
+        let mut xml = File::open(xml_path.unwrap()).unwrap();
+
+        define::define_domain(&conn, &mut xml);
         return;
     }
 
