@@ -1,5 +1,6 @@
 mod pool_autostart;
 mod pool_clean;
+mod pool_define;
 mod pool_delete;
 mod pool_dumpxml;
 mod pool_info;
@@ -11,9 +12,9 @@ mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
-use crate::help::help_pool;
+use crate::help::{help_pool, help_xml};
 use config::Config;
-use std::env;
+use std::{env, fs::File};
 use virt::{connect::Connect, storage_pool::StoragePool};
 
 pub fn main(settings: &Config, cmd: &str) {
@@ -22,6 +23,15 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "pool-list" {
         pool_list::list_pool(&conn);
+        return;
+    } else if cmd == "pool-define" {
+        let xml_path = env::args().nth(2);
+        if xml_path.is_none() {
+            help_xml(cmd);
+            return;
+        }
+        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        pool_define::define_pool(&conn, &mut xml);
         return;
     }
 
