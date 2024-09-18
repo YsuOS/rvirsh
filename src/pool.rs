@@ -1,5 +1,6 @@
 mod pool_autostart;
 mod pool_clean;
+mod pool_create;
 mod pool_define;
 mod pool_delete;
 mod pool_dumpxml;
@@ -24,14 +25,18 @@ pub fn main(settings: &Config, cmd: &str) {
     if cmd == "pool-list" {
         pool_list::list_pool(&conn);
         return;
-    } else if cmd == "pool-define" {
+    } else if cmd == "pool-define" || cmd == "pool-create" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_xml(cmd);
             return;
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
-        pool_define::define_pool(&conn, &mut xml);
+        if cmd == "pool-define" {
+            pool_define::define_pool(&conn, &mut xml);
+        } else if cmd == "pool-create" {
+            pool_create::create_pool(&conn, &mut xml);
+        }
         return;
     }
 

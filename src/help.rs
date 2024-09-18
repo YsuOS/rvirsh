@@ -26,6 +26,7 @@ pub fn show_help() {
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-define", "Define pool"],
+        ["pool-create", "Create and run pool"],
         ["pool-start", "Start pool"],
         ["pool-list", "List all pools"],
         [
