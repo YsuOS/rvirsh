@@ -12,6 +12,7 @@ mod poweroff;
 mod reboot;
 mod reset;
 mod resume;
+mod run;
 mod shutdown;
 mod start;
 mod suspend;
@@ -34,7 +35,7 @@ pub fn main(settings: &Config, cmd: &str) {
     if cmd == "list" {
         list::list_domain(&conn);
         return;
-    } else if cmd == "define" {
+    } else if cmd == "define" || cmd == "run" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_domain_xml(cmd);
@@ -42,7 +43,11 @@ pub fn main(settings: &Config, cmd: &str) {
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
 
-        define::define_domain(&conn, &mut xml);
+        if cmd == "define" {
+            define::define_domain(&conn, &mut xml);
+        } else if cmd == "run" {
+            run::run_domain(&conn, &mut xml);
+        }
         return;
     }
 

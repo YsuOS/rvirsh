@@ -31,7 +31,7 @@ fn main() {
     match command {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" => domain::main(&settings, command),
+        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean" => {

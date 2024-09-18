@@ -5,6 +5,7 @@ pub fn show_help() {
         ["list", "List all domains"],
         ["info", "Show domain various information"],
         ["define", "Define domain"],
+        ["run", "Create and run domain"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],
@@ -80,6 +81,7 @@ pub fn show_help() {
     }
 
     println!("\nDeprecated Command:");
+    println!("{:<width$} {}", "create", "Use 'run'");
     println!("{:<width$} {}", "destroy", "Use 'poweroff'");
     println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
     println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
