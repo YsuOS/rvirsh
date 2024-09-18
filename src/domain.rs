@@ -26,7 +26,7 @@ use virt::{
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::help::{help_domain, help_domain_xml};
+use crate::help::{help_domain, help_xml};
 
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
@@ -38,7 +38,7 @@ pub fn main(settings: &Config, cmd: &str) {
     } else if cmd == "define" || cmd == "run" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
-            help_domain_xml(cmd);
+            help_xml(cmd);
             return;
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();

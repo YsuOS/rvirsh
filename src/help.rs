@@ -88,7 +88,7 @@ pub fn show_help() {
     println!("{:<width$} {}", "net-destroy", "Use 'net-stop'");
 }
 
-pub fn help_domain_xml(cmd: &str) {
+pub fn help_xml(cmd: &str) {
     eprintln!("XML file is required");
     eprintln!("Usage: rvirsh {} <xml path>", cmd);
 }
