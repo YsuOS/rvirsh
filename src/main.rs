@@ -39,7 +39,7 @@ fn main() {
         }
         "net-destroy" => println!("'net-destroy' is deprecated. use 'net-stop'"),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
-        | "vol-pool" | "vol-wipe" => volume::main(&settings, command),
+        | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
         | "snapshot-dumpxml" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"

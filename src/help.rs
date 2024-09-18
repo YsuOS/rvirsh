@@ -21,6 +21,7 @@ pub fn show_help() {
         ["net-start", "Start network"],
         ["net-clean", "Run `net-stop` and `net-undefine`"],
         ["vol-list", "List all volumes"],
+        ["vol-create", "Create volume"],
         ["vol-delete", "Delete volume"],
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],

@@ -1,3 +1,4 @@
+mod vol_create;
 pub mod vol_delete;
 mod vol_dumpxml;
 mod vol_info;
@@ -7,9 +8,9 @@ mod vol_path;
 mod vol_pool;
 mod vol_wipe;
 
-use crate::help::help_volume;
+use crate::help::{help_volume, help_xml};
 use config::Config;
-use std::env;
+use std::{env, fs::File};
 use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol};
 
 pub fn main(settings: &Config, cmd: &str) {
@@ -34,6 +35,16 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "vol-list" {
         vol_list::list_volume(&pool);
+        return;
+    } else if cmd == "vol-create" {
+        let xml_path = env::args().nth(2);
+        if xml_path.is_none() {
+            help_xml(cmd);
+            return;
+        }
+        let mut xml = File::open(xml_path.unwrap()).unwrap();
+
+        vol_create::create_vol(&pool, &mut xml);
         return;
     }
 
