@@ -44,7 +44,7 @@ fn main() {
         | "snapshot-dumpxml" => snapshot::main(&settings, command),
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
         | "pool-undefine" | "pool-clean" | "pool-autostart" | "pool-noautostart"
-        | "pool-dumpxml" => pool::main(&settings, command),
+        | "pool-dumpxml" | "pool-start" | "pool-define" => pool::main(&settings, command),
         "pool-destroy" => println!("'pool-destroy' is deprecated. use 'pool-stop'"),
         "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),

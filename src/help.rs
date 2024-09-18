@@ -25,6 +25,8 @@ pub fn show_help() {
         ["vol-delete", "Delete volume"],
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-delete", "Delete a domain snapshots"],
+        ["pool-define", "Define pool"],
+        ["pool-start", "Start pool"],
         ["pool-list", "List all pools"],
         [
             "pool-clean",
