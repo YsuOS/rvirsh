@@ -6,6 +6,7 @@ mod pool_info;
 mod pool_list;
 mod pool_noautostart;
 pub mod pool_refresh;
+mod pool_start;
 mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
@@ -35,6 +36,7 @@ pub fn main(settings: &Config, cmd: &str) {
 
     match cmd {
         "pool-info" => pool_info::show_pool_info(&pool),
+        "pool-start" => pool_start::start_pool(&pool),
         "pool-stop" => pool_stop::stop_pool(&pool),
         "pool-refresh" => pool_refresh::refresh_pool(&pool),
         "pool-uuid" => pool_uuid::show_pool_uuid(&pool),
