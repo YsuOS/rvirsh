@@ -19,6 +19,8 @@ pub fn show_help() {
         ],
         ["net-list", "List all networks"],
         ["net-start", "Start network"],
+        ["net-create", "Create and run network"],
+        ["net-define", "Define network"],
         ["net-clean", "Run `net-stop` and `net-undefine`"],
         ["vol-list", "List all volumes"],
         ["vol-create", "Create volume"],

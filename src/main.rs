@@ -34,9 +34,8 @@ fn main() {
         | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, command),
         "delete" => delete::main(&settings),
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
-        | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean" => {
-            net::main(&settings, command)
-        }
+        | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
+        | "net-define" | "net-create" => net::main(&settings, command),
         "net-destroy" => println!("'net-destroy' is deprecated. use 'net-stop'"),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, command),
