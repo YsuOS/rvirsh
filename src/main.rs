@@ -40,7 +40,7 @@ fn main() {
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
         | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, command),
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
-        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-set" | "snapshot-create" => {
+        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
             snapshot::main(&settings, command)
         }
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"

@@ -28,7 +28,7 @@ pub fn show_help() {
         ["snapshot-create", "Create and run domain snapshot"],
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-current", "Get current snapshot on the domain"],
-        ["snapshot-set", "Set snapshot on the domain"],
+        ["snapshot-revert", "Set and revert snapshot on the domain"],
         ["snapshot-delete", "Delete a domain snapshots"],
         ["pool-define", "Define pool"],
         ["pool-create", "Create and run pool"],

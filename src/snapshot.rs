@@ -9,7 +9,7 @@ mod snapshot_dumpxml;
 mod snapshot_info;
 mod snapshot_list;
 mod snapshot_parent;
-mod snapshot_set;
+mod snapshot_revert;
 
 use crate::help::{help_domain, help_snapshot};
 
@@ -53,7 +53,7 @@ pub fn main(settings: &Config, cmd: &str) {
     // snapshot-(parent|dumpxml) does not require Domain, but it is needed to specify the snapshot
     match cmd {
         "snapshot-info" => snapshot_info::show_snapshot_info(&dom, &snapshot),
-        "snapshot-set" => snapshot_set::set_snapshot(&dom, &snapshot),
+        "snapshot-revert" => snapshot_revert::revert_snapshot(&dom, &snapshot),
         "snapshot-parent" => snapshot_parent::show_snapshot_parent(&snapshot),
         "snapshot-dumpxml" => snapshot_dumpxml::show_snapshot_dumpxml(&snapshot),
         _ => eprintln!("{} is not supported", cmd),
