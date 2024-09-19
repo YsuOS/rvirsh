@@ -2,6 +2,7 @@ use config::Config;
 use std::env;
 use virt::{connect::Connect, domain::Domain, domain_snapshot::DomainSnapshot};
 
+mod snapshot_current;
 pub mod snapshot_delete;
 mod snapshot_dumpxml;
 mod snapshot_info;
@@ -28,6 +29,9 @@ pub fn main(settings: &Config, cmd: &str) {
         return;
     } else if cmd == "snapshot-list" {
         snapshot_list::list_snapshots(&dom);
+        return;
+    } else if cmd == "snapshot-current" {
+        snapshot_current::get_current_snapshot(&dom);
         return;
     }
 
