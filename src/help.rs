@@ -25,6 +25,7 @@ pub fn show_help() {
         ["vol-list", "List all volumes"],
         ["vol-create", "Create volume"],
         ["vol-delete", "Delete volume"],
+        ["snapshot-create", "Create and run domain snapshot"],
         ["snapshot-list", "List domain snapshots"],
         ["snapshot-current", "Get current snapshot on the domain"],
         ["snapshot-set", "Set snapshot on the domain"],

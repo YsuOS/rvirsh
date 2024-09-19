@@ -2,6 +2,7 @@ use config::Config;
 use std::env;
 use virt::{connect::Connect, domain::Domain, domain_snapshot::DomainSnapshot};
 
+mod snapshot_create;
 mod snapshot_current;
 pub mod snapshot_delete;
 mod snapshot_dumpxml;
@@ -33,6 +34,10 @@ pub fn main(settings: &Config, cmd: &str) {
         return;
     } else if cmd == "snapshot-current" {
         snapshot_current::get_current_snapshot(&dom);
+        return;
+    } else if cmd == "snapshot-create" {
+        // TODO: snapshot name can be specified now
+        snapshot_create::create_snapshot(&dom);
         return;
     }
 
