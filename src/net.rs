@@ -1,5 +1,7 @@
 mod net_autostart;
 mod net_clean;
+mod net_create;
+mod net_define;
 mod net_dumpxml;
 mod net_info;
 mod net_list;
@@ -9,12 +11,12 @@ mod net_stop;
 mod net_undefine;
 mod net_uuid;
 
-use std::env;
+use std::{env, fs::File};
 
 use config::Config;
 use virt::{connect::Connect, network::Network};
 
-use crate::help::help_net;
+use crate::help::{help_net, help_xml};
 
 pub fn main(settings: &Config, cmd: &str) {
     let uri = settings.get_string("URI").unwrap();
@@ -22,6 +24,19 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "net-list" {
         net_list::list_net(&conn);
+        return;
+    } else if cmd == "net-define" || cmd == "net-create" {
+        let xml_path = env::args().nth(2);
+        if xml_path.is_none() {
+            help_xml(cmd);
+            return;
+        }
+        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        if cmd == "net-define" {
+            net_define::define_net(&conn, &mut xml);
+        } else if cmd == "net-create" {
+            net_create::create_net(&conn, &mut xml);
+        }
         return;
     }
 
