@@ -11,13 +11,21 @@ mod version;
 mod volume;
 
 use config::Config;
-use std::env;
+use std::{env, path::PathBuf};
 
 fn main() {
     let command: Option<String> = env::args().nth(1);
 
+    let home_dir = home::home_dir().unwrap();
+    let mut config_file = home_dir.join(".config/rvirsh/default.toml");
+
+    if !config_file.exists() {
+        // Use default.toml in project root dir
+        config_file = PathBuf::from("default.toml");
+    }
+
     let settings = Config::builder()
-        .add_source(config::File::with_name("default"))
+        .add_source(config::File::with_name(config_file.to_str().unwrap()))
         .build()
         .unwrap();
 
