@@ -95,6 +95,7 @@ pub fn show_help() {
     println!("{:<width$} {}", "nodeinfo", "Use 'hostinfo'");
     println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
     println!("{:<width$} {}", "net-destroy", "Use 'net-stop'");
+    println!();
 }
 
 pub fn help_xml(cmd: &str) {

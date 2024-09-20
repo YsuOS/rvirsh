@@ -10,59 +10,87 @@ mod uri;
 mod version;
 mod volume;
 
+use anyhow::{anyhow, bail, Result};
 use config::Config;
 use std::{env, path::PathBuf};
 
-fn main() {
-    let command: Option<String> = env::args().nth(1);
+fn run() -> Result<()> {
+    let command = get_command()?;
+    let config_file = get_config_file()?;
+    let settings = get_settings(&config_file)?;
 
-    let home_dir = home::home_dir().unwrap();
-    let mut config_file = home_dir.join(".config/rvirsh/default.toml");
-
-    if !config_file.exists() {
-        // Use default.toml in project root dir
-        config_file = PathBuf::from("default.toml");
-    }
-
-    let settings = Config::builder()
-        .add_source(config::File::with_name(config_file.to_str().unwrap()))
-        .build()
-        .unwrap();
-
-    if command.is_none() {
-        println!("1st argument is required");
-        help::show_help();
-    }
-
-    let command = command.unwrap();
-    let command = command.as_str();
-    match command {
+    match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, command),
+        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command),
         "delete" => delete::main(&settings),
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
-        | "net-define" | "net-create" => net::main(&settings, command),
-        "net-destroy" => println!("'net-destroy' is deprecated. use 'net-stop'"),
+        | "net-define" | "net-create" => net::main(&settings, &command),
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
-        | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, command),
+        | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, &command),
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
         | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
-            snapshot::main(&settings, command)
+            snapshot::main(&settings, &command)
         }
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
         | "pool-undefine" | "pool-clean" | "pool-autostart" | "pool-noautostart"
         | "pool-dumpxml" | "pool-start" | "pool-define" | "pool-create" => {
-            pool::main(&settings, command)
+            pool::main(&settings, &command)
         }
-        "pool-destroy" => println!("'pool-destroy' is deprecated. use 'pool-stop'"),
-        "destroy" => println!("'destroy' is deprecated. use 'poweroff'"),
         "version" => version::main(&settings),
         "hostname" => hostname::main(&settings),
-        "nodeinfo" => println!("'nodeinfo' is deprecated. use 'hostinfo'"),
         "hostinfo" => hostinfo::main(&settings),
         "uri" => uri::main(&settings),
-        _ => help::show_help(),
+        "nodeinfo" => bail!("'nodeinfo' is deprecated. use 'hostinfo'"),
+        "net-destroy" => bail!("'net-destroy' is deprecated. use 'net-stop'"),
+        "pool-destroy" => bail!("'pool-destroy' is deprecated. use 'pool-stop'"),
+        "destroy" => bail!("'destroy' is deprecated. use 'poweroff'"),
+        "help" => help::show_help(),
+        _ => {
+            help::show_help();
+            bail!(
+                "Command {} is not supported.\n\
+                Run 'rv help' to see commands",
+                &command
+            );
+        }
     };
+    Ok(())
+}
+
+fn get_command() -> Result<String> {
+    let command = env::args().nth(1).ok_or_else(|| {
+        anyhow!(
+            "1st argument is required\n\
+            Run 'rv help' to see commands"
+        )
+    })?;
+    Ok(command)
+}
+
+fn get_config_file() -> Result<PathBuf> {
+    let home_dir = home::home_dir().ok_or_else(|| anyhow!("Failed to locate home directory"))?;
+    let config_file = home_dir.join(".config/rvirsh/default.toml");
+    // if it does not exist, use default.toml in project root dir
+    if config_file.exists() {
+        Ok(config_file)
+    } else {
+        Ok(PathBuf::from("default.toml"))
+    }
+}
+
+fn get_settings(config_file: &PathBuf) -> Result<Config> {
+    let settings = Config::builder()
+        .add_source(config::File::with_name(
+            config_file
+                .to_str()
+                .ok_or_else(|| anyhow!("Invalid config file path"))?,
+        ))
+        .build()?;
+    Ok(settings)
+}
+
+fn main() -> Result<()> {
+    run()
 }
