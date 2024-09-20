@@ -1,6 +1,8 @@
-# rvirsh
+# rvirsh(rv)
 
 `rvirsh` is a Rust-based virtual machine management tool built using the `libvirt-rs` library. It reimplements the functionality of the `virsh` command, providing simple and efficient virtualization operations in Rust.
+
+To avoid using complex arguments, `rvirsh` reads default configuration from `$HOME/.config/rvirsh/default.toml` or `./default.toml` (if it does not exists).
 
 ## Installation
 
@@ -27,36 +29,36 @@
 
 ## Usage
 
-`rvirsh` provides commands similar to those found in `virsh`. Below are some basic examples. Please run `rvirsh help` to see which commands are supported.
+`rvirsh` provides commands similar to those found in `virsh`. Below are some basic examples. Please run `rv help` to see which commands are supported.
 
 ### List all virtual machines
 
 ```bash
-rvirsh list --all
+rv list
 ```
 
 ### Start a virtual machine
 
 ```bash
-rvirsh start <vm-name>
+rv start <vm-name>
 ```
 
 ### Shut down a virtual machine
 
 ```bash
-rvirsh shutdown <vm-name>
+rv shutdown <vm-name>
 ```
 
 ### Display information about a virtual machine
 
 ```bash
-rvirsh dominfo <vm-name>
+rv dominfo <vm-name>
 ```
 
 ### Show detailed configuration of a virtual machine
 
 ```bash
-rvirsh dumpxml <vm-name>
+rv dumpxml <vm-name>
 ```
 
 ## Development
