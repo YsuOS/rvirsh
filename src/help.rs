@@ -79,7 +79,7 @@ pub fn show_help() {
         ["pool-dumpxml", "Show pool information in XML"],
     ];
 
-    println!("Usage: rvirsh [COMMAND]");
+    println!("Usage: rv [COMMAND]");
     println!("\nMain Commands:");
     for h in main_helps {
         println!("{:<width$} {}", h[0], h[1]);
@@ -99,35 +99,35 @@ pub fn show_help() {
 
 pub fn help_xml(cmd: &str) {
     eprintln!("XML file is required");
-    eprintln!("Usage: rvirsh {} <xml path>", cmd);
+    eprintln!("Usage: rv {} <xml path>", cmd);
 }
 
 pub fn help_domain(cmd: &str) {
     eprintln!("Domain name is required");
-    eprintln!("Usage: rvirsh {} <domain>", cmd);
+    eprintln!("Usage: rv {} <domain>", cmd);
 }
 
 pub fn help_net(cmd: &str) {
     eprintln!("Network name is required");
-    eprintln!("Usage: rvirsh {} <network>", cmd);
+    eprintln!("Usage: rv {} <network>", cmd);
 }
 
 pub fn help_snapshot(cmd: &str) {
     eprintln!("Domain name and snapshot name are required");
-    eprintln!("Usage: rvirsh {} <domain> <snapshot>", cmd);
+    eprintln!("Usage: rv {} <domain> <snapshot>", cmd);
 }
 pub fn help_volume(cmd: &str) {
     eprintln!("Volume name is required");
-    eprintln!("Usage: rvirsh {} <volume>", cmd);
+    eprintln!("Usage: rv {} <volume>", cmd);
 }
 
 // For vol-pool
 pub fn help_volume_path(cmd: &str) {
     eprintln!("Volume path is required");
-    eprintln!("Usage: rvirsh {} <volume path>", cmd);
+    eprintln!("Usage: rv {} <volume path>", cmd);
 }
 
 pub fn help_pool(cmd: &str) {
     eprintln!("Pool name is required");
-    eprintln!("Usage: rvirsh {} <pool>", cmd);
+    eprintln!("Usage: rv {} <pool>", cmd);
 }

@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "rv"
+path = "src/main.rs"
+
 [dependencies]
 virt = { git = "https://gitlab.com/ryasuoka/libvirt-rust.git", branch="dev" }
 config = "0.14.0"
