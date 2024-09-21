@@ -8,20 +8,26 @@ To avoid using complex arguments, `rvirsh` reads default configuration from `$HO
 
 1. Ensure that Rust is installed on your system. If not, install it from the [official Rust website](https://www.rust-lang.org/tools/install).
 
-2. Clone the `rvirsh` repository:
+2. Ensure that `libvirt-dev` or `libvirt-devel` is installed on your system. Otherwise, compile will be fail. If not, install it with the following command (in Fedora/RHEL).
+
+   ```bash
+   dnf install libvirt-devel
+   ```
+
+3. Clone the `rvirsh` repository:
 
    ```bash
    git clone https://github.com/your-username/rvirsh.git
    ```
 
-3. Navigate to the project directory and build it using Cargo:
+4. Navigate to the project directory and build it using Cargo:
 
    ```bash
    cd rvirsh
    cargo build --release
    ```
 
-4. Install the binary:
+5. Install the binary:
 
    ```bash
    cargo install --path .
