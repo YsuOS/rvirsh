@@ -20,16 +20,13 @@ pub mod undefine;
 
 use anyhow::Result;
 use config::Config;
-use std::{env, fs::File};
+use std::env;
 use virt::{
     domain::Domain,
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::{
-    get_conn,
-    help::{help_domain, help_xml},
-};
+use crate::{get_conn, get_xml, help::help_domain};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -38,12 +35,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         list::list_domain(&conn);
         return Ok(());
     } else if cmd == "define" || cmd == "run" {
-        let xml_path = env::args().nth(2);
-        if xml_path.is_none() {
-            help_xml(cmd);
-            return Ok(());
-        }
-        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        let mut xml = get_xml(cmd)?;
 
         if cmd == "define" {
             define::define_domain(&conn, &mut xml);

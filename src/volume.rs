@@ -8,13 +8,10 @@ mod vol_path;
 mod vol_pool;
 mod vol_wipe;
 
-use crate::{
-    get_conn,
-    help::{help_volume, help_xml},
-};
+use crate::{get_conn, get_xml, help::help_volume};
 use anyhow::Result;
 use config::Config;
-use std::{env, fs::File};
+use std::env;
 use virt::{storage_pool::StoragePool, storage_vol::StorageVol};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
@@ -40,12 +37,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         vol_list::list_volume(&pool);
         return Ok(());
     } else if cmd == "vol-create" {
-        let xml_path = env::args().nth(2);
-        if xml_path.is_none() {
-            help_xml(cmd);
-            return Ok(());
-        }
-        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        let mut xml = get_xml(cmd)?;
 
         vol_create::create_vol(&pool, &mut xml);
         return Ok(());

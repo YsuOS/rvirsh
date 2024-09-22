@@ -10,9 +10,9 @@ mod uri;
 mod version;
 mod volume;
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{anyhow, bail, Ok, Result};
 use config::Config;
-use std::{env, path::PathBuf};
+use std::{env, fs::File, path::PathBuf};
 use virt::connect::Connect;
 
 fn run() -> Result<()> {
@@ -106,4 +106,11 @@ fn get_conn(settings: &Config) -> Result<Connect> {
     let uri = settings.get_string("URI")?;
     let conn = Connect::open(Some(&uri))?;
     Ok(conn)
+}
+
+fn get_xml(cmd: &str) -> Result<File> {
+    let xml_path = env::args()
+        .nth(2)
+        .ok_or_else(|| anyhow!("XML file is required\nUsage: rv {} <xml path>", cmd))?;
+    Ok(File::open(xml_path)?)
 }

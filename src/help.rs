@@ -101,11 +101,6 @@ pub fn show_help() -> Result<()> {
     Ok(())
 }
 
-pub fn help_xml(cmd: &str) {
-    eprintln!("XML file is required");
-    eprintln!("Usage: rv {} <xml path>", cmd);
-}
-
 pub fn help_domain(cmd: &str) {
     eprintln!("Domain name is required");
     eprintln!("Usage: rv {} <domain>", cmd);

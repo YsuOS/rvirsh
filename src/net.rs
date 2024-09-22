@@ -11,16 +11,13 @@ mod net_stop;
 mod net_undefine;
 mod net_uuid;
 
-use std::{env, fs::File};
+use std::env;
 
 use anyhow::Result;
 use config::Config;
 use virt::network::Network;
 
-use crate::{
-    get_conn,
-    help::{help_net, help_xml},
-};
+use crate::{get_conn, get_xml, help::help_net};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -29,12 +26,8 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         net_list::list_net(&conn);
         return Ok(());
     } else if cmd == "net-define" || cmd == "net-create" {
-        let xml_path = env::args().nth(2);
-        if xml_path.is_none() {
-            help_xml(cmd);
-            return Ok(());
-        }
-        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        let mut xml = get_xml(cmd)?;
+
         if cmd == "net-define" {
             net_define::define_net(&conn, &mut xml);
         } else if cmd == "net-create" {

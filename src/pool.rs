@@ -13,13 +13,10 @@ mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
-use crate::{
-    get_conn,
-    help::{help_pool, help_xml},
-};
+use crate::{get_conn, get_xml, help::help_pool};
 use anyhow::Result;
 use config::Config;
-use std::{env, fs::File};
+use std::env;
 use virt::storage_pool::StoragePool;
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
@@ -29,12 +26,8 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         pool_list::list_pool(&conn);
         return Ok(());
     } else if cmd == "pool-define" || cmd == "pool-create" {
-        let xml_path = env::args().nth(2);
-        if xml_path.is_none() {
-            help_xml(cmd);
-            return Ok(());
-        }
-        let mut xml = File::open(xml_path.unwrap()).unwrap();
+        let mut xml = get_xml(cmd)?;
+
         if cmd == "pool-define" {
             pool_define::define_pool(&conn, &mut xml);
         } else if cmd == "pool-create" {
