@@ -71,13 +71,19 @@ fn get_command() -> Result<String> {
 }
 
 fn get_config_file() -> Result<PathBuf> {
-    let home_dir = home::home_dir().ok_or_else(|| anyhow!("Failed to locate home directory"))?;
-    let config_file = home_dir.join(".config/rvirsh/default.toml");
-    // if it does not exist, use default.toml in project root dir
-    if config_file.exists() {
-        Ok(config_file)
+    if cfg!(debug_assertions) {
+        let config_file = env!("CARGO_MANIFEST_DIR").to_string() + "/default.toml";
+        println!("Using {}", config_file);
+        Ok(PathBuf::from(config_file))
     } else {
-        Ok(PathBuf::from("default.toml"))
+        let home_dir =
+            home::home_dir().ok_or_else(|| anyhow!("Failed to locate home directory"))?;
+        let config_file = home_dir.join(".config/rvirsh/default.toml");
+        if config_file.exists() {
+            Ok(config_file)
+        } else {
+            bail!("Failed to locate config file; {:?}", config_file)
+        }
     }
 }
 
