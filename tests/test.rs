@@ -38,3 +38,13 @@ fn version() {
 }
 
 //TODO: Need test for get_config_file
+
+#[test]
+fn list() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("list")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Instance Name        State"));
+}
