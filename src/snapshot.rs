@@ -1,6 +1,7 @@
+use anyhow::Result;
 use config::Config;
 use std::env;
-use virt::{connect::Connect, domain::Domain, domain_snapshot::DomainSnapshot};
+use virt::{domain::Domain, domain_snapshot::DomainSnapshot};
 
 mod snapshot_create;
 mod snapshot_current;
@@ -11,16 +12,18 @@ mod snapshot_list;
 mod snapshot_parent;
 mod snapshot_revert;
 
-use crate::help::{help_domain, help_snapshot};
+use crate::{
+    get_conn,
+    help::{help_domain, help_snapshot},
+};
 
-pub fn main(settings: &Config, cmd: &str) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     let dom_name = env::args().nth(2);
     if dom_name.is_none() {
         help_domain(cmd);
-        return;
+        return Ok(());
     }
 
     let dom_name = dom_name.unwrap();
@@ -28,23 +31,23 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "snapshot-delete" {
         snapshot_delete::delete_all_snapshots(&dom);
-        return;
+        return Ok(());
     } else if cmd == "snapshot-list" {
         snapshot_list::list_snapshots(&dom);
-        return;
+        return Ok(());
     } else if cmd == "snapshot-current" {
         snapshot_current::get_current_snapshot(&dom);
-        return;
+        return Ok(());
     } else if cmd == "snapshot-create" {
         // TODO: snapshot name can be specified now
         snapshot_create::create_snapshot(&dom);
-        return;
+        return Ok(());
     }
 
     let snapshot_name = env::args().nth(3);
     if snapshot_name.is_none() {
         help_snapshot(cmd);
-        return;
+        return Ok(());
     }
 
     let snapshot_name = snapshot_name.unwrap();
@@ -58,4 +61,5 @@ pub fn main(settings: &Config, cmd: &str) {
         "snapshot-dumpxml" => snapshot_dumpxml::show_snapshot_dumpxml(&snapshot),
         _ => eprintln!("{} is not supported", cmd),
     }
+    Ok(())
 }

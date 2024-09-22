@@ -18,28 +18,30 @@ mod start;
 mod suspend;
 pub mod undefine;
 
+use anyhow::Result;
 use config::Config;
 use std::{env, fs::File};
 use virt::{
-    connect::Connect,
     domain::Domain,
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::help::{help_domain, help_xml};
+use crate::{
+    get_conn,
+    help::{help_domain, help_xml},
+};
 
-pub fn main(settings: &Config, cmd: &str) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     if cmd == "list" {
         list::list_domain(&conn);
-        return;
+        return Ok(());
     } else if cmd == "define" || cmd == "run" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_xml(cmd);
-            return;
+            return Ok(());
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
 
@@ -48,13 +50,13 @@ pub fn main(settings: &Config, cmd: &str) {
         } else if cmd == "run" {
             run::run_domain(&conn, &mut xml);
         }
-        return;
+        return Ok(());
     }
 
     let dom_name = env::args().nth(2);
     if dom_name.is_none() {
         help_domain(cmd);
-        return;
+        return Ok(());
     }
 
     let dom_name = dom_name.unwrap();
@@ -79,6 +81,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "noautostart" => noautostart::noautostart_domain(&dom),
         _ => eprintln!("{} is not supported", cmd),
     }
+    Ok(())
 }
 
 pub fn get_state_str(dom: &Domain) -> &str {

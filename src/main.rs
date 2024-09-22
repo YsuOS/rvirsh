@@ -13,13 +13,14 @@ mod volume;
 use anyhow::{anyhow, bail, Result};
 use config::Config;
 use std::{env, path::PathBuf};
+use virt::connect::Connect;
 
 fn run() -> Result<()> {
     let command = get_command()?;
     let config_file = get_config_file()?;
     let settings = get_settings(&config_file)?;
 
-    match command.as_str() {
+    let _ = match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
         | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command),
@@ -48,7 +49,7 @@ fn run() -> Result<()> {
         "destroy" => bail!("'destroy' is deprecated. use 'poweroff'"),
         "help" => help::show_help(),
         _ => {
-            help::show_help();
+            let _ = help::show_help();
             bail!(
                 "Command {} is not supported.\n\
                 Run 'rv help' to see commands",
@@ -93,4 +94,10 @@ fn get_settings(config_file: &PathBuf) -> Result<Config> {
 
 fn main() -> Result<()> {
     run()
+}
+
+fn get_conn(settings: &Config) -> Result<Connect> {
+    let uri = settings.get_string("URI")?;
+    let conn = Connect::open(Some(&uri))?;
+    Ok(conn)
 }

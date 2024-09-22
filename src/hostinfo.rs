@@ -1,9 +1,10 @@
+use anyhow::Result;
 use config::Config;
-use virt::connect::Connect;
 
-pub fn main(settings: &Config) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+use crate::get_conn;
+
+pub fn main(settings: &Config) -> Result<()> {
+    let conn = get_conn(settings)?;
     let nodeinfo = conn.get_node_info().unwrap();
 
     println!("{:<20} {}", "CPU model:", nodeinfo.model);
@@ -14,4 +15,5 @@ pub fn main(settings: &Config) {
     println!("{:<20} {}", "Thread(s) per core:", nodeinfo.threads);
     println!("{:<20} {}", "NUMA cell(s):", nodeinfo.nodes);
     println!("{:<20} {} KiB", "Memory size:", nodeinfo.memory);
+    Ok(())
 }

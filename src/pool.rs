@@ -13,23 +13,26 @@ mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
-use crate::help::{help_pool, help_xml};
+use crate::{
+    get_conn,
+    help::{help_pool, help_xml},
+};
+use anyhow::Result;
 use config::Config;
 use std::{env, fs::File};
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::storage_pool::StoragePool;
 
-pub fn main(settings: &Config, cmd: &str) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     if cmd == "pool-list" {
         pool_list::list_pool(&conn);
-        return;
+        return Ok(());
     } else if cmd == "pool-define" || cmd == "pool-create" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_xml(cmd);
-            return;
+            return Ok(());
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
         if cmd == "pool-define" {
@@ -37,13 +40,13 @@ pub fn main(settings: &Config, cmd: &str) {
         } else if cmd == "pool-create" {
             pool_create::create_pool(&conn, &mut xml);
         }
-        return;
+        return Ok(());
     }
 
     let pool_name = env::args().nth(2);
     if pool_name.is_none() {
         help_pool(cmd);
-        return;
+        return Ok(());
     }
 
     let pool_name = pool_name.unwrap();
@@ -63,4 +66,5 @@ pub fn main(settings: &Config, cmd: &str) {
         "pool-dumpxml" => pool_dumpxml::show_pool_dumpxml(&pool),
         _ => eprintln!("{} is not supported", cmd),
     }
+    Ok(())
 }

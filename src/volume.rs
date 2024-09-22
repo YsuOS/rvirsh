@@ -8,26 +8,29 @@ mod vol_path;
 mod vol_pool;
 mod vol_wipe;
 
-use crate::help::{help_volume, help_xml};
+use crate::{
+    get_conn,
+    help::{help_volume, help_xml},
+};
+use anyhow::Result;
 use config::Config;
 use std::{env, fs::File};
-use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol};
+use virt::{storage_pool::StoragePool, storage_vol::StorageVol};
 
-pub fn main(settings: &Config, cmd: &str) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     if cmd == "vol-pool" {
         let vol_path = env::args().nth(2);
         if vol_path.is_none() {
             crate::help::help_volume_path(cmd);
-            return;
+            return Ok(());
         }
         let vol_path = vol_path.unwrap();
 
         let volume = StorageVol::lookup_by_path(&conn, &vol_path).unwrap();
         vol_pool::show_volume_pool(&volume);
-        return;
+        return Ok(());
     }
 
     let pool_name = settings.get_string("POOL").unwrap();
@@ -35,24 +38,24 @@ pub fn main(settings: &Config, cmd: &str) {
 
     if cmd == "vol-list" {
         vol_list::list_volume(&pool);
-        return;
+        return Ok(());
     } else if cmd == "vol-create" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_xml(cmd);
-            return;
+            return Ok(());
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
 
         vol_create::create_vol(&pool, &mut xml);
-        return;
+        return Ok(());
     }
 
     let vol_name = env::args().nth(2);
 
     if vol_name.is_none() {
         help_volume(cmd);
-        return;
+        return Ok(());
     }
 
     let vol_name = vol_name.unwrap();
@@ -67,4 +70,5 @@ pub fn main(settings: &Config, cmd: &str) {
         "vol-wipe" => vol_wipe::wipe_volume(&pool, &volume),
         _ => eprintln!("{} is not supported", cmd),
     }
+    Ok(())
 }

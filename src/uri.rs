@@ -1,9 +1,11 @@
+use anyhow::Result;
 use config::Config;
-use virt::connect::Connect;
 
-pub fn main(settings: &Config) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+use crate::get_conn;
+
+pub fn main(settings: &Config) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     println!("{}", conn.get_uri().unwrap());
+    Ok(())
 }

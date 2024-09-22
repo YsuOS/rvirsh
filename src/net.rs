@@ -13,23 +13,26 @@ mod net_uuid;
 
 use std::{env, fs::File};
 
+use anyhow::Result;
 use config::Config;
-use virt::{connect::Connect, network::Network};
+use virt::network::Network;
 
-use crate::help::{help_net, help_xml};
+use crate::{
+    get_conn,
+    help::{help_net, help_xml},
+};
 
-pub fn main(settings: &Config, cmd: &str) {
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    let conn = get_conn(settings)?;
 
     if cmd == "net-list" {
         net_list::list_net(&conn);
-        return;
+        return Ok(());
     } else if cmd == "net-define" || cmd == "net-create" {
         let xml_path = env::args().nth(2);
         if xml_path.is_none() {
             help_xml(cmd);
-            return;
+            return Ok(());
         }
         let mut xml = File::open(xml_path.unwrap()).unwrap();
         if cmd == "net-define" {
@@ -37,13 +40,13 @@ pub fn main(settings: &Config, cmd: &str) {
         } else if cmd == "net-create" {
             net_create::create_net(&conn, &mut xml);
         }
-        return;
+        return Ok(());
     }
 
     let net_name = env::args().nth(2);
     if net_name.is_none() {
         help_net(cmd);
-        return;
+        return Ok(());
     }
 
     let net_name = net_name.unwrap();
@@ -61,6 +64,7 @@ pub fn main(settings: &Config, cmd: &str) {
         "net-dumpxml" => net_dumpxml::show_net_dumpxml(&net),
         _ => eprintln!("{} is not supported", cmd),
     }
+    Ok(())
 }
 
 fn get_autostart_str(net: &Network) -> &str {

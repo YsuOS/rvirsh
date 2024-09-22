@@ -1,19 +1,19 @@
+use anyhow::Result;
 use config::Config;
 use std::env;
-use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
+use virt::{domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
-use crate::help::help_domain;
+use crate::{get_conn, help::help_domain};
 
-pub fn main(settings: &Config) {
+pub fn main(settings: &Config) -> Result<()> {
     let dom_name = env::args().nth(2);
 
     if dom_name.is_none() {
         help_domain("delete");
-        return;
+        return Ok(());
     }
 
-    let uri = settings.get_string("URI").unwrap();
-    let conn = Connect::open(Some(&uri)).unwrap();
+    let conn = get_conn(settings)?;
 
     let dom_name = dom_name.unwrap();
     let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
@@ -30,4 +30,5 @@ pub fn main(settings: &Config) {
     let volume = StorageVol::lookup_by_name(&pool, &vol_name).unwrap();
 
     crate::volume::vol_delete::delete_volume(&pool, &volume);
+    Ok(())
 }

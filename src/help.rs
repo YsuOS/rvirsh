@@ -1,4 +1,6 @@
-pub fn show_help() {
+use anyhow::Result;
+
+pub fn show_help() -> Result<()> {
     let width = 20;
     let main_helps: Vec<[&str; 2]> = vec![
         ["help", "Show this help"],
@@ -96,6 +98,7 @@ pub fn show_help() {
     println!("{:<width$} {}", "pool-destroy", "Use 'pool-stop'");
     println!("{:<width$} {}", "net-destroy", "Use 'net-stop'");
     println!();
+    Ok(())
 }
 
 pub fn help_xml(cmd: &str) {
