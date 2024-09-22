@@ -20,13 +20,12 @@ pub mod undefine;
 
 use anyhow::Result;
 use config::Config;
-use std::env;
 use virt::{
     domain::Domain,
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::{get_conn, get_xml, help::help_domain};
+use crate::{get_conn, get_domain, get_xml};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -45,14 +44,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     }
 
-    let dom_name = env::args().nth(2);
-    if dom_name.is_none() {
-        help_domain(cmd);
-        return Ok(());
-    }
-
-    let dom_name = dom_name.unwrap();
-    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
+    let dom = get_domain(&conn, cmd)?;
 
     match cmd {
         "dominfo" => dominfo::show_domain_info(&dom),

@@ -1,22 +1,12 @@
 use anyhow::Result;
 use config::Config;
-use std::env;
-use virt::{domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
+use virt::{storage_pool::StoragePool, storage_vol::StorageVol};
 
-use crate::{get_conn, help::help_domain};
+use crate::{get_conn, get_dom_name, get_domain};
 
-pub fn main(settings: &Config) -> Result<()> {
-    let dom_name = env::args().nth(2);
-
-    if dom_name.is_none() {
-        help_domain("delete");
-        return Ok(());
-    }
-
+pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
-
-    let dom_name = dom_name.unwrap();
-    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
+    let dom = get_domain(&conn, cmd)?;
 
     crate::snapshot::snapshot_delete::delete_all_snapshots(&dom);
 
@@ -26,6 +16,7 @@ pub fn main(settings: &Config) -> Result<()> {
     let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
 
     // TODO: Delete only a volume that matches the domain name
+    let dom_name = get_dom_name(cmd)?;
     let vol_name = dom_name.clone() + ".qcow2";
     let volume = StorageVol::lookup_by_name(&pool, &vol_name).unwrap();
 

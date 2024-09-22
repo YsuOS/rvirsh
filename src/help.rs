@@ -101,11 +101,6 @@ pub fn show_help() -> Result<()> {
     Ok(())
 }
 
-pub fn help_domain(cmd: &str) {
-    eprintln!("Domain name is required");
-    eprintln!("Usage: rv {} <domain>", cmd);
-}
-
 pub fn help_net(cmd: &str) {
     eprintln!("Network name is required");
     eprintln!("Usage: rv {} <network>", cmd);

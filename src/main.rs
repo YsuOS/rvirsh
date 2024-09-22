@@ -13,7 +13,7 @@ mod volume;
 use anyhow::{anyhow, bail, Ok, Result};
 use config::Config;
 use std::{env, fs::File, path::PathBuf};
-use virt::connect::Connect;
+use virt::{connect::Connect, domain::Domain};
 
 fn run() -> Result<()> {
     let command = get_command()?;
@@ -24,7 +24,7 @@ fn run() -> Result<()> {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
         | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command),
-        "delete" => delete::main(&settings),
+        "delete" => delete::main(&settings, &command),
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
         | "net-define" | "net-create" => net::main(&settings, &command),
@@ -112,4 +112,17 @@ fn get_xml(cmd: &str) -> Result<File> {
         .nth(2)
         .ok_or_else(|| anyhow!("XML file is required\nUsage: rv {} <xml path>", cmd))?;
     Ok(File::open(xml_path)?)
+}
+
+fn get_dom_name(cmd: &str) -> Result<String> {
+    let dom_name = env::args()
+        .nth(2)
+        .ok_or_else(|| anyhow!("Domain name is required\nUsage: rv {} <domain>", cmd))?;
+    Ok(dom_name)
+}
+
+fn get_domain(conn: &Connect, cmd: &str) -> Result<Domain> {
+    let dom_name = get_dom_name(cmd)?;
+
+    Ok(Domain::lookup_by_name(&conn, &dom_name)?)
 }

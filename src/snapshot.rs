@@ -1,7 +1,7 @@
 use anyhow::Result;
 use config::Config;
 use std::env;
-use virt::{domain::Domain, domain_snapshot::DomainSnapshot};
+use virt::domain_snapshot::DomainSnapshot;
 
 mod snapshot_create;
 mod snapshot_current;
@@ -12,22 +12,11 @@ mod snapshot_list;
 mod snapshot_parent;
 mod snapshot_revert;
 
-use crate::{
-    get_conn,
-    help::{help_domain, help_snapshot},
-};
+use crate::{get_conn, get_domain, help::help_snapshot};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
-
-    let dom_name = env::args().nth(2);
-    if dom_name.is_none() {
-        help_domain(cmd);
-        return Ok(());
-    }
-
-    let dom_name = dom_name.unwrap();
-    let dom = Domain::lookup_by_name(&conn, &dom_name).unwrap();
+    let dom = get_domain(&conn, cmd)?;
 
     if cmd == "snapshot-delete" {
         snapshot_delete::delete_all_snapshots(&dom);
