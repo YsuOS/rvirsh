@@ -36,3 +36,5 @@ fn version() {
         .stdout(predicate::str::contains("Using Library:"))
         .stdout(predicate::str::contains("Running hypervisor:"));
 }
+
+//TODO: Need test for get_config_file
