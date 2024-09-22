@@ -104,8 +104,7 @@ fn main() -> Result<()> {
 
 fn get_conn(settings: &Config) -> Result<Connect> {
     let uri = settings.get_string("URI")?;
-    let conn = Connect::open(Some(&uri))?;
-    Ok(conn)
+    Ok(Connect::open(Some(&uri))?)
 }
 
 fn get_xml(cmd: &str) -> Result<File> {
