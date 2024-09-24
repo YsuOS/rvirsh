@@ -20,34 +20,34 @@ fn run() -> Result<()> {
     let config_file = get_config_file()?;
     let settings = get_settings(&config_file)?;
 
-    let _ = match command.as_str() {
+    match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command),
-        "delete" => delete::main(&settings, &command),
+        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command)?,
+        "delete" => delete::main(&settings, &command)?,
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
-        | "net-define" | "net-create" => net::main(&settings, &command),
+        | "net-define" | "net-create" => net::main(&settings, &command)?,
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
-        | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, &command),
+        | "vol-pool" | "vol-wipe" | "vol-create" => volume::main(&settings, &command)?,
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
         | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
-            snapshot::main(&settings, &command)
+            snapshot::main(&settings, &command)?
         }
         "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
         | "pool-undefine" | "pool-clean" | "pool-autostart" | "pool-noautostart"
         | "pool-dumpxml" | "pool-start" | "pool-define" | "pool-create" => {
-            pool::main(&settings, &command)
+            pool::main(&settings, &command)?
         }
-        "version" => version::main(&settings),
-        "hostname" => hostname::main(&settings),
-        "hostinfo" => hostinfo::main(&settings),
-        "uri" => uri::main(&settings),
+        "version" => version::main(&settings)?,
+        "hostname" => hostname::main(&settings)?,
+        "hostinfo" => hostinfo::main(&settings)?,
+        "uri" => uri::main(&settings)?,
         "nodeinfo" => bail!("'nodeinfo' is deprecated. use 'hostinfo'"),
         "net-destroy" => bail!("'net-destroy' is deprecated. use 'net-stop'"),
         "pool-destroy" => bail!("'pool-destroy' is deprecated. use 'pool-stop'"),
         "destroy" => bail!("'destroy' is deprecated. use 'poweroff'"),
-        "help" => help::show_help(),
+        "help" => help::show_help()?,
         _ => {
             let _ = help::show_help();
             bail!(
@@ -57,6 +57,7 @@ fn run() -> Result<()> {
             );
         }
     };
+
     Ok(())
 }
 

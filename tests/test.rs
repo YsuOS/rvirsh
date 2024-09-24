@@ -48,3 +48,12 @@ fn list() {
         .success()
         .stdout(predicate::str::contains("Instance Name        State"));
 }
+
+#[test]
+fn info_without_dom() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("info")
+        .assert()
+        .failure();
+}
