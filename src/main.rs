@@ -10,7 +10,7 @@ mod uri;
 mod version;
 mod volume;
 
-use anyhow::{anyhow, bail, Ok, Result};
+use anyhow::{anyhow, bail, Context, Ok, Result};
 use config::Config;
 use std::{env, fs::File, path::PathBuf};
 use virt::{connect::Connect, domain::Domain};
@@ -62,12 +62,10 @@ fn run() -> Result<()> {
 }
 
 fn get_command() -> Result<String> {
-    let command = env::args().nth(1).ok_or_else(|| {
-        anyhow!(
-            "1st argument is required\n\
-            Run 'rv help' to see commands"
-        )
-    })?;
+    let command = env::args().nth(1).context(
+        "1st argument is required\n\
+            Run 'rv help' to see commands",
+    )?;
     Ok(command)
 }
 
@@ -77,8 +75,7 @@ fn get_config_file() -> Result<PathBuf> {
         println!("Using {}", config_file);
         Ok(PathBuf::from(config_file))
     } else {
-        let home_dir =
-            home::home_dir().ok_or_else(|| anyhow!("Failed to locate home directory"))?;
+        let home_dir = home::home_dir().context("Failed to locate home directory")?;
         let config_file = home_dir.join(".config/rvirsh/default.toml");
         if config_file.exists() {
             Ok(config_file)
@@ -91,9 +88,7 @@ fn get_config_file() -> Result<PathBuf> {
 fn get_settings(config_file: &PathBuf) -> Result<Config> {
     let settings = Config::builder()
         .add_source(config::File::with_name(
-            config_file
-                .to_str()
-                .ok_or_else(|| anyhow!("Invalid config file path"))?,
+            config_file.to_str().context("Invalid config file path")?,
         ))
         .build()?;
     Ok(settings)
@@ -111,14 +106,14 @@ fn get_conn(settings: &Config) -> Result<Connect> {
 fn get_xml(cmd: &str) -> Result<File> {
     let xml_path = env::args()
         .nth(2)
-        .ok_or_else(|| anyhow!("XML file is required\nUsage: rv {} <xml path>", cmd))?;
+        .with_context(|| anyhow!("XML file is required\nUsage: rv {} <xml path>", cmd))?;
     Ok(File::open(xml_path)?)
 }
 
 fn get_dom_name(cmd: &str) -> Result<String> {
     let dom_name = env::args()
         .nth(2)
-        .ok_or_else(|| anyhow!("Domain name is required\nUsage: rv {} <domain>", cmd))?;
+        .with_context(|| anyhow!("Domain name is required\nUsage: rv {} <domain>", cmd))?;
     Ok(dom_name)
 }
 
