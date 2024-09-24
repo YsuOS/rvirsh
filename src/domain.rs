@@ -18,6 +18,8 @@ mod start;
 mod suspend;
 pub mod undefine;
 
+use std::{fs::File, io::Read};
+
 use anyhow::Result;
 use config::Config;
 use virt::{
@@ -77,4 +79,10 @@ fn get_state_str(dom: &Domain) -> Result<&str> {
         _ => "-",
     };
     Ok(state)
+}
+
+fn xml_to_string(xml: &mut File) -> Result<String> {
+    let mut content = String::new();
+    xml.read_to_string(&mut content)?;
+    Ok(content)
 }
