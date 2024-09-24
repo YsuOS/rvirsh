@@ -83,7 +83,7 @@ To set up the development environment, follow these steps:
    cargo build
    ```
 
-3. Run tests: (Not introduced yet)
+3. Run tests:
 
    ```bash
    cargo test
