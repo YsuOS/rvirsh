@@ -1,7 +1,8 @@
+use anyhow::Result;
 use virt::domain::Domain;
 
-pub fn show_domain_info(dom: &Domain) {
-    let state = crate::domain::get_state_str(dom);
+pub fn show_domain_info(dom: &Domain) -> Result<()> {
+    let state = crate::domain::get_state_str(dom)?;
     let dominfo = dom.get_info().unwrap();
     let persistent = if dom.is_persistent().unwrap() {
         "yes"
@@ -41,4 +42,5 @@ pub fn show_domain_info(dom: &Domain) {
     //println!("{:<20} {}", "Security DOI:", todo!());
     //println!("{:<20} {}", "Security label:", todo!());
     //println!("{:<20} {}", "Messages:", todo!());
+    Ok(())
 }
