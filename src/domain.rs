@@ -20,7 +20,7 @@ pub mod undefine;
 
 use std::{fs::File, io::Read};
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use config::Config;
 use virt::{
     domain::Domain,
@@ -85,4 +85,9 @@ fn xml_to_string(xml: &mut File) -> Result<String> {
     let mut content = String::new();
     xml.read_to_string(&mut content)?;
     Ok(content)
+}
+
+fn get_id(dom: &Domain) -> Result<u32> {
+    let id = dom.get_id().context("Cannot find ID")?;
+    Ok(id)
 }

@@ -1,7 +1,8 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use virt::domain::Domain;
 
 pub fn show_domain_info(dom: &Domain) -> Result<()> {
+    let id = crate::domain::get_id(dom)?;
     let state = crate::domain::get_state_str(dom)?;
     let dominfo = dom.get_info()?;
     let persistent = if dom.is_persistent()? { "yes" } else { "no" };
@@ -16,7 +17,7 @@ pub fn show_domain_info(dom: &Domain) -> Result<()> {
         "no"
     };
 
-    println!("{:<20} {}", "Id:", dom.get_id().context("Can not find ID")?);
+    println!("{:<20} {}", "Id:", id);
     println!("{:<20} {}", "Name:", dom.get_name()?);
     println!("{:<20} {}", "UUID:", dom.get_uuid_string()?);
     println!("{:<20} {}", "OS Type:", dom.get_os_type()?);

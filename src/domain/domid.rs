@@ -1,7 +1,8 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use virt::domain::Domain;
 
 pub fn show_domain_id(dom: &Domain) -> Result<()> {
-    println!("{}", dom.get_id().context("Can not find ID")?);
+    let id = crate::domain::get_id(dom)?;
+    println!("{}", id);
     Ok(())
 }
