@@ -68,7 +68,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn get_state_str(dom: &Domain) -> Result<&str> {
+fn get_state_str(dom: &Domain) -> Result<&str> {
     let state = match dom.get_state().unwrap() {
         (VIR_DOMAIN_RUNNING, _) => "running",
         (VIR_DOMAIN_PAUSED, _) => "paused",
