@@ -20,7 +20,7 @@ pub mod undefine;
 
 use std::{fs::File, io::Read};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use config::Config;
 use virt::{
     domain::Domain,
@@ -65,7 +65,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         "undefine" => undefine::undefine_domain(&dom)?,
         "autostart" => autostart::autostart_domain(&dom)?,
         "noautostart" => noautostart::noautostart_domain(&dom)?,
-        _ => eprintln!("{} is not supported", cmd),
+        _ => bail!("{} is not supported", cmd),
     }
     Ok(())
 }
@@ -90,4 +90,8 @@ fn xml_to_string(xml: &mut File) -> Result<String> {
 fn get_id(dom: &Domain) -> Result<u32> {
     let id = dom.get_id().context("Cannot find ID")?;
     Ok(id)
+}
+
+fn error_domain_inactive(dom: &Domain) -> Result<()> {
+    bail!("Domain {} is inactive", dom.get_name()?)
 }

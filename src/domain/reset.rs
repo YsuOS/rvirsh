@@ -2,12 +2,10 @@ use anyhow::Result;
 use virt::domain::Domain;
 
 pub fn reset_domain(dom: &Domain) -> Result<()> {
-    if !dom.is_active().unwrap() {
-        println!("Domain {} is inactive", &dom.get_name().unwrap());
-        return Ok(());
+    if !dom.is_active()? {
+        crate::domain::error_domain_inactive(dom)?
     }
-
-    dom.reset().unwrap();
-    println!("Domain {} is reset", &dom.get_name().unwrap());
+    dom.reset()?;
+    println!("Domain {} is reset", dom.get_name()?);
     Ok(())
 }

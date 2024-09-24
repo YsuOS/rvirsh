@@ -2,12 +2,10 @@ use anyhow::Result;
 use virt::domain::Domain;
 
 pub fn poweroff_domain(dom: &Domain) -> Result<()> {
-    if !dom.is_active().unwrap() {
-        println!("Domain {} is inactive", &dom.get_name().unwrap());
-        return Ok(());
+    if !dom.is_active()? {
+        crate::domain::error_domain_inactive(dom)?
     }
-
-    dom.destroy().unwrap();
-    println!("Domain {} is powered off", &dom.get_name().unwrap());
+    dom.destroy()?;
+    println!("Domain {} is powered off", dom.get_name()?);
     Ok(())
 }
