@@ -54,7 +54,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         "domid" => domid::show_domain_id(&dom)?,
         "domuuid" => domuuid::show_domain_uuid(&dom)?,
         "dumpxml" => dumpxml::show_domain_dumpxml(&dom)?,
-        "info" => info::show_domain_info(&dom)?,
+        "info" => info::show_info(&dom)?,
         "start" => start::create_domain(&dom)?,
         "shutdown" => shutdown::shutdown_domain(&dom)?,
         "reboot" => reboot::reboot_domain(&dom)?,
