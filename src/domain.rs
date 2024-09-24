@@ -71,7 +71,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 }
 
 fn get_state_str(dom: &Domain) -> Result<&str> {
-    let state = match dom.get_state().unwrap() {
+    let state = match dom.get_state()? {
         (VIR_DOMAIN_RUNNING, _) => "running",
         (VIR_DOMAIN_PAUSED, _) => "paused",
         (VIR_DOMAIN_SHUTOFF, _) => "shut off",
