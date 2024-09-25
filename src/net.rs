@@ -62,7 +62,6 @@ fn get_net_name(cmd: &str) -> Result<String> {
 
 fn get_network(conn: &Connect, cmd: &str) -> Result<Network> {
     let net_name = get_net_name(cmd)?;
-
     Ok(Network::lookup_by_name(conn, &net_name)?)
 }
 
