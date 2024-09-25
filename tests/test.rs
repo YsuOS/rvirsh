@@ -224,3 +224,133 @@ fn domain_test() {
         .assert()
         .success();
 }
+
+#[test]
+fn net_list() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-list")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "{:<10} {:<8} {:<10} {}",
+            "Name", "State", "Autostart", "Persistent"
+        )));
+}
+
+#[test]
+fn temporary_net_test() {
+    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-net.xml";
+    let net_name = "test-net";
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-create")
+        .arg(&xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-stop")
+        .arg(net_name)
+        .assert()
+        .success();
+}
+
+#[test]
+fn net_test() {
+    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-net1.xml";
+    let net_name = "test-net1";
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-define")
+        .arg(&xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-undefine")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-define")
+        .arg(&xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-start")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-autostart")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-uuid")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-info")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-dumpxml")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-info")
+        .arg(net_name)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "{:<15} {}",
+            "Autostart:", "yes"
+        )));
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-noautostart")
+        .arg(net_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-info")
+        .arg(net_name)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "{:<15} {}",
+            "Autostart:", "no"
+        )));
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-clean")
+        .arg(net_name)
+        .assert()
+        .success();
+}
