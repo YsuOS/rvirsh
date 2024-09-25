@@ -120,5 +120,5 @@ fn get_dom_name(cmd: &str) -> Result<String> {
 fn get_domain(conn: &Connect, cmd: &str) -> Result<Domain> {
     let dom_name = get_dom_name(cmd)?;
 
-    Ok(Domain::lookup_by_name(&conn, &dom_name)?)
+    Ok(Domain::lookup_by_name(conn, &dom_name)?)
 }

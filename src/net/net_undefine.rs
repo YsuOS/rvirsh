@@ -1,11 +1,12 @@
+use anyhow::{bail, Result};
 use virt::network::Network;
 
-pub fn undefine_net(net: &Network) {
-    if net.is_active().unwrap() {
-        eprintln!("Can't undefine active net");
-        return;
+pub fn undefine_net(net: &Network) -> Result<()> {
+    if net.is_active()? {
+        bail!("Can't undefine active net")
     }
 
-    net.undefine().unwrap();
-    println!("{} is undefined", net.get_name().unwrap());
+    net.undefine()?;
+    println!("{} is undefined", net.get_name()?);
+    Ok(())
 }

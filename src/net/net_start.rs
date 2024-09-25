@@ -1,11 +1,12 @@
+use anyhow::{bail, Result};
 use virt::network::Network;
 
-pub fn start_net(net: &Network) {
-    if net.is_active().unwrap() {
-        println!("{} already started", net.get_name().unwrap());
-        return;
+pub fn start_net(net: &Network) -> Result<()> {
+    if net.is_active()? {
+        bail!("{} already started", net.get_name()?)
     }
 
-    net.create().unwrap();
-    println!("{} started", net.get_name().unwrap());
+    net.create()?;
+    println!("{} started", net.get_name()?);
+    Ok(())
 }
