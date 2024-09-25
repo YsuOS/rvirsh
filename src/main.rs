@@ -12,7 +12,7 @@ mod volume;
 
 use anyhow::{anyhow, bail, Context, Ok, Result};
 use config::Config;
-use std::{env, fs::File, path::PathBuf};
+use std::{env, fs::File, io::Read, path::PathBuf};
 use virt::{connect::Connect, domain::Domain};
 
 fn run() -> Result<()> {
@@ -121,4 +121,10 @@ fn get_domain(conn: &Connect, cmd: &str) -> Result<Domain> {
     let dom_name = get_dom_name(cmd)?;
 
     Ok(Domain::lookup_by_name(conn, &dom_name)?)
+}
+
+fn xml_to_string(xml: &mut File) -> Result<String> {
+    let mut content = String::new();
+    xml.read_to_string(&mut content)?;
+    Ok(content)
 }
