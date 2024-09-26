@@ -1,5 +1,5 @@
+use anyhow::Result;
 use virt::{
-    storage_pool::StoragePool,
     storage_vol::StorageVol,
     sys::{
         VIR_STORAGE_VOL_BLOCK, VIR_STORAGE_VOL_DIR, VIR_STORAGE_VOL_FILE, VIR_STORAGE_VOL_NETDIR,
@@ -7,10 +7,8 @@ use virt::{
     },
 };
 
-pub fn show_volume_info(pool: &StoragePool, volume: &StorageVol) {
-    crate::pool::pool_refresh::refresh_pool(pool);
-
-    let volinfo = volume.get_info().unwrap();
+pub fn show_volume_info(volume: &StorageVol) -> Result<()> {
+    let volinfo = volume.get_info()?;
     let kind = match volinfo.kind {
         VIR_STORAGE_VOL_FILE => "file",
         VIR_STORAGE_VOL_BLOCK => "block",
@@ -21,16 +19,21 @@ pub fn show_volume_info(pool: &StoragePool, volume: &StorageVol) {
         _ => "-",
     };
 
-    println!("{:<20} {}", "Name:", volume.get_name().unwrap());
+    println!("{:<20} {}", "Name:", volume.get_name()?);
     println!("{:<20} {}", "Type:", kind);
     println!(
         "{:<20} {:.2} GiB",
         "Capacity:",
-        (volinfo.capacity as f64) / 1024.0 / 1024.0 / 1024.0
+        bytes_to_gbytes(volinfo.capacity)?
     );
     println!(
         "{:<20} {:.2} GiB",
         "Allocation:",
-        (volinfo.allocation as f64) / 1024.0 / 1024.0 / 1024.0
+        bytes_to_gbytes(volinfo.allocation)?
     );
+    Ok(())
+}
+
+fn bytes_to_gbytes(mem: u64) -> Result<f64> {
+    Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
 }

@@ -105,16 +105,6 @@ pub fn help_snapshot(cmd: &str) {
     eprintln!("Domain name and snapshot name are required");
     eprintln!("Usage: rv {} <domain> <snapshot>", cmd);
 }
-pub fn help_volume(cmd: &str) {
-    eprintln!("Volume name is required");
-    eprintln!("Usage: rv {} <volume>", cmd);
-}
-
-// For vol-pool
-pub fn help_volume_path(cmd: &str) {
-    eprintln!("Volume path is required");
-    eprintln!("Usage: rv {} <volume path>", cmd);
-}
 
 pub fn help_pool(cmd: &str) {
     eprintln!("Pool name is required");

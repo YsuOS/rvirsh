@@ -1,11 +1,12 @@
-use std::{fs::File, io::Read};
+use std::fs::File;
 
+use anyhow::Result;
 use virt::{storage_pool::StoragePool, storage_vol::StorageVol};
 
-pub fn create_vol(pool: &StoragePool, xml: &mut File) {
-    let mut content = String::new();
-    xml.read_to_string(&mut content).unwrap();
+pub fn create_vol(pool: &StoragePool, xml: &mut File) -> Result<()> {
+    let content = crate::xml_to_string(xml)?;
 
-    let volume = StorageVol::create_xml(pool, &content, 0).unwrap();
-    println!("Volume {} is created", volume.get_name().unwrap());
+    let volume = StorageVol::create_xml(pool, &content, 0)?;
+    println!("Volume {} is created", volume.get_name()?);
+    Ok(())
 }
