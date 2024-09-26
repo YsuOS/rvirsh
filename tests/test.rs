@@ -354,3 +354,84 @@ fn net_test() {
         .assert()
         .success();
 }
+
+#[test]
+fn vol_list() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-list")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "{:<25} {}",
+            "Name", "Path"
+        )));
+}
+
+#[test]
+fn volume_test() {
+    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-vol.xml";
+    let vol_name = "test-vol.qcow2";
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-create")
+        .arg(xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-info")
+        .arg(vol_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-dumpxml")
+        .arg(vol_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-key")
+        .arg(vol_name)
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-path")
+        .arg(vol_name)
+        .assert()
+        .success()
+        .get_output()
+        .clone();
+
+    let vol_path = {
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        stdout.lines().nth(1).unwrap().to_string()
+    };
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-pool")
+        .arg(vol_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-wipe")
+        .arg(vol_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-delete")
+        .arg(vol_name)
+        .assert()
+        .success();
+}
