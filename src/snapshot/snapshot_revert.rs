@@ -1,5 +1,6 @@
 use anyhow::Result;
 use virt::{
+    domain::Domain,
     domain_snapshot::DomainSnapshot,
     sys::{
         VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT, VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE,
@@ -7,14 +8,13 @@ use virt::{
     },
 };
 
-pub fn revert_snapshot(snapshot: &DomainSnapshot) -> Result<()> {
+pub fn revert_snapshot(dom: &Domain, snapshot: &DomainSnapshot) -> Result<()> {
     let xml = snapshot.get_xml_desc(0)?;
-    let dom = snapshot.get_domain()?;
-    let _ = DomainSnapshot::create_xml(
-        &dom,
+    DomainSnapshot::create_xml(
+        dom,
         &xml,
         VIR_DOMAIN_SNAPSHOT_CREATE_REDEFINE | VIR_DOMAIN_SNAPSHOT_CREATE_CURRENT,
-    );
+    )?;
 
     snapshot.revert(VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING)?;
 

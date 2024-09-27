@@ -37,8 +37,8 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let snapshot = get_snapshot(&dom, cmd)?;
 
     match cmd {
-        "snapshot-info" => snapshot_info::show_snapshot_info(&snapshot)?,
-        "snapshot-revert" => snapshot_revert::revert_snapshot(&snapshot)?,
+        "snapshot-info" => snapshot_info::show_snapshot_info(&dom, &snapshot)?,
+        "snapshot-revert" => snapshot_revert::revert_snapshot(&dom, &snapshot)?,
         "snapshot-parent" => snapshot_parent::show_snapshot_parent(&snapshot)?,
         "snapshot-dumpxml" => snapshot_dumpxml::show_snapshot_dumpxml(&snapshot)?,
         _ => bail!("{} is not supported", cmd),

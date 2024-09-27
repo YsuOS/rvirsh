@@ -1,7 +1,9 @@
 use anyhow::Result;
-use virt::{domain_snapshot::DomainSnapshot, sys::VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS};
+use virt::{
+    domain::Domain, domain_snapshot::DomainSnapshot, sys::VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS,
+};
 
-pub fn show_snapshot_info(snapshot: &DomainSnapshot) -> Result<()> {
+pub fn show_snapshot_info(domain: &Domain, snapshot: &DomainSnapshot) -> Result<()> {
     let current = if snapshot.is_current(0)? { "yes" } else { "no" };
     let metadata = if snapshot.has_metadata(0)? {
         "yes"
@@ -9,7 +11,6 @@ pub fn show_snapshot_info(snapshot: &DomainSnapshot) -> Result<()> {
         "no"
     };
     let parent_name = get_parent(snapshot)?;
-    let domain = snapshot.get_domain()?;
 
     println!("{:<15} {}", "Name:", snapshot.get_name()?);
     println!("{:<15} {}", "Domain:", domain.get_name()?);
