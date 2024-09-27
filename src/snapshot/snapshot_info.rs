@@ -1,38 +1,36 @@
-use virt::{
-    domain::Domain, domain_snapshot::DomainSnapshot, sys::VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS,
-};
+use anyhow::Result;
+use virt::{domain_snapshot::DomainSnapshot, sys::VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS};
 
-pub fn show_snapshot_info(dom: &Domain, snapshot: &DomainSnapshot) {
-    let current = if snapshot.is_current(0).unwrap() {
+pub fn show_snapshot_info(snapshot: &DomainSnapshot) -> Result<()> {
+    let current = if snapshot.is_current(0)? { "yes" } else { "no" };
+    let metadata = if snapshot.has_metadata(0)? {
         "yes"
     } else {
         "no"
     };
-    let metadata = if snapshot.has_metadata(0).unwrap() {
-        "yes"
-    } else {
-        "no"
-    };
-    let parent_name = if snapshot.get_parent(0).is_ok() {
-        let parent = snapshot.get_parent(0).unwrap();
-        parent.get_name().unwrap()
-    } else {
-        "-".to_string()
-    };
+    let parent_name = get_parent(snapshot)?;
+    let domain = snapshot.get_domain()?;
 
-    println!("{:<15} {}", "Name:", snapshot.get_name().unwrap());
-    println!("{:<15} {}", "Domain:", dom.get_name().unwrap());
+    println!("{:<15} {}", "Name:", snapshot.get_name()?);
+    println!("{:<15} {}", "Domain:", domain.get_name()?);
     println!("{:<15} {}", "Current:", current);
     //println!("{:<15} {}", "State:", todo!());
     //println!("{:<15} {}", "Location:", todo!());
     println!("{:<15} {}", "Parent:", parent_name);
-    println!("{:<15} {}", "Children:", snapshot.num_children(0).unwrap());
+    println!("{:<15} {}", "Children:", snapshot.num_children(0)?);
     println!(
         "{:<15} {}",
         "Descendants:",
-        snapshot
-            .num_children(VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS)
-            .unwrap()
+        snapshot.num_children(VIR_DOMAIN_SNAPSHOT_LIST_DESCENDANTS)?
     );
     println!("{:<15} {}", "Metadata:", metadata);
+    Ok(())
+}
+
+fn get_parent(snapshot: &DomainSnapshot) -> Result<String> {
+    if let Ok(parent) = snapshot.get_parent(0) {
+        Ok(parent.get_name()?)
+    } else {
+        Ok("-".to_string())
+    }
 }

@@ -8,7 +8,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
     let dom = get_domain(&conn, cmd)?;
 
-    crate::snapshot::snapshot_delete::delete_all_snapshots(&dom);
+    crate::snapshot::snapshot_delete::delete_all_snapshots(&dom)?;
 
     crate::domain::undefine::undefine_domain(&dom)?;
 

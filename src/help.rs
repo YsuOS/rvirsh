@@ -100,8 +100,3 @@ pub fn show_help() -> Result<()> {
     println!();
     Ok(())
 }
-
-pub fn help_snapshot(cmd: &str) {
-    eprintln!("Domain name and snapshot name are required");
-    eprintln!("Usage: rv {} <domain> <snapshot>", cmd);
-}
