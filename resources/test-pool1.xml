@@ -1,0 +1,7 @@
+<pool type='dir'>
+  <name>test-pool1</name>
+  <target>
+	  <path>/tmp/test-pool1</path>
+  </target>
+</pool>
+
