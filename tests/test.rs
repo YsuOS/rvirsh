@@ -750,3 +750,12 @@ fn hostname_test() {
         .assert()
         .success();
 }
+
+#[test]
+fn hostinfo_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("hostinfo")
+        .assert()
+        .success();
+}

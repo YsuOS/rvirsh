@@ -5,7 +5,7 @@ use crate::get_conn;
 
 pub fn main(settings: &Config) -> Result<()> {
     let conn = get_conn(settings)?;
-    let nodeinfo = conn.get_node_info().unwrap();
+    let nodeinfo = conn.get_node_info()?;
 
     println!("{:<20} {}", "CPU model:", nodeinfo.model);
     println!("{:<20} {}", "CPU(s):", nodeinfo.cpus);
