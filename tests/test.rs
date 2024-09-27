@@ -741,3 +741,12 @@ fn uri_test() {
         .assert()
         .success();
 }
+
+#[test]
+fn hostname_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("hostname")
+        .assert()
+        .success();
+}
