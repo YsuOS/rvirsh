@@ -732,3 +732,12 @@ fn snapshot_test() {
 
     std::fs::remove_file(vm_xml_path).unwrap();
 }
+
+#[test]
+fn uri_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("uri")
+        .assert()
+        .success();
+}

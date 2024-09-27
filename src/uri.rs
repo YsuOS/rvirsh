@@ -6,6 +6,6 @@ use crate::get_conn;
 pub fn main(settings: &Config) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    println!("{}", conn.get_uri().unwrap());
+    println!("{}", conn.get_uri()?);
     Ok(())
 }
