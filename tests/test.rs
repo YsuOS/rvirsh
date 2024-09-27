@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use assert_cmd::Command;
 use predicates::prelude::*;
 
@@ -587,4 +589,146 @@ fn pool_test() {
         .arg(pool_name)
         .assert()
         .success();
+}
+
+fn set_filename(vol_path: &str, xml_path_dst: &str) {
+    let xml_path_src =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2.xml";
+    let xml_str = std::fs::read_to_string(&xml_path_src).unwrap();
+    let xml_str = xml_str.replace("FILENAME", vol_path);
+    let mut file = std::fs::File::create(&xml_path_dst).unwrap();
+    write!(file, "{}", xml_str).unwrap();
+}
+
+#[test]
+fn snapshot_test() {
+    let vm_xml_path =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2-copy.xml";
+    let vm_name = "test-vm2";
+
+    let vol_xml_path =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test-vol1.xml";
+    let vol_name = "test-vm2.qcow2";
+
+    let snapshot_name = "test-snapshot";
+    let snapshot_child_name = "test-snapshot1";
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-create")
+        .arg(&vol_xml_path)
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-path")
+        .arg(vol_name)
+        .assert()
+        .success()
+        .get_output()
+        .clone();
+
+    let vol_path = {
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        stdout.lines().nth(1).unwrap().to_string()
+    };
+    set_filename(&vol_path, &vm_xml_path);
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("run")
+        .arg(&vm_xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-list")
+        .arg(vm_name)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!("{:<10}", "Name")));
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-create")
+        .arg(vm_name)
+        .arg(snapshot_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-current")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-dumpxml")
+        .arg(vm_name)
+        .arg(snapshot_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-create")
+        .arg(vm_name)
+        .arg(snapshot_child_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-parent")
+        .arg(vm_name)
+        .arg(snapshot_child_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-info")
+        .arg(vm_name)
+        .arg(snapshot_child_name)
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(format!(
+            "{:<15} {}",
+            "Parent:", snapshot_name
+        )));
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-revert")
+        .arg(vm_name)
+        .arg(snapshot_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-delete")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("poweroff")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-delete")
+        .arg(vol_name)
+        .assert()
+        .success();
+
+    std::fs::remove_file(vm_xml_path).unwrap();
 }
