@@ -591,9 +591,7 @@ fn pool_test() {
         .success();
 }
 
-fn set_filename(vol_path: &str, xml_path_dst: &str) {
-    let xml_path_src =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2.xml";
+fn set_filename(vol_path: &str, xml_path_src: &str, xml_path_dst: &str) {
     let xml_str = std::fs::read_to_string(&xml_path_src).unwrap();
     let xml_str = xml_str.replace("FILENAME", vol_path);
     let mut file = std::fs::File::create(&xml_path_dst).unwrap();
@@ -602,7 +600,9 @@ fn set_filename(vol_path: &str, xml_path_dst: &str) {
 
 #[test]
 fn snapshot_test() {
-    let vm_xml_path =
+    let vm_xml_path_src =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2.xml";
+    let vm_xml_path_dst =
         env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2-copy.xml";
     let vm_name = "test-vm2";
 
@@ -633,12 +633,12 @@ fn snapshot_test() {
         let stdout = String::from_utf8(output.stdout).unwrap();
         stdout.lines().nth(1).unwrap().to_string()
     };
-    set_filename(&vol_path, &vm_xml_path);
+    set_filename(&vol_path, &vm_xml_path_src, &vm_xml_path_dst);
 
     Command::cargo_bin("rv")
         .unwrap()
         .arg("run")
-        .arg(&vm_xml_path)
+        .arg(&vm_xml_path_dst)
         .assert()
         .success();
 
@@ -730,7 +730,7 @@ fn snapshot_test() {
         .assert()
         .success();
 
-    std::fs::remove_file(vm_xml_path).unwrap();
+    std::fs::remove_file(vm_xml_path_dst).unwrap();
 }
 
 #[test]
@@ -758,4 +758,62 @@ fn hostinfo_test() {
         .arg("hostinfo")
         .assert()
         .success();
+}
+
+#[test]
+fn delete_test() {
+    let vm_xml_path_src =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test3.xml";
+    let vm_xml_path_dst =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test3-copy.xml";
+    let vm_name = "test-vm3";
+
+    let vol_xml_path =
+        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test-vol2.xml";
+    let vol_name = "test-vm3.qcow2";
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-create")
+        .arg(&vol_xml_path)
+        .assert()
+        .success();
+
+    let output = Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-path")
+        .arg(vol_name)
+        .assert()
+        .success()
+        .get_output()
+        .clone();
+
+    let vol_path = {
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        stdout.lines().nth(1).unwrap().to_string()
+    };
+    set_filename(&vol_path, &vm_xml_path_src, &vm_xml_path_dst);
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("define")
+        .arg(&vm_xml_path_dst)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("start")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("delete")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    std::fs::remove_file(vm_xml_path_dst).unwrap();
 }
