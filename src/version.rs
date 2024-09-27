@@ -15,8 +15,8 @@ fn calc_version(version: u32) -> String {
 pub fn main(settings: &Config) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    let lib_ver = calc_version(conn.get_lib_version().unwrap());
-    let hyp_ver = calc_version(conn.get_hyp_version().unwrap());
+    let lib_ver = calc_version(conn.get_lib_version()?);
+    let hyp_ver = calc_version(conn.get_hyp_version()?);
 
     //println!("Compiled againt library: libvirt {}", lib_ver);
     println!("Using Library: libvirt {}", lib_ver);
