@@ -1,6 +1,8 @@
+use anyhow::Result;
 use virt::storage_pool::StoragePool;
 
-pub fn autostart_pool(pool: &StoragePool) {
-    let _ = pool.set_autostart(true).unwrap();
-    println!("{} sets autostart", pool.get_name().unwrap());
+pub fn autostart_pool(pool: &StoragePool) -> Result<()> {
+    pool.set_autostart(true)?;
+    println!("{} sets autostart", pool.get_name()?);
+    Ok(())
 }

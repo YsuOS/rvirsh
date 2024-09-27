@@ -105,8 +105,3 @@ pub fn help_snapshot(cmd: &str) {
     eprintln!("Domain name and snapshot name are required");
     eprintln!("Usage: rv {} <domain> <snapshot>", cmd);
 }
-
-pub fn help_pool(cmd: &str) {
-    eprintln!("Pool name is required");
-    eprintln!("Usage: rv {} <pool>", cmd);
-}

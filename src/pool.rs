@@ -13,51 +13,56 @@ mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
-use crate::{get_conn, get_xml, help::help_pool};
-use anyhow::Result;
+use crate::{get_conn, get_xml};
+use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
 use std::env;
-use virt::storage_pool::StoragePool;
+use virt::{connect::Connect, storage_pool::StoragePool};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
 
     if cmd == "pool-list" {
-        pool_list::list_pool(&conn);
+        pool_list::list_pool(&conn)?;
         return Ok(());
     } else if cmd == "pool-define" || cmd == "pool-create" {
         let mut xml = get_xml(cmd)?;
 
         if cmd == "pool-define" {
-            pool_define::define_pool(&conn, &mut xml);
+            pool_define::define_pool(&conn, &mut xml)?;
         } else if cmd == "pool-create" {
-            pool_create::create_pool(&conn, &mut xml);
+            pool_create::create_pool(&conn, &mut xml)?;
         }
         return Ok(());
     }
 
-    let pool_name = env::args().nth(2);
-    if pool_name.is_none() {
-        help_pool(cmd);
-        return Ok(());
-    }
-
-    let pool_name = pool_name.unwrap();
-    let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
+    let pool = get_pool(&conn, cmd)?;
 
     match cmd {
-        "pool-info" => pool_info::show_pool_info(&pool),
-        "pool-start" => pool_start::start_pool(&pool),
-        "pool-stop" => pool_stop::stop_pool(&pool),
-        "pool-refresh" => pool_refresh::refresh_pool(&pool),
-        "pool-uuid" => pool_uuid::show_pool_uuid(&pool),
-        "pool-delete" => pool_delete::delete_pool(&pool),
-        "pool-undefine" => pool_undefine::undefine_pool(&pool),
-        "pool-clean" => pool_clean::clean_pool(&pool),
-        "pool-autostart" => pool_autostart::autostart_pool(&pool),
-        "pool-noautostart" => pool_noautostart::noautostart_pool(&pool),
-        "pool-dumpxml" => pool_dumpxml::show_pool_dumpxml(&pool),
-        _ => eprintln!("{} is not supported", cmd),
+        "pool-info" => pool_info::show_pool_info(&pool)?,
+        "pool-start" => pool_start::start_pool(&pool)?,
+        "pool-stop" => pool_stop::stop_pool(&pool)?,
+        "pool-refresh" => pool_refresh::refresh_pool(&pool)?,
+        "pool-uuid" => pool_uuid::show_pool_uuid(&pool)?,
+        "pool-delete" => pool_delete::delete_pool(&pool)?,
+        "pool-undefine" => pool_undefine::undefine_pool(&pool)?,
+        "pool-clean" => pool_clean::clean_pool(&pool)?,
+        "pool-autostart" => pool_autostart::autostart_pool(&pool)?,
+        "pool-noautostart" => pool_noautostart::noautostart_pool(&pool)?,
+        "pool-dumpxml" => pool_dumpxml::show_pool_dumpxml(&pool)?,
+        _ => bail!("{} is not supported", cmd),
     }
     Ok(())
+}
+
+fn get_pool_name(cmd: &str) -> Result<String> {
+    let pool_name = env::args()
+        .nth(2)
+        .with_context(|| anyhow!("pool name is required\nUsage: rv {} <pool>", cmd))?;
+    Ok(pool_name)
+}
+
+fn get_pool(conn: &Connect, cmd: &str) -> Result<StoragePool> {
+    let pool_name = get_pool_name(cmd)?;
+    Ok(StoragePool::lookup_by_name(conn, &pool_name)?)
 }

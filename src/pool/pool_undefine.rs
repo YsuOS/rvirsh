@@ -1,11 +1,12 @@
+use anyhow::{bail, Result};
 use virt::storage_pool::StoragePool;
 
-pub fn undefine_pool(pool: &StoragePool) {
-    if pool.is_active().unwrap() {
-        eprintln!("Can't undefine active pool");
-        return;
+pub fn undefine_pool(pool: &StoragePool) -> Result<()> {
+    if pool.is_active()? {
+        bail!("Can't undefine active pool")
     }
 
-    let _ = pool.undefine().unwrap();
-    println!("{} is undefined", pool.get_name().unwrap());
+    pool.undefine()?;
+    println!("{} is undefined", pool.get_name()?);
+    Ok(())
 }

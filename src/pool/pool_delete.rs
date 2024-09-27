@@ -1,11 +1,12 @@
+use anyhow::{bail, Result};
 use virt::storage_pool::StoragePool;
 
-pub fn delete_pool(pool: &StoragePool) {
-    if pool.is_active().unwrap() {
-        eprintln!("Can't delete active pool");
-        return;
+pub fn delete_pool(pool: &StoragePool) -> Result<()> {
+    if pool.is_active()? {
+        bail!("Can't delete active pool")
     }
 
-    let _ = pool.delete(0).unwrap();
-    println!("{} is deleted", pool.get_name().unwrap());
+    pool.delete(0)?;
+    println!("{} is deleted", pool.get_name()?);
+    Ok(())
 }

@@ -128,3 +128,7 @@ fn xml_to_string(xml: &mut File) -> Result<String> {
     xml.read_to_string(&mut content)?;
     Ok(content)
 }
+
+fn bytes_to_gbytes(mem: u64) -> Result<f64> {
+    Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
+}
