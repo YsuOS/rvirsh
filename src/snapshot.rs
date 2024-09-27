@@ -29,7 +29,8 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     } else if cmd == "snapshot-create" {
         // TODO: snapshot name can't be specified now
-        snapshot_create::create_snapshot(&dom)?;
+        let snapshot_name = get_snapshot_name(cmd)?;
+        snapshot_create::create_snapshot(&dom, &snapshot_name)?;
         return Ok(());
     }
 
