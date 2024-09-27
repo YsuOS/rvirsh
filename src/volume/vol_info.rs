@@ -24,16 +24,12 @@ pub fn show_volume_info(volume: &StorageVol) -> Result<()> {
     println!(
         "{:<20} {:.2} GiB",
         "Capacity:",
-        bytes_to_gbytes(volinfo.capacity)?
+        crate::bytes_to_gbytes(volinfo.capacity)?
     );
     println!(
         "{:<20} {:.2} GiB",
         "Allocation:",
-        bytes_to_gbytes(volinfo.allocation)?
+        crate::bytes_to_gbytes(volinfo.allocation)?
     );
     Ok(())
-}
-
-fn bytes_to_gbytes(mem: u64) -> Result<f64> {
-    Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
 }
