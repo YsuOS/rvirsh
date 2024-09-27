@@ -12,13 +12,13 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     crate::domain::undefine::undefine_domain(&dom)?;
 
-    let pool_name = settings.get_string("POOL").unwrap();
-    let pool = StoragePool::lookup_by_name(&conn, &pool_name).unwrap();
+    let pool_name = settings.get_string("POOL")?;
+    let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 
     // TODO: Delete only a volume that matches the domain name
     let dom_name = get_dom_name(cmd)?;
     let vol_name = dom_name.clone() + ".qcow2";
-    let volume = StorageVol::lookup_by_name(&pool, &vol_name).unwrap();
+    let volume = StorageVol::lookup_by_name(&pool, &vol_name)?;
 
     crate::volume::vol_delete::delete_volume(&volume)?;
     Ok(())
