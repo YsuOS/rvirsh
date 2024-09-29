@@ -91,7 +91,7 @@ To set up the development environment, follow these steps:
 
 ## Dependencies
 
-- [`libvirt-rs`](https://gitlab.com/ryasuoka/libvirt-rust/-/tree/dev?ref_type=heads) - Rust bindings for the Libvirt API. Note that rvirsh uses some features not implemented in upstream `libvirt-rs`. So it depends on my personal `libvirt-rs`.
+- [`libvirt-rs`](https://gitlab.com/ryasuoka/libvirt-rust/-/tree/dev?ref_type=heads) - Rust bindings for the Libvirt API. Note that since rvirsh uses some features not implemented in upstream `libvirt-rs`, it depends on my personal `libvirt-rs`.
 ## Contributing
 
 Please report any bugs or feature requests via the GitHub issue tracker. Pull requests are welcome!
