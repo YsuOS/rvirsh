@@ -29,6 +29,60 @@ fn unsupported_command() {
 }
 
 #[test]
+fn deprecated_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("nodeinfo")
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-destroy")
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("pool-destroy")
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("destroy")
+        .assert()
+        .failure();
+}
+
+#[test]
+fn help_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("help")
+        .assert()
+        .success();
+}
+
+#[test]
+fn get_domain_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("start")
+        .assert()
+        .failure();
+}
+
+#[test]
+fn get_xml_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("create")
+        .assert()
+        .failure();
+}
+
+#[test]
 fn version() {
     Command::cargo_bin("rv")
         .unwrap()
@@ -38,8 +92,6 @@ fn version() {
         .stdout(predicate::str::contains("Using Library:"))
         .stdout(predicate::str::contains("Running hypervisor:"));
 }
-
-//TODO: Need test for get_config_file
 
 #[test]
 fn list() {
@@ -81,6 +133,13 @@ fn temporary_domain_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("dominfo")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
         .arg("resume")
         .arg(vm_name)
         .assert()
@@ -105,6 +164,13 @@ fn domain_test() {
         .arg(&xml_path)
         .assert()
         .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("suspend")
+        .arg(vm_name)
+        .assert()
+        .failure();
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -228,6 +294,15 @@ fn domain_test() {
 }
 
 #[test]
+fn get_net_name_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-info")
+        .assert()
+        .failure();
+}
+
+#[test]
 fn net_list() {
     Command::cargo_bin("rv")
         .unwrap()
@@ -248,6 +323,13 @@ fn temporary_net_test() {
         .unwrap()
         .arg("net-create")
         .arg(&xml_path)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("net-info")
+        .arg(net_name)
         .assert()
         .success();
 
@@ -385,6 +467,12 @@ fn volume_test() {
     Command::cargo_bin("rv")
         .unwrap()
         .arg("vol-info")
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-info")
         .arg(vol_name)
         .assert()
         .success();
@@ -416,6 +504,13 @@ fn volume_test() {
         let stdout = String::from_utf8(output.stdout).unwrap();
         stdout.lines().nth(1).unwrap().to_string()
     };
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-pool")
+        .assert()
+        .failure();
+
     Command::cargo_bin("rv")
         .unwrap()
         .arg("vol-pool")
@@ -436,6 +531,15 @@ fn volume_test() {
         .arg(vol_name)
         .assert()
         .success();
+}
+
+#[test]
+fn get_pool_name_test() {
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("pool-start")
+        .assert()
+        .failure();
 }
 
 #[test]
@@ -641,6 +745,13 @@ fn snapshot_test() {
         .arg(&vm_xml_path_dst)
         .assert()
         .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("snapshot-info")
+        .arg(vm_name)
+        .assert()
+        .failure();
 
     Command::cargo_bin("rv")
         .unwrap()
