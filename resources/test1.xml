@@ -1,0 +1,8 @@
+<domain type="kvm">
+  <name>test-vm1</name>
+  <memory>1024</memory>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+  </os>
+</domain>
+

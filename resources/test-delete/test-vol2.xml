@@ -1,0 +1,8 @@
+<volume>
+  <name>test-vm3.qcow2</name>
+  <capacity>1</capacity>
+  <target>
+    <format type='qcow2'/>
+  </target>
+</volume>
+
