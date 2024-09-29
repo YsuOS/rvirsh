@@ -18,6 +18,7 @@ pub fn main(settings: &Config) -> Result<()> {
     let lib_ver = calc_version(conn.get_lib_version()?);
     let hyp_ver = calc_version(conn.get_hyp_version()?);
 
+    println!("rvirsh {}", env!("CARGO_PKG_VERSION"));
     //println!("Compiled againt library: libvirt {}", lib_ver);
     println!("Using Library: libvirt {}", lib_ver);
     //println!("Using API: QEMU {}", lib_ver);
