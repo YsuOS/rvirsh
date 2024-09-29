@@ -86,6 +86,9 @@ pub fn show_help() -> Result<()> {
     for h in main_helps {
         println!("{:<width$} {}", h[0], h[1]);
     }
+
+    println!("\nThe following commands are supported, but it is not often used.");
+
     println!("\nSub Commands:");
     for h in sub_helps {
         println!("{:<width$} {}", h[0], h[1]);
