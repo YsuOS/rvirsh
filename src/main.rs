@@ -23,7 +23,7 @@ fn run() -> Result<()> {
     match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" | "run" => domain::main(&settings, &command)?,
+        | "domstate" | "dumpxml" | "define" | "create" => domain::main(&settings, &command)?,
         "delete" => delete::main(&settings, &command)?,
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"

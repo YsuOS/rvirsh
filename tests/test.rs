@@ -67,7 +67,7 @@ fn temporary_domain_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
-        .arg("run")
+        .arg("create")
         .arg(&xml_path)
         .assert()
         .success();
@@ -637,7 +637,7 @@ fn snapshot_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
-        .arg("run")
+        .arg("create")
         .arg(&vm_xml_path_dst)
         .assert()
         .success();

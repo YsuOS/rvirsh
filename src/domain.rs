@@ -1,4 +1,5 @@
 mod autostart;
+mod create;
 mod define;
 mod domid;
 mod dominfo;
@@ -12,7 +13,6 @@ pub mod poweroff;
 mod reboot;
 mod reset;
 mod resume;
-mod run;
 mod shutdown;
 mod start;
 mod suspend;
@@ -33,13 +33,13 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     if cmd == "list" {
         list::list_domain(&conn)?;
         return Ok(());
-    } else if cmd == "define" || cmd == "run" {
+    } else if cmd == "define" || cmd == "create" {
         let mut xml = get_xml(cmd)?;
 
         if cmd == "define" {
             define::define_domain(&conn, &mut xml)?;
-        } else if cmd == "run" {
-            run::run_domain(&conn, &mut xml)?;
+        } else if cmd == "create" {
+            create::create_domain(&conn, &mut xml)?;
         }
         return Ok(());
     }
