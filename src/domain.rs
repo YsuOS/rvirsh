@@ -8,7 +8,7 @@ mod dumpxml;
 mod info;
 mod list;
 mod noautostart;
-mod poweroff;
+pub mod poweroff;
 mod reboot;
 mod reset;
 mod resume;

@@ -10,6 +10,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     crate::snapshot::snapshot_delete::delete_all_snapshots(&dom)?;
 
+    crate::domain::poweroff::poweroff_domain(&dom)?;
     crate::domain::undefine::undefine_domain(&dom)?;
 
     let pool_name = settings.get_string("POOL")?;
