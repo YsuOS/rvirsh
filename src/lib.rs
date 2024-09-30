@@ -20,11 +20,12 @@ fn get_conn(settings: &Config) -> Result<Connect> {
     Ok(Connect::open(Some(&uri))?)
 }
 
-fn get_xml(cmd: &str) -> Result<File> {
+fn get_xml(cmd: &str) -> Result<String> {
     let xml_path = env::args()
         .nth(2)
         .with_context(|| anyhow!("XML file is required\nUsage: rv {} <xml path>", cmd))?;
-    Ok(File::open(xml_path)?)
+    let content = xml_to_string(&mut File::open(xml_path)?)?;
+    Ok(content)
 }
 
 fn get_dom_name(cmd: &str) -> Result<String> {

@@ -26,12 +26,12 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         net_list::list_net(&conn)?;
         return Ok(());
     } else if cmd == "net-define" || cmd == "net-create" {
-        let mut xml = get_xml(cmd)?;
+        let xml = get_xml(cmd)?;
 
         if cmd == "net-define" {
-            net_define::define_net(&conn, &mut xml)?;
+            net_define::define_net(&conn, &xml)?;
         } else if cmd == "net-create" {
-            net_create::create_net(&conn, &mut xml)?;
+            net_create::create_net(&conn, &xml)?;
         }
         return Ok(());
     }

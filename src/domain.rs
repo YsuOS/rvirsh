@@ -34,12 +34,12 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         list::list_domain(&conn)?;
         return Ok(());
     } else if cmd == "define" || cmd == "create" {
-        let mut xml = get_xml(cmd)?;
+        let xml = get_xml(cmd)?;
 
         if cmd == "define" {
-            define::define_domain(&conn, &mut xml)?;
+            define::define_domain(&conn, &xml)?;
         } else if cmd == "create" {
-            create::create_domain(&conn, &mut xml)?;
+            create::create_domain(&conn, &xml)?;
         }
         return Ok(());
     }

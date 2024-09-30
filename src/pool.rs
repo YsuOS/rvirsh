@@ -26,12 +26,12 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         pool_list::list_pool(&conn)?;
         return Ok(());
     } else if cmd == "pool-define" || cmd == "pool-create" {
-        let mut xml = get_xml(cmd)?;
+        let xml = get_xml(cmd)?;
 
         if cmd == "pool-define" {
-            pool_define::define_pool(&conn, &mut xml)?;
+            pool_define::define_pool(&conn, &xml)?;
         } else if cmd == "pool-create" {
-            pool_create::create_pool(&conn, &mut xml)?;
+            pool_create::create_pool(&conn, &xml)?;
         }
         return Ok(());
     }

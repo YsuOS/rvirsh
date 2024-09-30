@@ -30,9 +30,9 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         vol_list::list_volume(&pool)?;
         return Ok(());
     } else if cmd == "vol-create" {
-        let mut xml = get_xml(cmd)?;
+        let xml = get_xml(cmd)?;
 
-        vol_create::create_vol(&pool, &mut xml)?;
+        vol_create::create_vol(&pool, &xml)?;
         return Ok(());
     }
 
