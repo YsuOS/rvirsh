@@ -14,7 +14,7 @@ mod reboot;
 mod reset;
 mod resume;
 mod shutdown;
-mod start;
+pub mod start;
 mod suspend;
 pub mod undefine;
 
