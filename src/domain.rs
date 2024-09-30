@@ -7,7 +7,7 @@ mod domstate;
 mod domuuid;
 mod dumpxml;
 mod info;
-mod list;
+pub mod list;
 mod noautostart;
 pub mod poweroff;
 mod reboot;
