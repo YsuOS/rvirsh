@@ -67,6 +67,12 @@ rv dominfo <vm-name>
 rv dumpxml <vm-name>
 ```
 
+## Usage (as a library)
+`rvirsh` also offers some functions as a library. So it can be embedded into your project as a crate. This project is not on crates.io because it depends on my personal `libvirt-rs` that isn't also on crates.io. Please include this project like below.
+   ```
+   rvirsh = { git = "https://github.com/YsuOS/rvirsh.git" }
+   ```
+
 ## Development
 
 To set up the development environment, follow these steps:
