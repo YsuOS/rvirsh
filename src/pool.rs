@@ -1,7 +1,7 @@
 mod pool_autostart;
 mod pool_clean;
-mod pool_create;
-mod pool_define;
+pub mod pool_create;
+pub mod pool_define;
 mod pool_delete;
 mod pool_dumpxml;
 mod pool_info;

@@ -1,4 +1,4 @@
-mod vol_create;
+pub mod vol_create;
 pub mod vol_delete;
 mod vol_dumpxml;
 mod vol_info;

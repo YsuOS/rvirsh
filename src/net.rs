@@ -1,7 +1,7 @@
 mod net_autostart;
 mod net_clean;
-mod net_create;
-mod net_define;
+pub mod net_create;
+pub mod net_define;
 mod net_dumpxml;
 mod net_info;
 mod net_list;

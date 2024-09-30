@@ -1,6 +1,6 @@
 mod autostart;
-mod create;
-mod define;
+pub mod create;
+pub mod define;
 mod domid;
 mod dominfo;
 mod domstate;

@@ -1,7 +1,10 @@
-use std::io::Write;
-
 use assert_cmd::Command;
 use predicates::prelude::*;
+use virt::{connect::Connect, storage_pool::StoragePool};
+
+// This test uses the following connection and pool
+const CONN: &str = "qemu:///system";
+const POOL: &str = "default";
 
 #[test]
 fn without_command() {
@@ -114,15 +117,20 @@ fn info_without_dom() {
 
 #[test]
 fn temporary_domain_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test.xml";
-    let vm_name = "test-vm";
+    let xml = r#"
+<domain type="kvm">
+  <name>test-vm</name>
+  <memory>1024</memory>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+  </os>
+</domain>
+"#;
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("create")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    let vm_name = "test-vm";
+    let conn = Connect::open(Some(CONN)).unwrap();
+
+    assert!(rvirsh::domain::create::create_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -155,15 +163,19 @@ fn temporary_domain_test() {
 
 #[test]
 fn domain_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test1.xml";
+    let xml = r#"
+<domain type="kvm">
+  <name>test-vm1</name>
+  <memory>1024</memory>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+  </os>
+</domain>
+"#;
     let vm_name = "test-vm1";
+    let conn = Connect::open(Some(CONN)).unwrap();
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("define")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    assert!(rvirsh::domain::define::define_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -317,14 +329,16 @@ fn net_list() {
 
 #[test]
 fn temporary_net_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-net.xml";
+    let xml = r#"
+<network>
+  <name>test-net</name>
+</network>
+"#;
+
     let net_name = "test-net";
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("net-create")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    let conn = Connect::open(Some(CONN)).unwrap();
+
+    assert!(rvirsh::net::net_create::create_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -343,15 +357,16 @@ fn temporary_net_test() {
 
 #[test]
 fn net_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-net1.xml";
-    let net_name = "test-net1";
+    let xml = r#"
+<network>
+  <name>test-net1</name>
+</network>
+"#;
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("net-define")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    let net_name = "test-net1";
+    let conn = Connect::open(Some(CONN)).unwrap();
+
+    assert!(rvirsh::net::net_define::define_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -360,12 +375,7 @@ fn net_test() {
         .assert()
         .success();
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("net-define")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    assert!(rvirsh::net::net_define::define_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -454,15 +464,18 @@ fn vol_list() {
 
 #[test]
 fn volume_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-vol.xml";
-    let vol_name = "test-vol.qcow2";
+    let xml = r#"
+<volume>
+  <name>test-vol.qcow2</name>
+  <capacity>1</capacity>
+</volume>
+"#;
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("vol-create")
-        .arg(xml_path)
-        .assert()
-        .success();
+    let vol_name = "test-vol.qcow2";
+    let conn = Connect::open(Some(CONN)).unwrap();
+    let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
+
+    assert!(rvirsh::volume::vol_create::create_vol(&pool, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -557,18 +570,22 @@ fn pool_list() {
 
 #[test]
 fn temporary_pool_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-pool.xml";
+    let xml = r#"
+<pool type='dir'>
+  <name>test-pool</name>
+  <target>
+	  <path>/tmp/test-pool/</path>
+  </target>
+</pool>
+"#;
+
     let pool_name = "test-pool";
-    let pool_path = "/tmp/test-pool1";
+    let pool_path = "/tmp/test-pool";
+    let conn = Connect::open(Some(CONN)).unwrap();
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("pool-create")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    assert!(rvirsh::pool::pool_create::create_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -580,18 +597,22 @@ fn temporary_pool_test() {
 
 #[test]
 fn pool_test() {
-    let xml_path = env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-pool1.xml";
+    let xml = r#"
+<pool type='dir'>
+  <name>test-pool1</name>
+  <target>
+	  <path>/tmp/test-pool1</path>
+  </target>
+</pool>
+"#;
+
     let pool_name = "test-pool1";
     let pool_path = "/tmp/test-pool1";
+    let conn = Connect::open(Some(CONN)).unwrap();
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("pool-define")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    assert!(rvirsh::pool::pool_define::define_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -680,12 +701,7 @@ fn pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("pool-define")
-        .arg(&xml_path)
-        .assert()
-        .success();
+    assert!(rvirsh::pool::pool_define::define_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -695,34 +711,43 @@ fn pool_test() {
         .success();
 }
 
-fn set_filename(vol_path: &str, xml_path_src: &str, xml_path_dst: &str) {
-    let xml_str = std::fs::read_to_string(&xml_path_src).unwrap();
-    let xml_str = xml_str.replace("FILENAME", vol_path);
-    let mut file = std::fs::File::create(&xml_path_dst).unwrap();
-    write!(file, "{}", xml_str).unwrap();
-}
-
 #[test]
 fn snapshot_test() {
-    let vm_xml_path_src =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2.xml";
-    let vm_xml_path_dst =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test2-copy.xml";
+    let vm_xml = r#"
+<domain type="kvm">
+  <name>test-vm2</name>
+  <memory>1024</memory>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+  </os>
+  <devices>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="FILENAME"/>
+      <target dev="vda" bus="virtio"/>
+    </disk>
+  </devices>
+</domain>
+"#;
     let vm_name = "test-vm2";
-
-    let vol_xml_path =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-snapshot/test-vol1.xml";
-    let vol_name = "test-vm2.qcow2";
+    let vol_xml = r#"
+<volume>
+  <name>test-vm2.qcow2</name>
+  <capacity>1</capacity>
+  <target>
+    <format type='qcow2'/>
+  </target>
+</volume>
+"#;
 
     let snapshot_name = "test-snapshot";
     let snapshot_child_name = "test-snapshot1";
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("vol-create")
-        .arg(&vol_xml_path)
-        .assert()
-        .success();
+    let vol_name = "test-vm2.qcow2";
+    let conn = Connect::open(Some(CONN)).unwrap();
+    let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
+
+    assert!(rvirsh::volume::vol_create::create_vol(&pool, vol_xml).is_ok());
 
     let output = Command::cargo_bin("rv")
         .unwrap()
@@ -737,14 +762,9 @@ fn snapshot_test() {
         let stdout = String::from_utf8(output.stdout).unwrap();
         stdout.lines().nth(1).unwrap().to_string()
     };
-    set_filename(&vol_path, &vm_xml_path_src, &vm_xml_path_dst);
+    let vm_xml = vm_xml.replace("FILENAME", &vol_path);
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("create")
-        .arg(&vm_xml_path_dst)
-        .assert()
-        .success();
+    assert!(rvirsh::domain::create::create_domain(&conn, &vm_xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -840,8 +860,6 @@ fn snapshot_test() {
         .arg(vol_name)
         .assert()
         .success();
-
-    std::fs::remove_file(vm_xml_path_dst).unwrap();
 }
 
 #[test]
@@ -873,22 +891,39 @@ fn hostinfo_test() {
 
 #[test]
 fn delete_test() {
-    let vm_xml_path_src =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test3.xml";
-    let vm_xml_path_dst =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test3-copy.xml";
+    let vm_xml = r#"
+<domain type="kvm">
+  <name>test-vm3</name>
+  <memory>1024</memory>
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+  </os>
+  <devices>
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="FILENAME"/>
+      <target dev="vda" bus="virtio"/>
+    </disk>
+  </devices>
+</domain>
+"#;
     let vm_name = "test-vm3";
 
-    let vol_xml_path =
-        env!("CARGO_MANIFEST_DIR").to_string() + "/resources/test-delete/test-vol2.xml";
-    let vol_name = "test-vm3.qcow2";
+    let vol_xml = r#"
+<volume>
+  <name>test-vm3.qcow2</name>
+  <capacity>1</capacity>
+  <target>
+    <format type='qcow2'/>
+  </target>
+</volume>
+"#;
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("vol-create")
-        .arg(&vol_xml_path)
-        .assert()
-        .success();
+    let vol_name = "test-vm3.qcow2";
+    let conn = Connect::open(Some(CONN)).unwrap();
+    let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
+
+    assert!(rvirsh::volume::vol_create::create_vol(&pool, vol_xml).is_ok());
 
     let output = Command::cargo_bin("rv")
         .unwrap()
@@ -903,14 +938,9 @@ fn delete_test() {
         let stdout = String::from_utf8(output.stdout).unwrap();
         stdout.lines().nth(1).unwrap().to_string()
     };
-    set_filename(&vol_path, &vm_xml_path_src, &vm_xml_path_dst);
+    let vm_xml = vm_xml.replace("FILENAME", &vol_path);
 
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("define")
-        .arg(&vm_xml_path_dst)
-        .assert()
-        .success();
+    assert!(rvirsh::domain::define::define_domain(&conn, &vm_xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -925,6 +955,4 @@ fn delete_test() {
         .arg(vm_name)
         .assert()
         .success();
-
-    std::fs::remove_file(vm_xml_path_dst).unwrap();
 }
