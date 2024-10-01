@@ -18,7 +18,7 @@ const XML: &str = r#"
 fn temporary_pool_test() {
     let pool_name = "test-pool";
     let pool_path = "/tmp/".to_string() + pool_name;
-    let xml = &set_xml(pool_name, XML);
+    let xml = &set_name_xml(pool_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     std::fs::create_dir_all(&pool_path).unwrap();
@@ -43,7 +43,7 @@ fn temporary_pool_test() {
 fn pool_test() {
     let pool_name = "test-pool1";
     let pool_path = "/tmp/".to_string() + pool_name;
-    let xml = &set_xml(pool_name, XML);
+    let xml = &set_name_xml(pool_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     std::fs::create_dir_all(&pool_path).unwrap();

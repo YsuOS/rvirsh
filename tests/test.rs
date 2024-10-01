@@ -1,10 +1,9 @@
+mod common;
+
 use assert_cmd::Command;
+use common::*;
 use predicates::prelude::*;
 use virt::{connect::Connect, storage_pool::StoragePool};
-
-// This test uses the following connection and pool
-const CONN: &str = "qemu:///system";
-const POOL: &str = "default";
 
 #[test]
 fn without_command() {
@@ -58,6 +57,7 @@ fn deprecated_test() {
         .failure();
 }
 
+// Misc command tests
 #[test]
 fn help_test() {
     Command::cargo_bin("rv")
@@ -76,157 +76,6 @@ fn version() {
         .success()
         .stdout(predicate::str::contains("Using Library:"))
         .stdout(predicate::str::contains("Running hypervisor:"));
-}
-
-#[test]
-fn snapshot_test() {
-    let vm_xml = r#"
-<domain type="kvm">
-  <name>test-vm2</name>
-  <memory>1024</memory>
-  <os>
-    <type arch="x86_64" machine="q35">hvm</type>
-  </os>
-  <devices>
-    <disk type="file" device="disk">
-      <driver name="qemu" type="qcow2"/>
-      <source file="FILENAME"/>
-      <target dev="vda" bus="virtio"/>
-    </disk>
-  </devices>
-</domain>
-"#;
-    let vm_name = "test-vm2";
-    let vol_xml = r#"
-<volume>
-  <name>test-vm2.qcow2</name>
-  <capacity>1</capacity>
-  <target>
-    <format type='qcow2'/>
-  </target>
-</volume>
-"#;
-
-    let snapshot_name = "test-snapshot";
-    let snapshot_child_name = "test-snapshot1";
-
-    let vol_name = "test-vm2.qcow2";
-    let conn = Connect::open(Some(CONN)).unwrap();
-    let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
-
-    assert!(rvirsh::volume::vol_create::create_vol(&pool, vol_xml).is_ok());
-
-    let output = Command::cargo_bin("rv")
-        .unwrap()
-        .arg("vol-path")
-        .arg(vol_name)
-        .assert()
-        .success()
-        .get_output()
-        .clone();
-
-    let vol_path = {
-        let stdout = String::from_utf8(output.stdout).unwrap();
-        stdout.lines().nth(1).unwrap().to_string()
-    };
-    let vm_xml = vm_xml.replace("FILENAME", &vol_path);
-
-    assert!(rvirsh::domain::create::create_domain(&conn, &vm_xml).is_ok());
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-info")
-        .arg(vm_name)
-        .assert()
-        .failure();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-list")
-        .arg(vm_name)
-        .assert()
-        .success()
-        .stdout(predicate::str::contains(format!("{:<10}", "Name")));
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-create")
-        .arg(vm_name)
-        .arg(snapshot_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-current")
-        .arg(vm_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-dumpxml")
-        .arg(vm_name)
-        .arg(snapshot_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-create")
-        .arg(vm_name)
-        .arg(snapshot_child_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-parent")
-        .arg(vm_name)
-        .arg(snapshot_child_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-info")
-        .arg(vm_name)
-        .arg(snapshot_child_name)
-        .assert()
-        .success()
-        .stdout(predicate::str::contains(format!(
-            "{:<15} {}",
-            "Parent:", snapshot_name
-        )));
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-revert")
-        .arg(vm_name)
-        .arg(snapshot_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("snapshot-delete")
-        .arg(vm_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("poweroff")
-        .arg(vm_name)
-        .assert()
-        .success();
-
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("vol-delete")
-        .arg(vol_name)
-        .assert()
-        .success();
 }
 
 #[test]
@@ -256,11 +105,9 @@ fn hostinfo_test() {
         .success();
 }
 
-#[test]
-fn delete_test() {
-    let vm_xml = r#"
+const VM_XML: &str = r#"
 <domain type="kvm">
-  <name>test-vm3</name>
+  <name>NAME</name>
   <memory>1024</memory>
   <os>
     <type arch="x86_64" machine="q35">hvm</type>
@@ -274,11 +121,10 @@ fn delete_test() {
   </devices>
 </domain>
 "#;
-    let vm_name = "test-vm3";
 
-    let vol_xml = r#"
+const VOL_XML: &str = r#"
 <volume>
-  <name>test-vm3.qcow2</name>
+  <name>NAME</name>
   <capacity>1</capacity>
   <target>
     <format type='qcow2'/>
@@ -286,7 +132,13 @@ fn delete_test() {
 </volume>
 "#;
 
+#[test]
+fn delete_test() {
+    let vm_name = "test-vm3";
+
     let vol_name = "test-vm3.qcow2";
+    let vol_xml = &set_name_xml(vol_name, VOL_XML);
+
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 
@@ -301,11 +153,10 @@ fn delete_test() {
         .get_output()
         .clone();
 
-    let vol_path = {
-        let stdout = String::from_utf8(output.stdout).unwrap();
-        stdout.lines().nth(1).unwrap().to_string()
-    };
-    let vm_xml = vm_xml.replace("FILENAME", &vol_path);
+    let vol_path = get_vol_path(output);
+
+    let vm_xml = &set_fname_xml(&vol_path, VM_XML);
+    let vm_xml = &set_name_xml(&vm_name, vm_xml);
 
     assert!(rvirsh::domain::define::define_domain(&conn, &vm_xml).is_ok());
 

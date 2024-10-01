@@ -15,7 +15,7 @@ const XML: &str = r#"
 #[test]
 fn volume_test() {
     let vol_name = "test-vol.qcow2";
-    let xml = &set_xml(vol_name, XML);
+    let xml = &set_name_xml(vol_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 

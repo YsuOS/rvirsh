@@ -14,7 +14,7 @@ const XML: &str = r#"
 #[test]
 fn temporary_net_test() {
     let net_name = "test-net";
-    let xml = &set_xml(net_name, XML);
+    let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::net::net_create::create_net(&conn, xml).is_ok());
@@ -43,7 +43,7 @@ fn temporary_net_test() {
 #[test]
 fn net_test() {
     let net_name = "test-net1";
-    let xml = &set_xml(net_name, XML);
+    let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::net::net_define::define_net(&conn, xml).is_ok());

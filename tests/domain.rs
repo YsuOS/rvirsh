@@ -18,7 +18,7 @@ const XML: &str = r#"
 #[test]
 fn temporary_domain_test() {
     let vm_name = "test-vm";
-    let xml = &set_xml(vm_name, XML);
+    let xml = &set_name_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     Command::cargo_bin("rv")
@@ -74,7 +74,7 @@ fn temporary_domain_test() {
 #[test]
 fn domain_test() {
     let vm_name = "test-vm1";
-    let xml = &set_xml(vm_name, XML);
+    let xml = &set_name_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::domain::define::define_domain(&conn, xml).is_ok());
