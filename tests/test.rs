@@ -68,24 +68,6 @@ fn help_test() {
 }
 
 #[test]
-fn get_domain_test() {
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("start")
-        .assert()
-        .failure();
-}
-
-#[test]
-fn get_xml_test() {
-    Command::cargo_bin("rv")
-        .unwrap()
-        .arg("create")
-        .assert()
-        .failure();
-}
-
-#[test]
 fn version() {
     Command::cargo_bin("rv")
         .unwrap()

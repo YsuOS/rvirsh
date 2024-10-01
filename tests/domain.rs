@@ -21,6 +21,12 @@ fn temporary_domain_test() {
     let xml = &set_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("create")
+        .assert()
+        .failure();
+
     assert!(rvirsh::domain::create::create_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
@@ -77,6 +83,12 @@ fn domain_test() {
         .unwrap()
         .arg("suspend")
         .arg(vm_name)
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("start")
         .assert()
         .failure();
 
