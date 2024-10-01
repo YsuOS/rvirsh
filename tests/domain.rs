@@ -1,12 +1,11 @@
+mod common;
+
 use assert_cmd::Command;
+use common::*;
 use predicates::prelude::*;
 use virt::connect::Connect;
 
-// This test uses the following connection
-const CONN: &str = "qemu:///system";
-
-fn set_xml(vm_name: &str) -> String {
-    let xml = r#"
+const XML: &str = r#"
 <domain type="kvm">
   <name>NAME</name>
   <memory>1024</memory>
@@ -15,14 +14,11 @@ fn set_xml(vm_name: &str) -> String {
   </os>
 </domain>
 "#;
-    let xml = xml.replace("NAME", vm_name);
-    xml.to_string()
-}
 
 #[test]
 fn temporary_domain_test() {
     let vm_name = "test-vm";
-    let xml = &set_xml(vm_name);
+    let xml = &set_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::domain::create::create_domain(&conn, xml).is_ok());
@@ -72,7 +68,7 @@ fn temporary_domain_test() {
 #[test]
 fn domain_test() {
     let vm_name = "test-vm1";
-    let xml = &set_xml(vm_name);
+    let xml = &set_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::domain::define::define_domain(&conn, xml).is_ok());
