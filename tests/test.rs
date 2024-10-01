@@ -115,19 +115,24 @@ fn info_without_dom() {
         .failure();
 }
 
-#[test]
-fn temporary_domain_test() {
+fn set_xml(vm_name: &str) -> String {
     let xml = r#"
 <domain type="kvm">
-  <name>test-vm</name>
+  <name>NAME</name>
   <memory>1024</memory>
   <os>
     <type arch="x86_64" machine="q35">hvm</type>
   </os>
 </domain>
 "#;
+    let xml = xml.replace("NAME", vm_name);
+    xml.to_string()
+}
 
+#[test]
+fn temporary_domain_test() {
     let vm_name = "test-vm";
+    let xml = &set_xml(vm_name);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::domain::create::create_domain(&conn, xml).is_ok());
@@ -163,16 +168,8 @@ fn temporary_domain_test() {
 
 #[test]
 fn domain_test() {
-    let xml = r#"
-<domain type="kvm">
-  <name>test-vm1</name>
-  <memory>1024</memory>
-  <os>
-    <type arch="x86_64" machine="q35">hvm</type>
-  </os>
-</domain>
-"#;
     let vm_name = "test-vm1";
+    let xml = &set_xml(vm_name);
     let conn = Connect::open(Some(CONN)).unwrap();
 
     assert!(rvirsh::domain::define::define_domain(&conn, xml).is_ok());
