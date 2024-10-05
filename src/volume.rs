@@ -23,7 +23,8 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     }
 
-    let pool = get_pool(settings, &conn)?;
+    let pool_name = settings.get_string("POOL")?;
+    let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
     crate::pool::pool_refresh::refresh_pool(&pool)?;
 
     if cmd == "vol-list" {
@@ -55,11 +56,6 @@ fn get_vol_path(conn: &Connect, cmd: &str) -> Result<StorageVol> {
         .nth(2)
         .with_context(|| anyhow!("Volume path is required\nUsage: rv {} <volume path>", cmd))?;
     Ok(StorageVol::lookup_by_path(conn, &vol_path)?)
-}
-
-fn get_pool(settings: &Config, conn: &Connect) -> Result<StoragePool> {
-    let pool_name = settings.get_string("POOL")?;
-    Ok(StoragePool::lookup_by_name(&conn, &pool_name)?)
 }
 
 fn get_vol_name(cmd: &str) -> Result<String> {

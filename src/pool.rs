@@ -17,7 +17,7 @@ use crate::{get_conn, get_xml};
 use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
 use std::env;
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::storage_pool::StoragePool;
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -36,7 +36,10 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     }
 
-    let pool = get_pool(&conn, cmd)?;
+    let pool_name = env::args()
+        .nth(2)
+        .with_context(|| anyhow!("pool name is required\nUsage: rv {} <pool>", cmd))?;
+    let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 
     match cmd {
         "pool-info" => pool_info::show_pool_info(&pool)?,
@@ -53,16 +56,4 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         _ => bail!("{} is not supported", cmd),
     }
     Ok(())
-}
-
-fn get_pool_name(cmd: &str) -> Result<String> {
-    let pool_name = env::args()
-        .nth(2)
-        .with_context(|| anyhow!("pool name is required\nUsage: rv {} <pool>", cmd))?;
-    Ok(pool_name)
-}
-
-fn get_pool(conn: &Connect, cmd: &str) -> Result<StoragePool> {
-    let pool_name = get_pool_name(cmd)?;
-    Ok(StoragePool::lookup_by_name(conn, &pool_name)?)
 }

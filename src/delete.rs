@@ -7,6 +7,7 @@ use crate::{get_conn, get_dom_name, get_domain};
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
     let dom = get_domain(&conn, cmd)?;
+
     let pool_name = settings.get_string("POOL")?;
     let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 

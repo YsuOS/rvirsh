@@ -10,7 +10,7 @@ pub mod uri;
 pub mod version;
 pub mod volume;
 
-use anyhow::{anyhow, Context, Ok, Result};
+use anyhow::{anyhow, Context, Result};
 use config::Config;
 use std::{env, fs::File, io::Read};
 use virt::{connect::Connect, domain::Domain};
