@@ -2,14 +2,14 @@ mod pool_autostart;
 mod pool_clean;
 pub mod pool_create;
 pub mod pool_define;
-mod pool_delete;
+pub mod pool_delete;
 mod pool_dumpxml;
 mod pool_info;
-mod pool_list;
+pub mod pool_list;
 mod pool_noautostart;
 pub mod pool_refresh;
 mod pool_start;
-mod pool_stop;
+pub mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
