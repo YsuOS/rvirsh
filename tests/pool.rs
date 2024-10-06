@@ -37,6 +37,8 @@ fn temporary_pool_test() {
         .arg(pool_name)
         .assert()
         .success();
+
+    std::fs::remove_dir_all(&pool_path).unwrap();
 }
 
 #[test]
