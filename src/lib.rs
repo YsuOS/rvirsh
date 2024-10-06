@@ -6,6 +6,7 @@ pub mod hostname;
 pub mod net;
 pub mod pool;
 pub mod snapshot;
+pub mod template;
 pub mod uri;
 pub mod version;
 pub mod volume;

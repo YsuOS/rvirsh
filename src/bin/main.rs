@@ -28,6 +28,9 @@ fn run() -> Result<()> {
         | "pool-dumpxml" | "pool-start" | "pool-define" | "pool-create" => {
             rvirsh::pool::main(&settings, &command)?
         }
+        "template-list" | "template-create" | "template-delete" | "template-info" => {
+            rvirsh::template::main(&settings, &command)?
+        }
         "version" => rvirsh::version::main(&settings)?,
         "hostname" => rvirsh::hostname::main(&settings)?,
         "hostinfo" => rvirsh::hostinfo::main(&settings)?,
