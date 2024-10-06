@@ -5,6 +5,7 @@ use std::process::Output;
 // This test uses the following connection and pool
 pub const CONN: &str = "qemu:///system";
 pub const POOL: &str = "default";
+pub const TEMP_POOL: &str = "test-templates-pool";
 
 pub fn set_name_xml(name: &str, xml: &str) -> String {
     let xml = set_xml(name, xml, "NAME");

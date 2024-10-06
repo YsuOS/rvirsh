@@ -1,0 +1,7 @@
+<pool type='dir'>
+  <name>templates</name>
+  <target>
+    <path>/tmp</path>
+  </target>
+</pool>
+

@@ -40,6 +40,7 @@ pub fn show_help() -> Result<()> {
             "pool-clean",
             "Run 'pool-stop', 'pool-delete', and 'pool-undefine'",
         ],
+        ["template-list", "List all templates"],
         ["hostname", "Show the hypervisor hostname"],
         ["hostinfo", "Show the host information"],
         ["uri", "Show the hypervisor URI"],
