@@ -19,10 +19,11 @@ pub mod start;
 mod suspend;
 pub mod undefine;
 
+use std::env;
+
 use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
 use quick_xml::{events::Event, Reader};
-use std::env;
 use virt::{
     domain::Domain,
     storage_pool::StoragePool,

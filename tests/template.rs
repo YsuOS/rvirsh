@@ -2,10 +2,10 @@ mod common;
 
 use std::{fs::File, io::Write, path::Path};
 
-use assert_cmd::Command;
+use assert_cmd::{output::OutputOkExt, Command};
 use common::*;
 use predicates::prelude::*;
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol};
 
 const POOL_XML: &str = r#"
 <pool type='dir'>
@@ -42,16 +42,23 @@ fn template_test() {
 
     if let Ok(pool) = StoragePool::lookup_by_name(&conn, pool_name) {
         rvirsh::pool::pool_stop::stop_pool(&pool).unwrap();
+        std::fs::remove_dir_all(&pool_path).unwrap();
     }
     std::fs::create_dir_all(&pool_path).unwrap();
     rvirsh::pool::pool_create::create_pool(&conn, xml).unwrap();
 
-    let pool = StoragePool::lookup_by_name(&conn, pool_name).unwrap();
+    let tmp_pool = StoragePool::lookup_by_name(&conn, pool_name).unwrap();
 
     let mut xml = File::create(Path::new("/tmp/test.xml")).unwrap();
     xml.write_all(VM_XML.as_bytes()).unwrap();
 
-    File::create(Path::new("/tmp/test.qcow2")).unwrap();
+    std::process::Command::new("qemu-img")
+        .arg("create")
+        .arg("-f")
+        .arg("qcow2")
+        .arg("/tmp/test.qcow2")
+        .arg("1K")
+        .unwrap();
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -69,6 +76,27 @@ fn template_test() {
         .success()
         .stdout(predicate::str::contains(format!("{:<25}", "Name")));
 
+    let spawn_domain = "test-clone";
+    let pool = StoragePool::lookup_by_name(&conn, "default").unwrap();
+    if let Ok(vol) = StorageVol::lookup_by_name(&pool, &(spawn_domain.to_string() + ".qcow2")) {
+        rvirsh::volume::vol_delete::delete_volume(&vol).unwrap();
+    }
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("spawn")
+        .arg("test")
+        .arg(spawn_domain)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("poweroff")
+        .arg(spawn_domain)
+        .assert()
+        .success();
+
     Command::cargo_bin("rv")
         .unwrap()
         .arg("template-info")
@@ -83,6 +111,8 @@ fn template_test() {
         .assert()
         .success();
 
-    rvirsh::pool::pool_stop::stop_pool(&pool).unwrap();
+    rvirsh::pool::pool_stop::stop_pool(&tmp_pool).unwrap();
     std::fs::remove_dir_all(&pool_path).unwrap();
+    std::fs::remove_file(Path::new("/tmp/test.xml")).unwrap();
+    std::fs::remove_file(Path::new("/tmp/test.qcow2")).unwrap();
 }

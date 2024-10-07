@@ -59,7 +59,8 @@ fn err_msg(msg: &str, cmd: &str, args: Vec<&str>) -> anyhow::Error {
 }
 
 fn get_temp_settings(settings: &Config) -> Result<String> {
-    if cfg!(test) {
+    if cfg!(debug_assertions) {
+        println!("Use test-templates pool");
         Ok("test-templates".to_string())
     } else {
         settings
