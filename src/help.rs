@@ -69,6 +69,7 @@ pub fn show_help() -> Result<()> {
         ["vol-path", "Show volume path"],
         ["vol-pool", "Show pool name the volume belongs to"],
         ["vol-dumpxml", "Show volume information in XML"],
+        ["vol-clone", "Clone volume"],
         ["vol-wipe", "Wipe volume"],
         ["pool-info", "Show pool information"],
         ["pool-uuid", "Show pool uuid"],

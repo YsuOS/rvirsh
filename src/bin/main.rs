@@ -18,7 +18,9 @@ fn run() -> Result<()> {
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
         | "net-define" | "net-create" => rvirsh::net::main(&settings, &command)?,
         "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
-        | "vol-pool" | "vol-wipe" | "vol-create" => rvirsh::volume::main(&settings, &command)?,
+        | "vol-pool" | "vol-wipe" | "vol-create" | "vol-clone" => {
+            rvirsh::volume::main(&settings, &command)?
+        }
         "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
         | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
             rvirsh::snapshot::main(&settings, &command)?

@@ -81,6 +81,29 @@ fn volume_test() {
         .assert()
         .success();
 
+    let cloned_vol_name = "test-vol-clone.qcow2";
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-clone")
+        .arg(vol_name)
+        .assert()
+        .failure();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-clone")
+        .arg(vol_name)
+        .arg(cloned_vol_name)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-delete")
+        .arg(cloned_vol_name)
+        .assert()
+        .success();
+
     Command::cargo_bin("rv")
         .unwrap()
         .arg("vol-wipe")

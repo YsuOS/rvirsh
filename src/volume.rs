@@ -1,3 +1,4 @@
+mod vol_clone;
 pub mod vol_create;
 pub mod vol_delete;
 mod vol_dumpxml;
@@ -38,6 +39,17 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     }
 
     let volume = get_volume(&pool, cmd)?;
+
+    if cmd == "vol-clone" {
+        let name = env::args().nth(3).with_context(|| {
+            anyhow!(
+                "New volume name is required\nUsage: rv {} <src volume> <new volume>",
+                cmd
+            )
+        })?;
+        vol_clone::clone_vol(&pool, &volume, &name)?;
+        return Ok(());
+    }
 
     match cmd {
         "vol-delete" => vol_delete::delete_volume(&volume)?,
