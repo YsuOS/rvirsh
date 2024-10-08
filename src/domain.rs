@@ -18,7 +18,7 @@ pub mod start;
 mod suspend;
 pub mod undefine;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Result};
 use config::Config;
 use virt::{
     domain::Domain,
@@ -79,9 +79,8 @@ fn get_state_str(dom: &Domain) -> Result<&str> {
     Ok(state)
 }
 
-fn get_id(dom: &Domain) -> Result<u32> {
-    let id = dom.get_id().context("Cannot find ID")?;
-    Ok(id)
+fn get_id(dom: &Domain) -> Result<String> {
+    Ok(dom.get_id().map_or("-".to_string(), |id| id.to_string()))
 }
 
 fn error_domain_inactive(dom: &Domain) -> Result<()> {
