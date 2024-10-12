@@ -27,6 +27,8 @@ virt = { git = "https://gitlab.com/ryasuoka/libvirt-rust.git", branch="dev" }
 config = "0.14.0"
 home = "0.5.9"
 anyhow = "1.0.89"
+quick-xml = "0.24.1"
+regex = "1.11.0"
 
 [build-dependencies]
 home = "0.5.9"

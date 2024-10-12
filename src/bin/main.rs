@@ -10,7 +10,7 @@ fn run() -> Result<()> {
     match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" | "create" => {
+        | "domstate" | "dumpxml" | "define" | "create" | "clone" => {
             rvirsh::domain::main(&settings, &command)?
         }
         "delete" => rvirsh::delete::main(&settings, &command)?,

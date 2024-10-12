@@ -8,6 +8,7 @@ pub fn show_help() -> Result<()> {
         ["info", "Show domain various information"],
         ["define", "Define domain"],
         ["create", "Create and run domain"],
+        ["clone", "Clone domain"],
         ["start", "Start domain"],
         ["shutdown", "Shutdown domain"],
         ["reboot", "Reboot domain"],

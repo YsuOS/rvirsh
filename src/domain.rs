@@ -1,4 +1,5 @@
 mod autostart;
+mod clone;
 pub mod create;
 pub mod define;
 mod domid;
@@ -18,10 +19,14 @@ pub mod start;
 mod suspend;
 pub mod undefine;
 
-use anyhow::{bail, Result};
+use std::env;
+use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
+use quick_xml::{events::Event, Reader};
 use virt::{
     domain::Domain,
+    storage_pool::StoragePool,
+    storage_vol::StorageVol,
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
@@ -45,6 +50,33 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     }
 
     let dom = get_domain(&conn, cmd)?;
+
+    if cmd == "clone" {
+        let new_name = env::args().nth(3).with_context(|| {
+            anyhow!(
+                "New domain name is required\nUsage: rv {} <org domain> <new domain>",
+                cmd
+            )
+        })?;
+        let new_pool_name = settings.get_string("POOL")?;
+        let new_pool = StoragePool::lookup_by_name(&conn, &new_pool_name)?;
+        let new_vol_path = env::args().nth(4).with_context(|| {
+            anyhow!(
+                "New volume path is required\nUsage: rv {} <org domain> <new domain> <new volume path>",
+                cmd
+            )
+        })?;
+        clone::clone_domain(
+            &conn,
+            &dom.get_name()?,
+            &dom.get_xml_desc(0)?,
+            &get_volume_from_domain(&dom)?,
+            &new_name,
+            &new_pool,
+            &new_vol_path,
+        )?;
+        return Ok(());
+    }
 
     match cmd {
         "dominfo" => dominfo::show_domain_info(&dom)?,
@@ -85,4 +117,34 @@ fn get_id(dom: &Domain) -> Result<String> {
 
 fn error_domain_inactive(dom: &Domain) -> Result<()> {
     bail!("Domain {} is inactive", dom.get_name()?)
+}
+
+fn get_volume_from_domain(dom: &Domain) -> Result<StorageVol> {
+    let xml = dom.get_xml_desc(0)?;
+    let mut reader = Reader::from_str(&xml);
+    let mut file_path = None;
+
+    loop {
+        match reader.read_event() {
+            Ok(Event::Empty(e)) if e.name().as_ref() == b"source" => {
+                if let Some(attr) = e
+                    .attributes()
+                    .find(|a| a.as_ref().unwrap().key.as_ref() == b"file")
+                {
+                    file_path = Some(attr?.unescape_value()?.to_string());
+                }
+                break;
+            }
+            Err(e) => panic!("Error: {}", e),
+            Ok(Event::Eof) => break,
+            _ => (),
+        }
+    }
+    let file_path = file_path.with_context(|| {
+        anyhow!(
+            "Could not find volume from {}'s xml",
+            dom.get_name().unwrap()
+        )
+    })?;
+    Ok(StorageVol::lookup_by_path(&dom.get_connect()?, &file_path)?)
 }
