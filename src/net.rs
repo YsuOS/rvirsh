@@ -13,11 +13,11 @@ mod net_uuid;
 
 use std::env;
 
-use anyhow::{anyhow, bail, Context, Result};
+use anyhow::{bail, Context, Result};
 use config::Config;
 use virt::{connect::Connect, network::Network};
 
-use crate::{get_conn, get_xml};
+use crate::{err_msg, get_conn, get_xml};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -56,7 +56,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 fn get_net_name(cmd: &str) -> Result<String> {
     let net_name = env::args()
         .nth(2)
-        .with_context(|| anyhow!("Network name is required\nUsage: rv {} <network>", cmd))?;
+        .with_context(|| err_msg("Network name is required", cmd, vec!["<network>"]))?;
     Ok(net_name)
 }
 

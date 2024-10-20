@@ -19,10 +19,10 @@ pub mod start;
 mod suspend;
 pub mod undefine;
 
-use std::env;
 use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
 use quick_xml::{events::Event, Reader};
+use std::env;
 use virt::{
     domain::Domain,
     storage_pool::StoragePool,
@@ -30,7 +30,7 @@ use virt::{
     sys::{VIR_DOMAIN_PAUSED, VIR_DOMAIN_RUNNING, VIR_DOMAIN_SHUTOFF},
 };
 
-use crate::{get_conn, get_domain, get_xml};
+use crate::{err_msg, get_conn, get_domain, get_xml};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -53,17 +53,19 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     if cmd == "clone" {
         let new_name = env::args().nth(3).with_context(|| {
-            anyhow!(
-                "New domain name is required\nUsage: rv {} <org domain> <new domain>",
-                cmd
+            err_msg(
+                "New domain name is required",
+                cmd,
+                vec!["<org domain>", "<new domain>"],
             )
         })?;
         let new_pool_name = settings.get_string("POOL")?;
         let new_pool = StoragePool::lookup_by_name(&conn, &new_pool_name)?;
         let new_vol_path = env::args().nth(4).with_context(|| {
-            anyhow!(
-                "New volume path is required\nUsage: rv {} <org domain> <new domain> <new volume path>",
-                cmd
+            err_msg(
+                "New volume path is required",
+                cmd,
+                vec!["<org domain>", "<new domain>", "<new volume path>"],
             )
         })?;
         clone::clone_domain(

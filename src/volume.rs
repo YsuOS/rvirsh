@@ -9,8 +9,8 @@ mod vol_path;
 mod vol_pool;
 mod vol_wipe;
 
-use crate::{get_conn, get_xml};
-use anyhow::{anyhow, bail, Context, Result};
+use crate::{err_msg, get_conn, get_xml};
+use anyhow::{bail, Context, Result};
 use config::Config;
 use std::env;
 use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol};
@@ -42,9 +42,10 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     if cmd == "vol-clone" {
         let name = env::args().nth(3).with_context(|| {
-            anyhow!(
-                "New volume name is required\nUsage: rv {} <src volume> <new volume>",
-                cmd
+            err_msg(
+                "New volume name is required",
+                cmd,
+                vec!["<src volume>", "<new volume>"],
             )
         })?;
         vol_clone::clone_vol(&pool, &volume, &name)?;
@@ -66,14 +67,14 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 fn get_vol_path(conn: &Connect, cmd: &str) -> Result<StorageVol> {
     let vol_path = env::args()
         .nth(2)
-        .with_context(|| anyhow!("Volume path is required\nUsage: rv {} <volume path>", cmd))?;
+        .with_context(|| err_msg("Volume path is required", cmd, vec!["<volume path>"]))?;
     Ok(StorageVol::lookup_by_path(conn, &vol_path)?)
 }
 
 fn get_vol_name(cmd: &str) -> Result<String> {
     let vol_name = env::args()
         .nth(2)
-        .with_context(|| anyhow!("Volume name is required\nUsage: rv {} <volume>", cmd))?;
+        .with_context(|| err_msg("Volume name is required", cmd, vec!["<volume>"]))?;
     Ok(vol_name)
 }
 
