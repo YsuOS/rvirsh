@@ -1,6 +1,6 @@
 # rvirsh(rv)
 
-`rvirsh` is a Rust-based virtual machine management tool built using the `libvirt-rs` library. It reimplements the functionality of the `virsh` command, providing simple and efficient virtualization operations in Rust.
+`rvirsh` is a Rust-based virtual machine management tool built using the `libvirt-rs` library. It reimplements the functionality of the `virsh` command and `virt-install` command, providing simple and efficient virtualization operations in Rust.
 
 To avoid using complex arguments, `rvirsh` reads default configuration from `$HOME/.config/rvirsh/default.toml` or `./default.toml` (if it does not exists).
 
