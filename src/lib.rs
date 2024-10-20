@@ -1,3 +1,4 @@
+pub mod console;
 pub mod delete;
 pub mod domain;
 pub mod help;

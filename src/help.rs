@@ -20,6 +20,7 @@ pub fn show_help() -> Result<()> {
             "delete",
             "Run 'undefine', 'vol-delete', and 'snapshot-delete'",
         ],
+        ["console", "Connect domain via console"],
         ["net-list", "List all networks"],
         ["net-start", "Start network"],
         ["net-create", "Create and run network"],

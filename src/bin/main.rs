@@ -14,6 +14,7 @@ fn run() -> Result<()> {
             rvirsh::domain::main(&settings, &command)?
         }
         "delete" => rvirsh::delete::main(&settings, &command)?,
+        "console" => rvirsh::console::main(&settings, &command)?,
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
         | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
         | "net-define" | "net-create" => rvirsh::net::main(&settings, &command)?,

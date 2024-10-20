@@ -29,6 +29,8 @@ home = "0.5.9"
 anyhow = "1.0.89"
 quick-xml = "0.24.1"
 regex = "1.11.0"
+libc = "0.2.161"
+termios = "0.3.3"
 
 [build-dependencies]
 home = "0.5.9"
