@@ -6,7 +6,10 @@ use std::{
     io::{self, Read, Write},
     os::fd::AsRawFd,
 };
-use termios::{Termios, ECHO, ICANON, ISIG, TCSANOW};
+use termios::{
+    Termios, CLOCAL, CREAD, ECHO, ECHOE, ECHOK, ECHONL, ICANON, ICRNL, IEXTEN, IGNBRK, IGNCR,
+    INLCR, ISIG, OPOST, TCSANOW,
+};
 use virt::{
     console::Console,
     event::{event_register_default_impl, event_run_default_impl, Event},
@@ -47,13 +50,13 @@ fn stdin_callback(
         let mut stdin = stdin.lock();
         let con = unsafe { &mut *(console_ptr as *mut Console) };
 
-        let mut buf = [0; 1];
-        if let Ok(_) = stdin.read(&mut buf) {
+        let mut buf = [0; 1024];
+        if let Ok(size) = stdin.read(&mut buf) {
             // 29 == Ctrl-]
             if buf[0] == 29 {
                 con.cond.store(false, std::sync::atomic::Ordering::SeqCst);
             }
-            con.st.send(&buf)?;
+            con.st.send(&buf[0..size])?;
         }
     }
     Ok(())
@@ -65,7 +68,10 @@ fn set_raw_mode() -> Result<Termios> {
     let mut termios = Termios::from_fd(fd)?;
     let orig_termios = termios.clone();
 
-    termios.c_lflag &= !(ICANON | ECHO | ISIG);
+    termios.c_cflag |= CREAD | CLOCAL;
+    termios.c_lflag &= !(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ISIG | IEXTEN);
+    termios.c_oflag &= !OPOST;
+    termios.c_iflag &= !(INLCR | IGNCR | ICRNL | IGNBRK);
     termios::tcsetattr(fd, TCSANOW, &termios)?;
 
     Ok(orig_termios)
