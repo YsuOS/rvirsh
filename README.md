@@ -68,9 +68,9 @@ rv dumpxml <vm-name>
 ```
 
 ## Usage (as a library)
-`rvirsh` also offers some functions as a library. So it can be embedded into your project as a crate. This project is not on crates.io because it depends on my personal `libvirt-rs` that isn't also on crates.io. Please include this project like below.
+`rvirsh` also offers some functions as a library. So it can be embedded into your project as a crate. Please visit [crates.io](https://crates.io/crates/rvirsh) for more info.
    ```
-   rvirsh = { git = "https://github.com/YsuOS/rvirsh.git" }
+   rvirsh = "x.y.z"
    ```
 
 ## Development
@@ -95,9 +95,6 @@ To set up the development environment, follow these steps:
    cargo test
    ```
 
-## Dependencies
-
-- [`libvirt-rs`](https://gitlab.com/ryasuoka/libvirt-rust/-/tree/dev?ref_type=heads) - Rust bindings for the Libvirt API. Note that since rvirsh uses some features not implemented in upstream `libvirt-rs`, it depends on my personal `libvirt-rs`.
 ## Contributing
 
 Please report any bugs or feature requests via the GitHub issue tracker. Pull requests are welcome!
