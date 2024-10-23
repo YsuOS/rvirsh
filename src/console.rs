@@ -1,6 +1,12 @@
+use crate::event::EventHandleCallback;
+use crate::{
+    event::{event_register_default_impl, event_run_default_impl, Event},
+    get_conn, get_domain,
+};
 use anyhow::Result;
 use config::Config;
 use libc;
+use std::sync::{atomic::AtomicBool, Arc};
 use std::{
     ffi::c_void,
     io::{self, Read, Write},
@@ -11,8 +17,6 @@ use termios::{
     INLCR, ISIG, OPOST, TCSANOW,
 };
 use virt::{
-    console::Console,
-    event::{event_register_default_impl, event_run_default_impl, Event},
     stream::Stream,
     sys::{
         virStreamEventType, VIR_DOMAIN_CONSOLE_FORCE, VIR_EVENT_HANDLE_READABLE,
@@ -20,7 +24,31 @@ use virt::{
     },
 };
 
-use crate::{get_conn, get_domain};
+pub struct Console {
+    pub st: Stream,
+    pub callback: Option<EventHandleCallback>,
+    pub cond: Arc<AtomicBool>,
+}
+
+impl Console {
+    pub fn new(st: Stream) -> Self {
+        Console {
+            st,
+            callback: None,
+            cond: Arc::new(AtomicBool::new(true)),
+        }
+    }
+}
+
+impl Event for Console {
+    fn set_callback(&mut self, cb: EventHandleCallback) {
+        self.callback = Some(cb);
+    }
+
+    fn get_callback(&mut self) -> &mut Option<EventHandleCallback> {
+        &mut self.callback
+    }
+}
 
 fn read_callback(stream: &Stream, event_type: virStreamEventType) -> Result<()> {
     if event_type == VIR_STREAM_EVENT_READABLE {

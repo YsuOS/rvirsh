@@ -23,7 +23,8 @@ name = "rv"
 path = "src/bin/main.rs"
 
 [dependencies]
-virt = { git = "https://gitlab.com/ryasuoka/libvirt-rust.git", branch="dev" }
+virt = "0.4.1"
+virt-sys = "0.3.0"
 config = "0.14.0"
 home = "0.5.9"
 anyhow = "1.0.89"
