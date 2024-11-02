@@ -57,3 +57,13 @@ fn bytes_to_gbytes(mem: u64) -> Result<f64> {
 fn err_msg(msg: &str, cmd: &str, args: Vec<&str>) -> anyhow::Error {
     anyhow!("{}\nUsage: rv {} {}", msg, cmd, args.join(" "))
 }
+
+fn get_temp_settings(settings: &Config) -> Result<String> {
+    if cfg!(test) {
+        Ok("test-templates".to_string())
+    } else {
+        settings
+            .get_string("TEMP_POOL")
+            .with_context(|| anyhow!("Can not get TEMP_POOL from config file"))
+    }
+}
