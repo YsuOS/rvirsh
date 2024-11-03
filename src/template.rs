@@ -1,5 +1,6 @@
 mod template_create;
 mod template_delete;
+mod template_info;
 mod template_list;
 
 use std::env;
@@ -55,6 +56,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     match cmd {
         "template-delete" => template_delete::delete_template(&pool, &template)?,
+        "template-info" => template_info::show_template_info(&pool, &template)?,
         _ => bail!("{} is not supported", cmd),
     }
     Ok(())

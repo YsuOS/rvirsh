@@ -45,6 +45,7 @@ pub fn show_help() -> Result<()> {
         ["template-create", "Create template"],
         ["template-list", "List all templates"],
         ["template-delete", "Delete template"],
+        ["template-info", "Show template information"],
         ["hostname", "Show the hypervisor hostname"],
         ["hostinfo", "Show the host information"],
         ["uri", "Show the hypervisor URI"],

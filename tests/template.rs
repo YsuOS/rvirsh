@@ -71,6 +71,13 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("template-info")
+        .arg("test")
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
         .arg("template-delete")
         .arg("test")
         .assert()
