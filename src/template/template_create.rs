@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::Result;
 use quick_xml::{
     events::{attributes::Attribute, BytesStart, BytesText, Event},
     Reader, Writer,
@@ -8,6 +8,8 @@ use std::{
     path::Path,
 };
 use virt::storage_pool::StoragePool;
+
+use crate::template::get_pool_path;
 
 pub fn create_template(
     pool: &StoragePool,
@@ -25,30 +27,6 @@ pub fn create_template(
 
     println!("Template {} is created", template);
     return Ok(());
-}
-
-// only support dir type
-fn get_pool_path(pool: &StoragePool) -> Result<String> {
-    let xml = pool.get_xml_desc(0)?;
-    let mut reader = Reader::from_str(&xml);
-    let mut pool_path: Option<String> = None;
-    let mut in_path = false;
-
-    loop {
-        match reader.read_event() {
-            Ok(Event::Start(e)) if e.name().as_ref() == b"path" => {
-                in_path = true;
-            }
-            Ok(Event::Text(e)) if in_path => {
-                pool_path = Some(e.unescape()?.to_string());
-                break;
-            }
-            Err(e) => panic!("Error: {}", e),
-            Ok(Event::Eof) => break,
-            _ => (),
-        }
-    }
-    pool_path.with_context(|| anyhow!("Can not find pool path"))
 }
 
 fn create_sealed_xml(src: &Path, dst: &Path) -> Result<()> {

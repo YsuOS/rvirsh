@@ -69,8 +69,13 @@ fn template_test() {
         .success()
         .stdout(predicate::str::contains(format!("{:<25}", "Name")));
 
-    std::fs::remove_file(Path::new("/tmp/test.xml")).unwrap();
-    std::fs::remove_file(Path::new("/tmp/test.qcow2")).unwrap();
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("template-delete")
+        .arg("test")
+        .assert()
+        .success();
+
     rvirsh::pool::pool_stop::stop_pool(&pool).unwrap();
     std::fs::remove_dir_all(&pool_path).unwrap();
 }
