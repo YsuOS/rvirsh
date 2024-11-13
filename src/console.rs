@@ -16,6 +16,8 @@ use termios::{
     Termios, CLOCAL, CREAD, ECHO, ECHOE, ECHOK, ECHONL, ICANON, ICRNL, IEXTEN, IGNBRK, IGNCR,
     INLCR, ISIG, OPOST, TCSANOW,
 };
+use virt::connect::Connect;
+use virt::domain::Domain;
 use virt::{
     stream::Stream,
     sys::{
@@ -114,10 +116,17 @@ fn reset_mode(orig_termios: Termios) -> Result<()> {
 }
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+    // It should be called before getting conn and dom
     event_register_default_impl()?;
 
     let conn = get_conn(settings)?;
     let dom = get_domain(&conn, cmd)?;
+
+    connect_console(&conn, &dom)?;
+    Ok(())
+}
+
+pub fn connect_console(conn: &Connect, dom: &Domain) -> Result<()> {
     let st = Stream::new(&conn, VIR_STREAM_NONBLOCK)?;
 
     println!("Try to connect via console");
