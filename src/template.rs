@@ -1,4 +1,4 @@
-mod spawn;
+pub mod spawn;
 mod template_create;
 mod template_delete;
 mod template_info;
