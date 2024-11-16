@@ -77,7 +77,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 }
 
 // only support dir type
-fn get_pool_path(pool: &StoragePool) -> Result<String> {
+pub fn get_pool_path(pool: &StoragePool) -> Result<String> {
     let xml = pool.get_xml_desc(0)?;
     let mut reader = Reader::from_str(&xml);
     let mut pool_path: Option<String> = None;
