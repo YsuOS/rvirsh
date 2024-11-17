@@ -76,9 +76,10 @@ fn template_test() {
         .success()
         .stdout(predicate::str::contains(format!("{:<25}", "Name")));
 
-    let spawn_domain = "test-clone";
+    let new_domain = "test-clone";
+    let new_domain_vol = new_domain.to_string() + ".qcow2";
     let pool = StoragePool::lookup_by_name(&conn, "default").unwrap();
-    if let Ok(vol) = StorageVol::lookup_by_name(&pool, &(spawn_domain.to_string() + ".qcow2")) {
+    if let Ok(vol) = StorageVol::lookup_by_name(&pool, &new_domain_vol) {
         rvirsh::volume::vol_delete::delete_volume(&vol).unwrap();
     }
 
@@ -86,14 +87,36 @@ fn template_test() {
         .unwrap()
         .arg("spawn")
         .arg("test")
-        .arg(spawn_domain)
+        .arg(new_domain)
         .assert()
         .success();
 
     Command::cargo_bin("rv")
         .unwrap()
         .arg("poweroff")
-        .arg(spawn_domain)
+        .arg(new_domain)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("vol-delete")
+        .arg(&new_domain_vol)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("deploy")
+        .arg("test")
+        .arg(new_domain)
+        .assert()
+        .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("delete")
+        .arg(new_domain)
         .assert()
         .success();
 

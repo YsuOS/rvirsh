@@ -1,3 +1,4 @@
+pub mod deploy;
 pub mod spawn;
 mod template_create;
 mod template_delete;
@@ -52,7 +53,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
         template_create::create_template(&pool, &template, &org_xml, &org_vol)?;
         return Ok(());
-    } else if cmd == "spawn" {
+    } else if cmd == "spawn" || cmd == "deploy" {
         let (vol, mut xml) = get_template(&pool, cmd)?;
 
         let name = env::args().nth(3).with_context(|| {
@@ -63,7 +64,11 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         })?;
 
         let pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
-        spawn::spawn_domain(&conn, &pool, &name, &template, &mut xml, &vol)?;
+        if cmd == "spawn" {
+            spawn::spawn_domain(&conn, &pool, &name, &template, &mut xml, &vol)?;
+        } else {
+            deploy::deploy_domain(&conn, &pool, &name, &template, &mut xml, &vol)?;
+        }
 
         return Ok(());
     }
