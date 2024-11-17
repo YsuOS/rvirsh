@@ -88,7 +88,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         "domuuid" => domuuid::show_domain_uuid(&dom)?,
         "dumpxml" => dumpxml::show_domain_dumpxml(&dom)?,
         "info" => info::show_info(&dom)?,
-        "start" => start::create_domain(&dom)?,
+        "start" => start::start_domain(&dom)?,
         "shutdown" => shutdown::shutdown_domain(&dom)?,
         "reboot" => reboot::reboot_domain(&dom)?,
         "suspend" => suspend::suspend_domain(&dom)?,
