@@ -10,9 +10,10 @@ fn run() -> Result<()> {
     match command.as_str() {
         "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
         | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-        | "domstate" | "dumpxml" | "define" | "create" | "clone" => {
+        | "domstate" | "dumpxml" | "define" | "create" => {
             rvirsh::domain::main(&settings, &command)?
         }
+        "clone" => rvirsh::clone::main(&settings, &command)?,
         "delete" => rvirsh::delete::main(&settings, &command)?,
         "console" => rvirsh::console::main(&settings, &command)?,
         "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"

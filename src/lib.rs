@@ -1,3 +1,4 @@
+pub mod clone;
 pub mod console;
 pub mod delete;
 pub mod domain;
