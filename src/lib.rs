@@ -26,18 +26,15 @@ fn get_conn(settings: &Config) -> Result<Connect> {
 
 fn get_xml(cmd: &str) -> Result<String> {
     let xml_path = get_args(2, "XML file is required", cmd, &vec!["<xml path>"])?;
-    let content = xml_to_string(&mut File::open(xml_path)?)?;
-    Ok(content)
+    xml_to_string(&mut File::open(xml_path)?)
 }
 
 fn get_dom_name(cmd: &str) -> Result<String> {
-    let dom_name = get_args(2, "Domain name is required", cmd, &vec!["<domain>"])?;
-    Ok(dom_name)
+    get_args(2, "Domain name is required", cmd, &vec!["<domain>"])
 }
 
 fn get_domain(conn: &Connect, cmd: &str) -> Result<Domain> {
     let dom_name = get_dom_name(cmd)?;
-
     Ok(Domain::lookup_by_name(conn, &dom_name)?)
 }
 
