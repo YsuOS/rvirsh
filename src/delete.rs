@@ -21,7 +21,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 }
 
 pub fn delete_instance(dom: &Domain, volume: &StorageVol) -> Result<()> {
-    crate::snapshot::snapshot_delete::delete_all_snapshots(&dom)?;
+    crate::snapshot::delete_all_snapshots(&dom)?;
 
     if dom.is_active()? {
         crate::domain::poweroff_domain(&dom)?;
