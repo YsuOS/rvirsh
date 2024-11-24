@@ -25,7 +25,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 
     let pool_name = settings.get_string("POOL")?;
     let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
-    crate::pool::pool_refresh::refresh_pool(&pool)?;
+    crate::pool::refresh_pool(&pool)?;
 
     if cmd == "vol-list" {
         vol_list::list_volume(&pool)?;

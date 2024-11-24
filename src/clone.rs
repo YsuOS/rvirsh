@@ -88,7 +88,7 @@ pub fn clone_domain(
     let new_vol_xml = create_new_volume_xml(org_vol, new_vol_path)?;
     let new_xml = create_new_domain_xml(org_xml, org_vol, new_vol_path, org_name, new_name)?;
 
-    crate::pool::pool_refresh::refresh_pool(new_pool)?;
+    crate::pool::refresh_pool(new_pool)?;
     StorageVol::create_xml_from(new_pool, &new_vol_xml, org_vol, 0)?;
 
     let dom = Domain::define_xml(conn, &new_xml)?;

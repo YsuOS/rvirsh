@@ -12,7 +12,7 @@ pub fn spawn_domain(
     tmp_xml: &mut str,
     tmp_vol: &StorageVol,
 ) -> Result<()> {
-    crate::pool::pool_refresh::refresh_pool(&pool)?;
+    crate::pool::refresh_pool(&pool)?;
 
     let vol_name = name.to_string().clone() + ".qcow2";
     StorageVol::create_xml_from(

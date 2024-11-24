@@ -2,7 +2,7 @@ use anyhow::Result;
 use virt::storage_pool::StoragePool;
 
 pub fn list_template(pool: &StoragePool) -> Result<()> {
-    crate::pool::pool_refresh::refresh_pool(pool)?;
+    crate::pool::refresh_pool(pool)?;
     let temps = pool.list_all_volumes(0)?;
     let width = 25;
     println!("{:<width$}", "Name");

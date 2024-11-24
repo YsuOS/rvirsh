@@ -41,11 +41,11 @@ fn template_test() {
     let conn = Connect::open(Some(CONN)).unwrap();
 
     if let Ok(pool) = StoragePool::lookup_by_name(&conn, pool_name) {
-        rvirsh::pool::pool_stop::stop_pool(&pool).unwrap();
+        rvirsh::pool::stop_pool(&pool).unwrap();
         std::fs::remove_dir_all(&pool_path).unwrap();
     }
     std::fs::create_dir_all(&pool_path).unwrap();
-    rvirsh::pool::pool_create::create_pool(&conn, xml).unwrap();
+    rvirsh::pool::create_pool(&conn, xml).unwrap();
 
     let tmp_pool = StoragePool::lookup_by_name(&conn, pool_name).unwrap();
 
@@ -134,7 +134,7 @@ fn template_test() {
         .assert()
         .success();
 
-    rvirsh::pool::pool_stop::stop_pool(&tmp_pool).unwrap();
+    rvirsh::pool::stop_pool(&tmp_pool).unwrap();
     std::fs::remove_dir_all(&pool_path).unwrap();
     std::fs::remove_file(Path::new("/tmp/test.xml")).unwrap();
     std::fs::remove_file(Path::new("/tmp/test.qcow2")).unwrap();

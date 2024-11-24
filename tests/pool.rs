@@ -23,7 +23,7 @@ fn temporary_pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    assert!(rvirsh::pool::pool_create::create_pool(&conn, xml).is_ok());
+    assert!(rvirsh::pool::create_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -50,7 +50,7 @@ fn pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    assert!(rvirsh::pool::pool_define::define_pool(&conn, xml).is_ok());
+    assert!(rvirsh::pool::define_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -149,7 +149,7 @@ fn pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
-    assert!(rvirsh::pool::pool_define::define_pool(&conn, xml).is_ok());
+    assert!(rvirsh::pool::define_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
