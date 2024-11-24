@@ -1,9 +1,9 @@
-use crate::{err_msg, get_conn, get_domain, get_xml};
+use crate::{get_args, get_conn, get_domain, get_xml};
 use anyhow::{anyhow, bail, ensure, Context, Result};
 use config::Config;
 use quick_xml::{events::Event, Reader};
 use regex::Regex;
-use std::{env, path::Path};
+use std::path::Path;
 use virt::{
     connect::Connect,
     domain::Domain,
@@ -317,22 +317,12 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let dom = get_domain(&conn, cmd)?;
 
     if cmd == "clone" {
-        let new_name = env::args().nth(3).with_context(|| {
-            err_msg(
-                "New domain name is required",
-                cmd,
-                vec!["<org domain>", "<new domain>"],
-            )
-        })?;
+        let usage = vec!["<org domain>", "<new domain>", "<new volume path>"];
+
+        let new_name = get_args(3, "New domain name is required", cmd, &usage)?;
         let new_pool_name = settings.get_string("POOL")?;
         let new_pool = StoragePool::lookup_by_name(&conn, &new_pool_name)?;
-        let new_vol_path = env::args().nth(4).with_context(|| {
-            err_msg(
-                "New volume path is required",
-                cmd,
-                vec!["<org domain>", "<new domain>", "<new volume path>"],
-            )
-        })?;
+        let new_vol_path = get_args(4, "New volume path is required", cmd, &usage)?;
         clone_domain(
             &conn,
             &dom.get_name()?,

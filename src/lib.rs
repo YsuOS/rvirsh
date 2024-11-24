@@ -24,17 +24,13 @@ fn get_conn(settings: &Config) -> Result<Connect> {
 }
 
 fn get_xml(cmd: &str) -> Result<String> {
-    let xml_path = env::args()
-        .nth(2)
-        .with_context(|| err_msg("XML file is required", cmd, vec!["<xml path>"]))?;
+    let xml_path = get_args(2, "XML file is required", cmd, &vec!["<xml path>"])?;
     let content = xml_to_string(&mut File::open(xml_path)?)?;
     Ok(content)
 }
 
 fn get_dom_name(cmd: &str) -> Result<String> {
-    let dom_name = env::args()
-        .nth(2)
-        .with_context(|| err_msg("Domain name is required", cmd, vec!["<domain>"]))?;
+    let dom_name = get_args(2, "Domain name is required", cmd, &vec!["<domain>"])?;
     Ok(dom_name)
 }
 
@@ -54,8 +50,10 @@ fn bytes_to_gbytes(mem: u64) -> Result<f64> {
     Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
 }
 
-fn err_msg(msg: &str, cmd: &str, args: Vec<&str>) -> anyhow::Error {
-    anyhow!("{}\nUsage: rv {} {}", msg, cmd, args.join(" "))
+fn get_args(index: usize, msg: &str, cmd: &str, args: &Vec<&str>) -> Result<String> {
+    env::args()
+        .nth(index)
+        .with_context(|| format!("{}\nUsage: rv {} {}", msg, cmd, args.join(" ")))
 }
 
 fn get_temp_settings(settings: &Config) -> Result<String> {

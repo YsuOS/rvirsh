@@ -13,10 +13,9 @@ pub mod pool_stop;
 mod pool_undefine;
 mod pool_uuid;
 
-use crate::{err_msg, get_conn, get_xml};
-use anyhow::{bail, Context, Result};
+use crate::{get_args, get_conn, get_xml};
+use anyhow::{bail, Result};
 use config::Config;
-use std::env;
 use virt::storage_pool::StoragePool;
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
@@ -36,9 +35,7 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     }
 
-    let pool_name = env::args()
-        .nth(2)
-        .with_context(|| err_msg("pool name is required", cmd, vec!["<pool>"]))?;
+    let pool_name = get_args(2, "pool name is required", cmd, &vec!["<pool>"])?;
     let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 
     match cmd {

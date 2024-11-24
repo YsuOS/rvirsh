@@ -1,6 +1,5 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Result};
 use config::Config;
-use std::env;
 use virt::{domain::Domain, domain_snapshot::DomainSnapshot};
 
 mod snapshot_create;
@@ -12,7 +11,7 @@ mod snapshot_list;
 mod snapshot_parent;
 mod snapshot_revert;
 
-use crate::{err_msg, get_conn, get_domain};
+use crate::{get_args, get_conn, get_domain};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -47,14 +46,12 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
 }
 
 fn get_snapshot_name(cmd: &str) -> Result<String> {
-    let snapshot_name = env::args().nth(3).with_context(|| {
-        err_msg(
-            "snapshot name is required",
-            cmd,
-            vec!["<domain>", "<snapshot>"],
-        )
-    })?;
-    Ok(snapshot_name)
+    Ok(get_args(
+        3,
+        "snapshot name is required",
+        cmd,
+        &vec!["<domain>", "<snapshot>"],
+    )?)
 }
 
 fn get_snapshot(dom: &Domain, cmd: &str) -> Result<DomainSnapshot> {

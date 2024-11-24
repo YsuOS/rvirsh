@@ -8,10 +8,10 @@ mod template_list;
 use anyhow::{anyhow, bail, Context, Result};
 use config::Config;
 use quick_xml::{events::Event, Reader};
-use std::{env, fs::File};
+use std::fs::File;
 use virt::{storage_pool::StoragePool, storage_vol::StorageVol};
 
-use crate::{err_msg, get_conn, get_temp_settings, xml_to_string};
+use crate::{get_args, get_conn, get_temp_settings, xml_to_string};
 
 pub fn main(settings: &Config, cmd: &str) -> Result<()> {
     let conn = get_conn(settings)?;
@@ -27,41 +27,29 @@ pub fn main(settings: &Config, cmd: &str) -> Result<()> {
         return Ok(());
     }
 
-    let template = env::args()
-        .nth(2)
-        .with_context(|| err_msg("Template name is required", cmd, vec!["<template>"]))?;
+    let template = get_args(2, "Template name is required", cmd, &vec!["<template>"])?;
 
     if cmd == "template-create" {
-        let org_xml = env::args().nth(3).with_context(|| {
-            err_msg(
-                "New template xml path is required",
-                cmd,
-                vec!["<template>", "<original xml path>"],
-            )
-        })?;
-        let org_vol = env::args().nth(4).with_context(|| {
-            err_msg(
-                "New template volume path is required",
-                cmd,
-                vec![
-                    "<template>",
-                    "<original xml path>",
-                    "<original volume path>",
-                ],
-            )
-        })?;
+        let usage = vec![
+            "<template>",
+            "<original xml path>",
+            "<original volume path>",
+        ];
+
+        let org_xml = get_args(3, "New template xml path is required", cmd, &usage)?;
+        let org_vol = get_args(4, "New template volume path is required", cmd, &usage)?;
 
         template_create::create_template(&pool, &template, &org_xml, &org_vol)?;
         return Ok(());
     } else if cmd == "spawn" || cmd == "deploy" {
         let (vol, mut xml) = get_template(&pool, cmd)?;
 
-        let name = env::args().nth(3).with_context(|| {
-            anyhow!(
-                "New Domain name is required\nUsage: rv {} <template name> <new domain>",
-                cmd
-            )
-        })?;
+        let name = get_args(
+            3,
+            "New Domain name is required",
+            cmd,
+            &vec!["<template name>", "<new domain>"],
+        )?;
 
         let pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
         if cmd == "spawn" {
@@ -106,9 +94,7 @@ pub fn get_pool_path(pool: &StoragePool) -> Result<String> {
 }
 
 fn get_template(pool: &StoragePool, cmd: &str) -> Result<(StorageVol, String)> {
-    let temp = env::args()
-        .nth(2)
-        .with_context(|| err_msg("Template is required", cmd, vec!["<template>"]))?;
+    let temp = get_args(2, "Template is required", cmd, &vec!["<template>"])?;
     let vol = StorageVol::lookup_by_name(pool, &(temp.clone() + ".qcow2"))?;
     let xml = xml_to_string(&mut File::open(
         get_pool_path(pool)? + "/" + &(temp.clone() + ".xml"),
