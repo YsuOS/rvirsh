@@ -27,7 +27,7 @@ fn temporary_domain_test() {
         .assert()
         .failure();
 
-    assert!(rvirsh::domain::create::create_domain(&conn, xml).is_ok());
+    assert!(rvirsh::domain::create_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -77,7 +77,7 @@ fn domain_test() {
     let xml = &set_name_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
-    assert!(rvirsh::domain::define::define_domain(&conn, xml).is_ok());
+    assert!(rvirsh::domain::define_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -257,7 +257,7 @@ fn clone_test() {
     let vm_xml = &set_fname_xml(&vol_path, VM_XML);
     let vm_xml = &set_name_xml(&org_vm_name, vm_xml);
 
-    assert!(rvirsh::domain::define::define_domain(&conn, &vm_xml).is_ok());
+    assert!(rvirsh::domain::define_domain(&conn, &vm_xml).is_ok());
 
     let new_vm_name = "test-vm4-clone";
     let new_vol_path = "/tmp/test-vm4-clone.qcow2";

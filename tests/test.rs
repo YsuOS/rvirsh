@@ -158,7 +158,7 @@ fn delete_test() {
     let vm_xml = &set_fname_xml(&vol_path, VM_XML);
     let vm_xml = &set_name_xml(&vm_name, vm_xml);
 
-    assert!(rvirsh::domain::define::define_domain(&conn, &vm_xml).is_ok());
+    assert!(rvirsh::domain::define_domain(&conn, &vm_xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()

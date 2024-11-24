@@ -60,7 +60,7 @@ fn snapshot_test() {
     let vm_xml = &set_fname_xml(&vol_path, VM_XML);
     let vm_xml = &set_name_xml(&vm_name, vm_xml);
 
-    assert!(rvirsh::domain::create::create_domain(&conn, &vm_xml).is_ok());
+    assert!(rvirsh::domain::create_domain(&conn, &vm_xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
