@@ -17,7 +17,7 @@ fn temporary_net_test() {
     let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
-    assert!(rvirsh::net::net_create::create_net(&conn, xml).is_ok());
+    assert!(rvirsh::net::create_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -46,7 +46,7 @@ fn net_test() {
     let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
-    assert!(rvirsh::net::net_define::define_net(&conn, xml).is_ok());
+    assert!(rvirsh::net::define_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -55,7 +55,7 @@ fn net_test() {
         .assert()
         .success();
 
-    assert!(rvirsh::net::net_define::define_net(&conn, xml).is_ok());
+    assert!(rvirsh::net::define_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
