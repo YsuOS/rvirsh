@@ -142,7 +142,7 @@ fn delete_test() {
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 
-    assert!(rvirsh::volume::vol_create::create_vol(&pool, vol_xml).is_ok());
+    assert!(rvirsh::volume::create_vol(&pool, vol_xml).is_ok());
 
     let output = Command::cargo_bin("rv")
         .unwrap()

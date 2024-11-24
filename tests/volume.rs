@@ -19,7 +19,7 @@ fn volume_test() {
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 
-    assert!(rvirsh::volume::vol_create::create_vol(&pool, xml).is_ok());
+    assert!(rvirsh::volume::create_vol(&pool, xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()

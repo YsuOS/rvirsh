@@ -80,7 +80,7 @@ fn template_test() {
     let new_domain_vol = new_domain.to_string() + ".qcow2";
     let pool = StoragePool::lookup_by_name(&conn, "default").unwrap();
     if let Ok(vol) = StorageVol::lookup_by_name(&pool, &new_domain_vol) {
-        rvirsh::volume::vol_delete::delete_volume(&vol).unwrap();
+        rvirsh::volume::delete_volume(&vol).unwrap();
     }
 
     Command::cargo_bin("rv")

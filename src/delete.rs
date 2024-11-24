@@ -28,6 +28,6 @@ pub fn delete_instance(dom: &Domain, volume: &StorageVol) -> Result<()> {
     }
     crate::domain::undefine_domain(&dom)?;
 
-    crate::volume::vol_delete::delete_volume(&volume)?;
+    crate::volume::delete_volume(&volume)?;
     Ok(())
 }
