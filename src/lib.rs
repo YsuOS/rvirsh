@@ -14,7 +14,7 @@ pub mod uri;
 pub mod version;
 pub mod volume;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use config::Config;
 use std::{env, fs::File, io::Read};
 use virt::{connect::Connect, domain::Domain};
@@ -61,6 +61,6 @@ fn get_temp_settings(settings: &Config) -> Result<String> {
     } else {
         settings
             .get_string("TEMP_POOL")
-            .with_context(|| anyhow!("Can not get TEMP_POOL from config file"))
+            .with_context(|| format!("Can not get TEMP_POOL from config file"))
     }
 }
