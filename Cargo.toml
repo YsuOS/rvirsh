@@ -1,6 +1,6 @@
 [package]
 name = "rvirsh"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Ryosuke Yasuoka <ryasuoka@redhat.com>"]
 description = """
 rvirsh is a Rust-based virtual machine management tool
