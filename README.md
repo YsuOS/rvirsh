@@ -6,6 +6,8 @@ To avoid using complex arguments, `rvirsh` reads default configuration from `$HO
 
 ## Installation
 
+### Common procedures
+
 1. Ensure that Rust is installed on your system. If not, install it from the [official Rust website](https://www.rust-lang.org/tools/install).
 
 2. Ensure that `libvirt-dev` or `libvirt-devel` is installed on your system. Otherwise, compile will be fail. If not, install it with the following command (in Fedora/RHEL).
@@ -13,6 +15,16 @@ To avoid using complex arguments, `rvirsh` reads default configuration from `$HO
    ```bash
    dnf install libvirt-devel
    ```
+
+### Get binary
+
+3. Install from [crates.io](https://crates.io/crates/rvirsh):
+   
+   ```bash
+   cargo install rvirsh
+   ```
+
+### Install from source code 
 
 3. Clone the `rvirsh` repository:
 
