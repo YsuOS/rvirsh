@@ -3,7 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
-use virt::connect::Connect;
+use virt::{connect::Connect, network::Network};
 
 const XML: &str = r#"
 <network>
@@ -17,6 +17,9 @@ fn temporary_net_test() {
     let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
+    if let Ok(net) = Network::lookup_by_name(&conn, net_name) {
+        rvirsh::net::clean_net(&net).unwrap();
+    }
     assert!(rvirsh::net::create_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
@@ -46,6 +49,9 @@ fn net_test() {
     let xml = &set_name_xml(net_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
+    if let Ok(net) = Network::lookup_by_name(&conn, net_name) {
+        rvirsh::net::clean_net(&net).unwrap();
+    }
     assert!(rvirsh::net::define_net(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
