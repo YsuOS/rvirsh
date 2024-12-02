@@ -1,10 +1,12 @@
-use crate::{get_args, get_conn, get_xml};
+use crate::{
+    get_conn, get_xml,
+    Commands::{self, *},
+};
 use anyhow::{bail, Result};
 use config::Config;
 use virt::{connect::Connect, network::Network};
 
-fn get_network(conn: &Connect, cmd: &str) -> Result<Network> {
-    let name = get_args(2, "Network name is required", cmd, &vec!["<network>"])?;
+fn get_network(conn: &Connect, name: &str) -> Result<Network> {
     Ok(Network::lookup_by_name(conn, &name)?)
 }
 
@@ -139,36 +141,41 @@ pub fn show_net_uuid(net: &Network) -> Result<()> {
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    if cmd == "net-list" {
-        list_net(&conn)?;
-        return Ok(());
-    } else if cmd == "net-define" || cmd == "net-create" {
-        let xml = get_xml(cmd)?;
-
-        if cmd == "net-define" {
-            define_net(&conn, &xml)?;
-        } else if cmd == "net-create" {
-            create_net(&conn, &xml)?;
-        }
-        return Ok(());
-    }
-
-    let net = get_network(&conn, cmd)?;
-
     match cmd {
-        "net-autostart" => autostart_net(&net)?,
-        "net-noautostart" => noautostart_net(&net)?,
-        "net-stop" => stop_net(&net)?,
-        "net-undefine" => undefine_net(&net)?,
-        "net-clean" => clean_net(&net)?,
-        "net-start" => start_net(&net)?,
-        "net-uuid" => show_net_uuid(&net)?,
-        "net-info" => show_net_info(&net)?,
-        "net-dumpxml" => show_net_dumpxml(&net)?,
-        _ => bail!("{} is not supported", cmd),
+        NetList => {
+            list_net(&conn)?;
+            return Ok(());
+        }
+        NetDefine(xml) | NetCreate(xml) => {
+            let xml = get_xml(&xml.name)?;
+            match cmd {
+                NetDefine(_) => define_net(&conn, &xml)?,
+                NetCreate(_) => create_net(&conn, &xml)?,
+                _ => unreachable!(),
+            }
+            return Ok(());
+        }
+        NetUuid(net) | NetInfo(net) | NetDumpxml(net) | NetAutostart(net) | NetNoautostart(net)
+        | NetStop(net) | NetStart(net) | NetUndefine(net) | NetClean(net) => {
+            let net = get_network(&conn, &net.name)?;
+            match cmd {
+                NetAutostart(_) => autostart_net(&net)?,
+                NetNoautostart(_) => noautostart_net(&net)?,
+                NetStop(_) => stop_net(&net)?,
+                NetUndefine(_) => undefine_net(&net)?,
+                NetClean(_) => clean_net(&net)?,
+                NetStart(_) => start_net(&net)?,
+                NetUuid(_) => show_net_uuid(&net)?,
+                NetInfo(_) => show_net_info(&net)?,
+                NetDumpxml(_) => show_net_dumpxml(&net)?,
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
     }
+
     Ok(())
 }

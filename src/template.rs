@@ -1,4 +1,4 @@
-use crate::{get_args, get_conn, get_temp_settings, xml_to_string};
+use crate::{get_args, get_conn, get_temp_settings, get_xml};
 use anyhow::{bail, Context, Result};
 use config::Config;
 use quick_xml::{
@@ -51,7 +51,7 @@ fn tmp_create_get_args(index: usize, msg: &str, cmd: &str) -> Result<String> {
 fn get_template(pool: &StoragePool, temp: &str) -> Result<(String, StorageVol)> {
     // TODO: Be able to get them non-named "temp" + {.xml, .qcow2}
     let (xml_path, _) = get_template_path(pool, temp)?;
-    let xml = xml_to_string(&mut File::open(&xml_path)?)?;
+    let xml = get_xml(&xml_path)?;
     let vol = StorageVol::lookup_by_name(pool, &get_template_vol_name(&temp)?)?;
 
     Ok((xml, vol))
