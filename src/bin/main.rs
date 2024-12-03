@@ -29,7 +29,7 @@ fn run() -> Result<()> {
         }
         Clone => todo!(),
         Delete(_) => todo!(),
-        Console(_) => todo!(),
+        Console(_) => rvirsh::console::main(&settings, &command)?,
         NetList | NetUuid(_) | NetInfo(_) | NetDumpxml(_) | NetAutostart(_) | NetNoautostart(_)
         | NetStop(_) | NetStart(_) | NetUndefine(_) | NetClean(_) | NetDefine(_) | NetCreate(_) => {
             rvirsh::net::main(&settings, &command)?
@@ -53,14 +53,8 @@ fn run() -> Result<()> {
     };
 
     //    match command.as_str() {
-    //        "list" | "start" | "shutdown" | "reboot" | "suspend" | "resume" | "reset" | "poweroff"
-    //        | "undefine" | "dominfo" | "info" | "domid" | "domuuid" | "autostart" | "noautostart"
-    //        | "domstate" | "dumpxml" | "define" | "create" => {
-    //            rvirsh::domain::main(&settings, &command)?
-    //        }
     //        "clone" => rvirsh::clone::main(&settings, &command)?,
     //        "delete" => rvirsh::delete::main(&settings, &command)?,
-    //        "console" => rvirsh::console::main(&settings, &command)?,
     //        "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
     //        | "vol-pool" | "vol-wipe" | "vol-create" | "vol-clone" => {
     //            rvirsh::volume::main(&settings, &command)?

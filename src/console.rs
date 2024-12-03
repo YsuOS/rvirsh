@@ -1,24 +1,23 @@
-use crate::event::EventHandleCallback;
 use crate::{
-    event::{event_register_default_impl, event_run_default_impl, Event},
-    get_conn, get_domain,
+    event::{event_register_default_impl, event_run_default_impl, Event, EventHandleCallback},
+    get_conn, get_domain, Commands,
 };
 use anyhow::Result;
 use config::Config;
 use libc;
-use std::sync::{atomic::AtomicBool, Arc};
 use std::{
     ffi::c_void,
     io::{self, Read, Write},
     os::fd::AsRawFd,
+    sync::{atomic::AtomicBool, Arc},
 };
 use termios::{
     Termios, CLOCAL, CREAD, ECHO, ECHOE, ECHOK, ECHONL, ICANON, ICRNL, IEXTEN, IGNBRK, IGNCR,
     INLCR, ISIG, OPOST, TCSANOW,
 };
-use virt::connect::Connect;
-use virt::domain::Domain;
 use virt::{
+    connect::Connect,
+    domain::Domain,
     stream::Stream,
     sys::{
         virStreamEventType, VIR_DOMAIN_CONSOLE_FORCE, VIR_EVENT_HANDLE_READABLE,
@@ -115,17 +114,6 @@ fn reset_mode(orig_termios: Termios) -> Result<()> {
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
-    // It should be called before getting conn and dom
-    event_register_default_impl()?;
-
-    let conn = get_conn(settings)?;
-    let dom = get_domain(&conn, cmd)?;
-
-    connect_console(&conn, &dom)?;
-    Ok(())
-}
-
 pub fn connect_console(conn: &Connect, dom: &Domain) -> Result<()> {
     let st = Stream::new(&conn, VIR_STREAM_NONBLOCK)?;
 
@@ -157,5 +145,19 @@ pub fn connect_console(conn: &Connect, dom: &Domain) -> Result<()> {
     }
 
     reset_mode(orig_termios)?;
+    Ok(())
+}
+
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
+    // It should be called before getting conn and dom
+    event_register_default_impl()?;
+
+    let conn = get_conn(settings)?;
+
+    if let Commands::Console(dom) = cmd {
+        let dom = get_domain(&conn, &dom.name)?;
+        connect_console(&conn, &dom)?;
+    }
+
     Ok(())
 }

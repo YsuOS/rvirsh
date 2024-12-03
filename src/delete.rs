@@ -2,21 +2,23 @@ use anyhow::Result;
 use config::Config;
 use virt::{domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
-use crate::{get_conn, get_domain};
+use crate::{get_conn, get_domain, Commands};
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
-    let dom = get_domain(&conn, cmd)?;
+    if let Commands::Delete(dom) = cmd {
+        let dom = get_domain(&conn, &dom.name)?;
 
-    let pool_name = settings.get_string("POOL")?;
-    let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
+        let pool_name = settings.get_string("POOL")?;
+        let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 
-    // TODO: Delete only a volume that matches the domain name
-    let dom_name = dom.get_name()?;
-    let vol_name = dom_name.clone() + ".qcow2";
-    let volume = StorageVol::lookup_by_name(&pool, &vol_name)?;
+        // TODO: Delete only a volume that matches the domain name
+        let dom_name = dom.get_name()?;
+        let vol_name = dom_name.clone() + ".qcow2";
+        let volume = StorageVol::lookup_by_name(&pool, &vol_name)?;
 
-    delete_instance(&dom, &volume)?;
+        delete_instance(&dom, &volume)?;
+    }
     Ok(())
 }
 
