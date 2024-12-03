@@ -40,9 +40,11 @@ fn run() -> Result<()> {
         }
         SnapshotList | SnapshotDelete | SnapshotInfo | SnapshotParent | SnapshotDumpxml
         | SnapshotCurrent | SnapshotRevert | SnapshotCreate => todo!(),
-        PoolList | PoolInfo | PoolRefresh | PoolUuid | PoolStop | PoolDelete | PoolUndefine
-        | PoolClean | PoolAutostart | PoolNoautostart | PoolDumpxml | PoolStart | PoolDefine
-        | PoolCreate => todo!(),
+        PoolList | PoolInfo(_) | PoolRefresh(_) | PoolUuid(_) | PoolStop(_) | PoolDelete(_)
+        | PoolUndefine(_) | PoolClean(_) | PoolAutostart(_) | PoolNoautostart(_)
+        | PoolDumpxml(_) | PoolStart(_) | PoolDefine(_) | PoolCreate(_) => {
+            rvirsh::pool::main(&settings, &command)?
+        }
         TemplateList | TemplateCreate | TemplateDelete | TemplateInfo | Spawn | Deploy => todo!(),
         Version => rvirsh::version::main(&settings)?,
         Uri => rvirsh::uri::main(&settings)?,
@@ -60,11 +62,6 @@ fn run() -> Result<()> {
     //        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
     //        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
     //            rvirsh::snapshot::main(&settings, &command)?
-    //        }
-    //        "pool-list" | "pool-info" | "pool-refresh" | "pool-uuid" | "pool-stop" | "pool-delete"
-    //        | "pool-undefine" | "pool-clean" | "pool-autostart" | "pool-noautostart"
-    //        | "pool-dumpxml" | "pool-start" | "pool-define" | "pool-create" => {
-    //            rvirsh::pool::main(&settings, &command)?
     //        }
     //        "template-list" | "template-create" | "template-delete" | "template-info" | "spawn"
     //        | "deploy" => rvirsh::template::main(&settings, &command)?,

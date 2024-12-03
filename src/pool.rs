@@ -1,4 +1,7 @@
-use crate::{get_args, get_conn, get_xml};
+use crate::{
+    get_conn, get_xml,
+    Commands::{self, *},
+};
 use anyhow::{bail, Result};
 use config::Config;
 use virt::{
@@ -167,39 +170,51 @@ pub fn show_pool_uuid(pool: &StoragePool) -> Result<()> {
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    if cmd == "pool-list" {
-        list_pool(&conn)?;
-        return Ok(());
-    } else if cmd == "pool-define" || cmd == "pool-create" {
-        let xml = get_xml(cmd)?;
-
-        if cmd == "pool-define" {
-            define_pool(&conn, &xml)?;
-        } else if cmd == "pool-create" {
-            create_pool(&conn, &xml)?;
-        }
-        return Ok(());
-    }
-
-    let pool_name = get_args(2, "pool name is required", cmd, &vec!["<pool>"])?;
-    let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
-
     match cmd {
-        "pool-info" => show_pool_info(&pool)?,
-        "pool-start" => start_pool(&pool)?,
-        "pool-stop" => stop_pool(&pool)?,
-        "pool-refresh" => refresh_pool(&pool)?,
-        "pool-uuid" => show_pool_uuid(&pool)?,
-        "pool-delete" => delete_pool(&pool)?,
-        "pool-undefine" => undefine_pool(&pool)?,
-        "pool-clean" => clean_pool(&pool)?,
-        "pool-autostart" => autostart_pool(&pool)?,
-        "pool-noautostart" => noautostart_pool(&pool)?,
-        "pool-dumpxml" => show_pool_dumpxml(&pool)?,
-        _ => bail!("{} is not supported", cmd),
+        PoolList => {
+            list_pool(&conn)?;
+        }
+        PoolDefine(xml) | PoolCreate(xml) => {
+            let xml = get_xml(&xml.name)?;
+
+            match cmd {
+                PoolDefine(_) => define_pool(&conn, &xml)?,
+                PoolCreate(_) => create_pool(&conn, &xml)?,
+                _ => unreachable!(),
+            }
+        }
+        PoolInfo(pool)
+        | PoolRefresh(pool)
+        | PoolUuid(pool)
+        | PoolStop(pool)
+        | PoolDelete(pool)
+        | PoolUndefine(pool)
+        | PoolClean(pool)
+        | PoolAutostart(pool)
+        | PoolNoautostart(pool)
+        | PoolDumpxml(pool)
+        | PoolStart(pool) => {
+            let pool = StoragePool::lookup_by_name(&conn, &pool.name)?;
+
+            match cmd {
+                PoolInfo(_) => show_pool_info(&pool)?,
+                PoolStart(_) => start_pool(&pool)?,
+                PoolStop(_) => stop_pool(&pool)?,
+                PoolRefresh(_) => refresh_pool(&pool)?,
+                PoolUuid(_) => show_pool_uuid(&pool)?,
+                PoolDelete(_) => delete_pool(&pool)?,
+                PoolUndefine(_) => undefine_pool(&pool)?,
+                PoolClean(_) => clean_pool(&pool)?,
+                PoolAutostart(_) => autostart_pool(&pool)?,
+                PoolNoautostart(_) => noautostart_pool(&pool)?,
+                PoolDumpxml(_) => show_pool_dumpxml(&pool)?,
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
     }
     Ok(())
 }

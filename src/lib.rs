@@ -31,20 +31,9 @@ fn get_xml(xml_path: &str) -> Result<String> {
     Ok(content)
 }
 
-//fn get_dom_name(cmd: &str) -> Result<String> {
-//    get_args(2, "Domain name is required", cmd, &vec!["<domain>"])
-//}
-
 fn get_domain(conn: &Connect, name: &str) -> Result<Domain> {
-    //let dom_name = get_dom_name(cmd)?;
     Ok(Domain::lookup_by_name(conn, name)?)
 }
-
-//fn xml_to_string(xml: &mut File) -> Result<String> {
-//    let mut content = String::new();
-//    xml.read_to_string(&mut content)?;
-//    Ok(content)
-//}
 
 fn bytes_to_gbytes(mem: u64) -> Result<f64> {
     Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
@@ -128,15 +117,15 @@ pub enum Commands {
     /// Delete a domain snapshots
     SnapshotDelete,
     /// Define pool
-    PoolDefine,
+    PoolDefine(Xml),
     /// Create and run pool
-    PoolCreate,
+    PoolCreate(Xml),
     /// Start pool
-    PoolStart,
+    PoolStart(Pool),
     /// List all pools
     PoolList,
     /// Run 'pool-stop', 'pool-delete', and 'pool-undefine'
-    PoolClean,
+    PoolClean(Pool),
     /// Create template
     TemplateCreate,
     /// List all templates
@@ -205,23 +194,23 @@ pub enum Commands {
     /// Wipe volume
     VolWipe(Vol),
     /// Print pool information
-    PoolInfo,
+    PoolInfo(Pool),
     /// Print pool uuid
-    PoolUuid,
+    PoolUuid(Pool),
     /// Refresh pool
-    PoolRefresh,
+    PoolRefresh(Pool),
     /// Stop pool
-    PoolStop,
+    PoolStop(Pool),
     /// Delete pool
-    PoolDelete,
+    PoolDelete(Pool),
     /// Undefine pool
-    PoolUndefine,
+    PoolUndefine(Pool),
     /// Enable pool autostart
-    PoolAutostart,
+    PoolAutostart(Pool),
     /// Disable pool autostart
-    PoolNoautostart,
+    PoolNoautostart(Pool),
     /// Print pool information in XML
-    PoolDumpxml,
+    PoolDumpxml(Pool),
 
     /// Use 'hostinfo'
     Nodeinfo,
@@ -275,5 +264,11 @@ pub struct VCArgs {
 #[derive(Args, Debug, PartialEq)]
 pub struct VolPath {
     /// Volume path
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct Pool {
+    /// Pool name
     name: String,
 }

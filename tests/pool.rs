@@ -3,7 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
-use virt::connect::Connect;
+use virt::{connect::Connect, storage_pool::StoragePool};
 
 const XML: &str = r#"
 <pool type='dir'>
@@ -23,6 +23,9 @@ fn temporary_pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
+    if let Ok(dom) = StoragePool::lookup_by_name(&conn, pool_name) {
+        rvirsh::pool::stop_pool(&dom).unwrap();
+    }
     assert!(rvirsh::pool::create_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
@@ -50,6 +53,9 @@ fn pool_test() {
 
     std::fs::create_dir_all(&pool_path).unwrap();
 
+    if let Ok(dom) = StoragePool::lookup_by_name(&conn, pool_name) {
+        rvirsh::pool::delete_pool(&dom).unwrap();
+    }
     assert!(rvirsh::pool::define_pool(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
