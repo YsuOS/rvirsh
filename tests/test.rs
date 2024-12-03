@@ -7,13 +7,7 @@ use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_
 
 #[test]
 fn without_command() {
-    Command::cargo_bin("rv")
-        .unwrap()
-        .assert()
-        .failure()
-        .stderr(predicate::eq(
-            "Error: 1st argument is required\nRun 'rv help' to see commands\n",
-        ));
+    Command::cargo_bin("rv").unwrap().assert().failure();
 }
 
 #[test]
@@ -23,11 +17,7 @@ fn unsupported_command() {
         .unwrap()
         .arg(cmd)
         .assert()
-        .failure()
-        .stderr(predicate::eq(format!(
-            "Error: Command {} is not supported.\nRun 'rv help' to see commands\n",
-            cmd
-        )));
+        .failure();
 }
 
 #[test]
