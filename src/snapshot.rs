@@ -1,5 +1,8 @@
-use crate::{get_args, get_conn, get_domain};
-use anyhow::{bail, Result};
+use crate::{
+    get_conn, get_domain,
+    Commands::{self, *},
+};
+use anyhow::Result;
 use config::Config;
 use virt::{
     domain::Domain,
@@ -10,21 +13,17 @@ use virt::{
     },
 };
 
-fn get_snapshot_name(cmd: &str) -> Result<String> {
-    Ok(get_args(
-        3,
-        "snapshot name is required",
-        cmd,
-        &vec!["<domain>", "<snapshot>"],
-    )?)
-}
+//fn get_snapshot_name(dom: &Domain) -> Result<String> {
+//    Ok(get_args(
+//        3,
+//        "snapshot name is required",
+//        cmd,
+//        &vec!["<domain>", "<snapshot>"],
+//    )?)
+//}
 
-fn get_snapshot(dom: &Domain, cmd: &str) -> Result<DomainSnapshot> {
-    Ok(DomainSnapshot::lookup_by_name(
-        dom,
-        &get_snapshot_name(cmd)?,
-        0,
-    )?)
+fn get_snapshot(dom: &Domain, ss: &str) -> Result<DomainSnapshot> {
+    Ok(DomainSnapshot::lookup_by_name(dom, ss, 0)?)
 }
 
 fn get_parent(snapshot: &DomainSnapshot) -> Result<String> {
@@ -133,33 +132,39 @@ pub fn show_snapshot_info(domain: &Domain, snapshot: &DomainSnapshot) -> Result<
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
-    let dom = get_domain(&get_conn(settings)?, cmd)?;
-
-    if cmd == "snapshot-delete" {
-        delete_all_snapshots(&dom)?;
-        return Ok(());
-    } else if cmd == "snapshot-list" {
-        list_snapshots(&dom)?;
-        return Ok(());
-    } else if cmd == "snapshot-current" {
-        get_current_snapshot(&dom)?;
-        return Ok(());
-    } else if cmd == "snapshot-create" {
-        // TODO: snapshot name can't be specified now
-        let snapshot_name = get_snapshot_name(cmd)?;
-        create_snapshot(&dom, &snapshot_name)?;
-        return Ok(());
-    }
-
-    let snapshot = get_snapshot(&dom, cmd)?;
-
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     match cmd {
-        "snapshot-info" => show_snapshot_info(&dom, &snapshot)?,
-        "snapshot-revert" => revert_snapshot(&dom, &snapshot)?,
-        "snapshot-parent" => show_snapshot_parent(&snapshot)?,
-        "snapshot-dumpxml" => show_snapshot_dumpxml(&snapshot)?,
-        _ => bail!("{} is not supported", cmd),
+        SnapshotDelete(dom) | SnapshotList(dom) | SnapshotCurrent(dom) => {
+            let dom = get_domain(&get_conn(settings)?, &dom.name)?;
+            match cmd {
+                SnapshotDelete(_) => delete_all_snapshots(&dom)?,
+                SnapshotList(_) => list_snapshots(&dom)?,
+                SnapshotCurrent(_) => get_current_snapshot(&dom)?,
+                _ => unreachable!(),
+            }
+        }
+        SnapshotCreate(args)
+        | SnapshotInfo(args)
+        | SnapshotRevert(args)
+        | SnapshotParent(args)
+        | SnapshotDumpxml(args) => {
+            let dom = get_domain(&get_conn(settings)?, &args.dom)?;
+            if let SnapshotCreate(args) = cmd {
+                create_snapshot(&dom, &args.ss)?;
+                return Ok(());
+            }
+
+            let snapshot = get_snapshot(&dom, &args.ss)?;
+            match cmd {
+                SnapshotInfo(_) => show_snapshot_info(&dom, &snapshot)?,
+                SnapshotRevert(_) => revert_snapshot(&dom, &snapshot)?,
+                SnapshotParent(_) => show_snapshot_parent(&snapshot)?,
+                SnapshotDumpxml(_) => show_snapshot_dumpxml(&snapshot)?,
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
     }
+
     Ok(())
 }

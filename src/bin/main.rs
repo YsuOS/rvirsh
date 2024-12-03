@@ -38,8 +38,10 @@ fn run() -> Result<()> {
         | VolPool(_) | VolWipe(_) | VolCreate(_) | VolClone(_) => {
             rvirsh::volume::main(&settings, &command)?
         }
-        SnapshotList | SnapshotDelete | SnapshotInfo | SnapshotParent | SnapshotDumpxml
-        | SnapshotCurrent | SnapshotRevert | SnapshotCreate => todo!(),
+        SnapshotList(_) | SnapshotDelete(_) | SnapshotInfo(_) | SnapshotParent(_)
+        | SnapshotDumpxml(_) | SnapshotCurrent(_) | SnapshotRevert(_) | SnapshotCreate(_) => {
+            rvirsh::snapshot::main(&settings, &command)?
+        }
         PoolList | PoolInfo(_) | PoolRefresh(_) | PoolUuid(_) | PoolStop(_) | PoolDelete(_)
         | PoolUndefine(_) | PoolClean(_) | PoolAutostart(_) | PoolNoautostart(_)
         | PoolDumpxml(_) | PoolStart(_) | PoolDefine(_) | PoolCreate(_) => {
@@ -58,10 +60,6 @@ fn run() -> Result<()> {
 
     //    match command.as_str() {
     //        "clone" => rvirsh::clone::main(&settings, &command)?,
-    //        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
-    //        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
-    //            rvirsh::snapshot::main(&settings, &command)?
-    //        }
     //        "template-list" | "template-create" | "template-delete" | "template-info" | "spawn"
     //        | "deploy" => rvirsh::template::main(&settings, &command)?,
     //    };

@@ -107,15 +107,15 @@ pub enum Commands {
     /// Delete volume
     VolDelete(Vol),
     /// Create and run domain snapshot
-    SnapshotCreate,
+    SnapshotCreate(SSArgs),
     /// List domain snapshots
-    SnapshotList,
+    SnapshotList(Dom),
     /// Get current snapshot on the domain
-    SnapshotCurrent,
+    SnapshotCurrent(Dom),
     /// Set and revert snapshot on the domain
-    SnapshotRevert,
+    SnapshotRevert(SSArgs),
     /// Delete a domain snapshots
-    SnapshotDelete,
+    SnapshotDelete(Dom),
     /// Define pool
     PoolDefine(Xml),
     /// Create and run pool
@@ -174,11 +174,11 @@ pub enum Commands {
     /// Print net information in XML
     NetDumpxml(Net),
     /// Print snapshot information
-    SnapshotInfo,
+    SnapshotInfo(SSArgs),
     /// Get a parent of snapshot
-    SnapshotParent,
+    SnapshotParent(SSArgs),
     /// Print snapshot information in XML
-    SnapshotDumpxml,
+    SnapshotDumpxml(SSArgs),
     /// Print volume information
     VolInfo(Vol),
     /// Print volume key
@@ -271,4 +271,12 @@ pub struct VolPath {
 pub struct Pool {
     /// Pool name
     name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct SSArgs {
+    /// Dom name
+    dom: String,
+    /// Snapshot name
+    ss: String,
 }
