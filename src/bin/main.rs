@@ -22,12 +22,14 @@ fn run() -> Result<()> {
 
     let command = cli.command;
     match command {
-        List | Start | Shutdown | Reboot | Suspend | Resume | Reset | Poweroff | Undefine
-        | Dominfo | Info | Domid | Domuuid | Autostart | Noautostart | Domstate | Dumpxml
-        | Define | Create => todo!(),
+        List | Start(_) | Shutdown(_) | Reboot(_) | Suspend(_) | Resume(_) | Reset(_)
+        | Poweroff(_) | Undefine(_) | Dominfo(_) | Info(_) | Domid(_) | Domuuid(_)
+        | Autostart(_) | Noautostart(_) | Domstate(_) | Dumpxml(_) | Define(_) | Create(_) => {
+            rvirsh::domain::main(&settings, &command)?
+        }
         Clone => todo!(),
-        Delete => todo!(),
-        Console => todo!(),
+        Delete(_) => todo!(),
+        Console(_) => todo!(),
         NetList | NetUuid(_) | NetInfo(_) | NetDumpxml(_) | NetAutostart(_) | NetNoautostart(_)
         | NetStop(_) | NetStart(_) | NetUndefine(_) | NetClean(_) | NetDefine(_) | NetCreate(_) => {
             rvirsh::net::main(&settings, &command)?
@@ -59,9 +61,6 @@ fn run() -> Result<()> {
     //        "clone" => rvirsh::clone::main(&settings, &command)?,
     //        "delete" => rvirsh::delete::main(&settings, &command)?,
     //        "console" => rvirsh::console::main(&settings, &command)?,
-    //        "net-list" | "net-uuid" | "net-info" | "net-dumpxml" | "net-autostart"
-    //        | "net-noautostart" | "net-stop" | "net-start" | "net-undefine" | "net-clean"
-    //        | "net-define" | "net-create" => rvirsh::net::main(&settings, &command)?,
     //        "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
     //        | "vol-pool" | "vol-wipe" | "vol-create" | "vol-clone" => {
     //            rvirsh::volume::main(&settings, &command)?

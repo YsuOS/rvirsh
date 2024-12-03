@@ -32,13 +32,13 @@ fn get_xml(xml_path: &str) -> Result<String> {
     Ok(content)
 }
 
-fn get_dom_name(cmd: &str) -> Result<String> {
-    get_args(2, "Domain name is required", cmd, &vec!["<domain>"])
-}
+//fn get_dom_name(cmd: &str) -> Result<String> {
+//    get_args(2, "Domain name is required", cmd, &vec!["<domain>"])
+//}
 
-fn get_domain(conn: &Connect, cmd: &str) -> Result<Domain> {
-    let dom_name = get_dom_name(cmd)?;
-    Ok(Domain::lookup_by_name(conn, &dom_name)?)
+fn get_domain(conn: &Connect, name: &str) -> Result<Domain> {
+    //let dom_name = get_dom_name(cmd)?;
+    Ok(Domain::lookup_by_name(conn, name)?)
 }
 
 //fn xml_to_string(xml: &mut File) -> Result<String> {
@@ -73,11 +73,11 @@ pub enum Commands {
     /// List all domains
     List,
     /// Print domain various information
-    Info,
+    Info(Dom),
     /// Define domain
-    Define,
+    Define(Xml),
     /// Create and run domain
-    Create,
+    Create(Xml),
     /// Clone domain
     Clone,
     /// Create and run domain from template
@@ -85,23 +85,23 @@ pub enum Commands {
     /// Define domain from template
     Deploy,
     /// Start domain
-    Start,
+    Start(Dom),
     /// Shutdown domain
-    Shutdown,
+    Shutdown(Dom),
     /// Reboot domain
-    Reboot,
+    Reboot(Dom),
     /// Suspend domain
-    Suspend,
+    Suspend(Dom),
     /// Resume domain
-    Resume,
+    Resume(Dom),
     /// Reset domain
-    Reset,
+    Reset(Dom),
     /// Forcefully terminate domain
-    Poweroff,
+    Poweroff(Dom),
     /// Run 'undefine', 'vol-delete', and 'snapshot-delete'
-    Delete,
+    Delete(Dom),
     /// Connect domain via console
-    Console,
+    Console(Dom),
     /// List all networks
     NetList,
     /// Start network
@@ -156,21 +156,21 @@ pub enum Commands {
     Hostinfo,
 
     /// Enable autostart
-    Autostart,
+    Autostart(Dom),
     /// Disable autostart
-    Noautostart,
+    Noautostart(Dom),
     /// Undefine domain
-    Undefine,
+    Undefine(Dom),
     /// Print domain information. Use `info`
-    Dominfo,
+    Dominfo(Dom),
     /// Print domain state. Use `info`
-    Domstate,
+    Domstate(Dom),
     /// Print domain id. Use `info`
-    Domid,
+    Domid(Dom),
     /// Print domain uuid. Use `info`
-    Domuuid,
+    Domuuid(Dom),
     /// Print domain information in XML
-    Dumpxml,
+    Dumpxml(Dom),
     /// Enable net autostart
     NetAutostart(Net),
     /// Disable net autostart
@@ -236,13 +236,19 @@ pub enum Commands {
 
 #[derive(Args, Debug, PartialEq)]
 pub struct Xml {
-    /// XML File containing a network description
+    /// XML File containing a component's description
     #[arg(value_name = "FILE")]
     name: String,
 }
 
 #[derive(Args, Debug, PartialEq)]
 pub struct Net {
+    /// Network name
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct Dom {
     /// Network name
     name: String,
 }

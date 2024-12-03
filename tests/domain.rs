@@ -3,7 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool};
 
 const XML: &str = r#"
 <domain type="kvm">
@@ -27,6 +27,9 @@ fn temporary_domain_test() {
         .assert()
         .failure();
 
+    if let Ok(dom) = Domain::lookup_by_name(&conn, vm_name) {
+        rvirsh::domain::poweroff_domain(&dom).unwrap();
+    }
     assert!(rvirsh::domain::create_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")
@@ -77,6 +80,9 @@ fn domain_test() {
     let xml = &set_name_xml(vm_name, XML);
     let conn = Connect::open(Some(CONN)).unwrap();
 
+    if let Ok(dom) = Domain::lookup_by_name(&conn, vm_name) {
+        rvirsh::domain::undefine_domain(&dom).unwrap();
+    }
     assert!(rvirsh::domain::define_domain(&conn, xml).is_ok());
 
     Command::cargo_bin("rv")

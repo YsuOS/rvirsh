@@ -1,4 +1,7 @@
-use crate::{get_conn, get_domain, get_xml};
+use crate::{
+    get_conn, get_domain, get_xml,
+    Commands::{self, *},
+};
 use anyhow::{bail, ensure, Result};
 use config::Config;
 use virt::{
@@ -207,43 +210,51 @@ pub fn undefine_domain(dom: &Domain) -> Result<()> {
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    if cmd == "list" {
-        list_domain(&conn)?;
-        return Ok(());
-    } else if cmd == "define" || cmd == "create" {
-        let xml = get_xml(cmd)?;
-
-        if cmd == "define" {
-            define_domain(&conn, &xml)?;
-        } else if cmd == "create" {
-            create_domain(&conn, &xml)?;
-        }
-        return Ok(());
-    }
-
-    let dom = get_domain(&conn, cmd)?;
-
     match cmd {
-        "dominfo" => show_domain_info(&dom)?,
-        "domstate" => show_domain_state(&dom)?,
-        "domid" => show_domain_id(&dom)?,
-        "domuuid" => show_domain_uuid(&dom)?,
-        "dumpxml" => show_domain_dumpxml(&dom)?,
-        "info" => show_info(&dom)?,
-        "start" => start_domain(&dom)?,
-        "shutdown" => shutdown_domain(&dom)?,
-        "reboot" => reboot_domain(&dom)?,
-        "suspend" => suspend_domain(&dom)?,
-        "resume" => resume_domain(&dom)?,
-        "reset" => reset_domain(&dom)?,
-        "poweroff" => poweroff_domain(&dom)?,
-        "undefine" => undefine_domain(&dom)?,
-        "autostart" => autostart_domain(&dom)?,
-        "noautostart" => noautostart_domain(&dom)?,
-        _ => bail!("{} is not supported", cmd),
+        List => {
+            list_domain(&conn)?;
+            return Ok(());
+        }
+        Define(xml) | Create(xml) => {
+            let xml = get_xml(&xml.name)?;
+
+            match cmd {
+                Define(_) => define_domain(&conn, &xml)?,
+                Create(_) => create_domain(&conn, &xml)?,
+                _ => unreachable!(),
+            }
+            return Ok(());
+        }
+        Start(dom) | Shutdown(dom) | Reboot(dom) | Suspend(dom) | Resume(dom) | Reset(dom)
+        | Poweroff(dom) | Undefine(dom) | Dominfo(dom) | Info(dom) | Domid(dom) | Domuuid(dom)
+        | Autostart(dom) | Noautostart(dom) | Domstate(dom) | Dumpxml(dom) => {
+            let dom = get_domain(&conn, &dom.name)?;
+
+            match cmd {
+                Dominfo(_) => show_domain_info(&dom)?,
+                Domstate(_) => show_domain_state(&dom)?,
+                Domid(_) => show_domain_id(&dom)?,
+                Domuuid(_) => show_domain_uuid(&dom)?,
+                Dumpxml(_) => show_domain_dumpxml(&dom)?,
+                Info(_) => show_info(&dom)?,
+                Start(_) => start_domain(&dom)?,
+                Shutdown(_) => shutdown_domain(&dom)?,
+                Reboot(_) => reboot_domain(&dom)?,
+                Suspend(_) => suspend_domain(&dom)?,
+                Resume(_) => resume_domain(&dom)?,
+                Reset(_) => reset_domain(&dom)?,
+                Poweroff(_) => poweroff_domain(&dom)?,
+                Undefine(_) => undefine_domain(&dom)?,
+                Autostart(_) => autostart_domain(&dom)?,
+                Noautostart(_) => noautostart_domain(&dom)?,
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
     }
+
     Ok(())
 }
