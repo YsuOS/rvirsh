@@ -3,7 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
-use virt::{connect::Connect, storage_pool::StoragePool};
+use virt::{connect::Connect, storage_pool::StoragePool, storage_vol::StorageVol};
 
 const XML: &str = r#"
 <volume>
@@ -19,6 +19,9 @@ fn volume_test() {
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 
+    if let Ok(vol) = StorageVol::lookup_by_name(&pool, vol_name) {
+        rvirsh::volume::delete_volume(&vol).unwrap();
+    }
     assert!(rvirsh::volume::create_vol(&pool, xml).is_ok());
 
     Command::cargo_bin("rv")
@@ -82,6 +85,9 @@ fn volume_test() {
         .success();
 
     let cloned_vol_name = "test-vol-clone.qcow2";
+    if let Ok(vol) = StorageVol::lookup_by_name(&pool, cloned_vol_name) {
+        rvirsh::volume::delete_volume(&vol).unwrap();
+    }
     Command::cargo_bin("rv")
         .unwrap()
         .arg("vol-clone")

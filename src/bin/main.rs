@@ -34,8 +34,10 @@ fn run() -> Result<()> {
         | NetStop(_) | NetStart(_) | NetUndefine(_) | NetClean(_) | NetDefine(_) | NetCreate(_) => {
             rvirsh::net::main(&settings, &command)?
         }
-        VolDelete | VolList | VolInfo | VolPath | VolKey | VolDumpxml | VolPool | VolWipe
-        | VolCreate | VolClone => todo!(),
+        VolDelete(_) | VolList | VolInfo(_) | VolPath(_) | VolKey(_) | VolDumpxml(_)
+        | VolPool(_) | VolWipe(_) | VolCreate(_) | VolClone(_) => {
+            rvirsh::volume::main(&settings, &command)?
+        }
         SnapshotList | SnapshotDelete | SnapshotInfo | SnapshotParent | SnapshotDumpxml
         | SnapshotCurrent | SnapshotRevert | SnapshotCreate => todo!(),
         PoolList | PoolInfo | PoolRefresh | PoolUuid | PoolStop | PoolDelete | PoolUndefine
@@ -55,10 +57,6 @@ fn run() -> Result<()> {
     //    match command.as_str() {
     //        "clone" => rvirsh::clone::main(&settings, &command)?,
     //        "delete" => rvirsh::delete::main(&settings, &command)?,
-    //        "vol-delete" | "vol-list" | "vol-info" | "vol-path" | "vol-key" | "vol-dumpxml"
-    //        | "vol-pool" | "vol-wipe" | "vol-create" | "vol-clone" => {
-    //            rvirsh::volume::main(&settings, &command)?
-    //        }
     //        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
     //        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
     //            rvirsh::snapshot::main(&settings, &command)?

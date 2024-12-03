@@ -1,5 +1,8 @@
-use crate::{get_args, get_conn, get_xml};
-use anyhow::{bail, Result};
+use crate::{
+    get_args, get_conn, get_xml,
+    Commands::{self, *},
+};
+use anyhow::Result;
 use config::Config;
 use virt::{
     connect::Connect,
@@ -11,9 +14,8 @@ use virt::{
     },
 };
 
-fn get_vol_path(conn: &Connect, cmd: &str) -> Result<StorageVol> {
-    let vol_path = get_args(2, "Volume path is required", cmd, &vec!["<volume path>"])?;
-    Ok(StorageVol::lookup_by_path(conn, &vol_path)?)
+fn get_vol_path(conn: &Connect, path: &str) -> Result<StorageVol> {
+    Ok(StorageVol::lookup_by_path(conn, &path)?)
 }
 
 fn get_volume(pool: &StoragePool, cmd: &str) -> Result<StorageVol> {
@@ -123,48 +125,49 @@ pub fn wipe_volume(volume: &StorageVol) -> Result<()> {
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
 
-    if cmd == "vol-pool" {
-        show_volume_pool(&get_vol_path(&conn, cmd)?)?;
+    if let VolPool(path) = cmd {
+        show_volume_pool(&get_vol_path(&conn, &path.name)?)?;
         return Ok(());
-    }
+    };
 
     let pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
     crate::pool::refresh_pool(&pool)?;
 
-    if cmd == "vol-list" {
-        list_volume(&pool)?;
-        return Ok(());
-    } else if cmd == "vol-create" {
-        let xml = get_xml(cmd)?;
-
-        create_vol(&pool, &xml)?;
-        return Ok(());
-    }
-
-    let volume = get_volume(&pool, cmd)?;
-
-    if cmd == "vol-clone" {
-        let name = get_args(
-            3,
-            "New volume name is required",
-            cmd,
-            &vec!["<src volume>", "<new volume>"],
-        )?;
-        clone_vol(&pool, &volume, &name)?;
-        return Ok(());
-    }
-
     match cmd {
-        "vol-delete" => delete_volume(&volume)?,
-        "vol-info" => show_volume_info(&volume)?,
-        "vol-path" => show_volume_path(&volume)?,
-        "vol-key" => show_volume_key(&volume)?,
-        "vol-dumpxml" => show_volume_dumpxml(&volume)?,
-        "vol-wipe" => wipe_volume(&volume)?,
-        _ => bail!("{} is not supported", cmd),
+        VolList => {
+            list_volume(&pool)?;
+            return Ok(());
+        }
+        VolCreate(xml) => {
+            let xml = get_xml(&xml.name)?;
+
+            create_vol(&pool, &xml)?;
+            return Ok(());
+        }
+        VolClone(args) => {
+            let volume = get_volume(&pool, &args.vol)?;
+            clone_vol(&pool, &volume, &args.newvol)?;
+            return Ok(());
+        }
+        VolDelete(vol) | VolInfo(vol) | VolKey(vol) | VolDumpxml(vol) | VolPath(vol)
+        | VolWipe(vol) => {
+            let volume = get_volume(&pool, &vol.name)?;
+
+            match cmd {
+                VolDelete(_) => delete_volume(&volume)?,
+                VolInfo(_) => show_volume_info(&volume)?,
+                VolPath(_) => show_volume_path(&volume)?,
+                VolKey(_) => show_volume_key(&volume)?,
+                VolDumpxml(_) => show_volume_dumpxml(&volume)?,
+                VolWipe(_) => wipe_volume(&volume)?,
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
     }
+
     Ok(())
 }

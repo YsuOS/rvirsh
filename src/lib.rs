@@ -19,7 +19,6 @@ use clap::{Args, Subcommand};
 use config::Config;
 use std::{env, fs::File, io::Read};
 use virt::{connect::Connect, domain::Domain};
-
 fn get_conn(settings: &Config) -> Result<Connect> {
     let uri = settings.get_string("URI")?;
     Ok(Connect::open(Some(&uri))?)
@@ -115,9 +114,9 @@ pub enum Commands {
     /// List all volumes
     VolList,
     /// Create volume
-    VolCreate,
+    VolCreate(Xml),
     /// Delete volume
-    VolDelete,
+    VolDelete(Vol),
     /// Create and run domain snapshot
     SnapshotCreate,
     /// List domain snapshots
@@ -192,19 +191,19 @@ pub enum Commands {
     /// Print snapshot information in XML
     SnapshotDumpxml,
     /// Print volume information
-    VolInfo,
+    VolInfo(Vol),
     /// Print volume key
-    VolKey,
+    VolKey(Vol),
     /// Print volume path
-    VolPath,
+    VolPath(Vol),
     /// Print pool name the volume belongs to
-    VolPool,
+    VolPool(VolPath),
     /// Print volume information in XML
-    VolDumpxml,
+    VolDumpxml(Vol),
     /// Clone volume
-    VolClone,
+    VolClone(VCArgs),
     /// Wipe volume
-    VolWipe,
+    VolWipe(Vol),
     /// Print pool information
     PoolInfo,
     /// Print pool uuid
@@ -249,6 +248,32 @@ pub struct Net {
 
 #[derive(Args, Debug, PartialEq)]
 pub struct Dom {
-    /// Network name
+    /// Domain name
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct Vol {
+    /// Vol name
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct NewVol {
+    /// New vol name
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct VCArgs {
+    /// Vol name
+    vol: String,
+    /// New vol name
+    newvol: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct VolPath {
+    /// Volume path
     name: String,
 }
