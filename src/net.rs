@@ -147,7 +147,6 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     match cmd {
         NetList => {
             list_net(&conn)?;
-            return Ok(());
         }
         NetDefine(xml) | NetCreate(xml) => {
             let xml = get_xml(&xml.name)?;
@@ -156,7 +155,6 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
                 NetCreate(_) => create_net(&conn, &xml)?,
                 _ => unreachable!(),
             }
-            return Ok(());
         }
         NetUuid(net) | NetInfo(net) | NetDumpxml(net) | NetAutostart(net) | NetNoautostart(net)
         | NetStop(net) | NetStart(net) | NetUndefine(net) | NetClean(net) => {

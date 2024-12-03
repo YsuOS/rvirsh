@@ -216,7 +216,6 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     match cmd {
         List => {
             list_domain(&conn)?;
-            return Ok(());
         }
         Define(xml) | Create(xml) => {
             let xml = get_xml(&xml.name)?;
@@ -226,7 +225,6 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
                 Create(_) => create_domain(&conn, &xml)?,
                 _ => unreachable!(),
             }
-            return Ok(());
         }
         Start(dom) | Shutdown(dom) | Reboot(dom) | Suspend(dom) | Resume(dom) | Reset(dom)
         | Poweroff(dom) | Undefine(dom) | Dominfo(dom) | Info(dom) | Domid(dom) | Domuuid(dom)

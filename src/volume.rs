@@ -139,23 +139,18 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     match cmd {
         VolList => {
             list_volume(&pool)?;
-            return Ok(());
         }
         VolCreate(xml) => {
             let xml = get_xml(&xml.name)?;
-
             create_vol(&pool, &xml)?;
-            return Ok(());
         }
         VolClone(args) => {
             let volume = get_volume(&pool, &args.vol)?;
             clone_vol(&pool, &volume, &args.newvol)?;
-            return Ok(());
         }
         VolDelete(vol) | VolInfo(vol) | VolKey(vol) | VolDumpxml(vol) | VolPath(vol)
         | VolWipe(vol) => {
             let volume = get_volume(&pool, &vol.name)?;
-
             match cmd {
                 VolDelete(_) => delete_volume(&volume)?,
                 VolInfo(_) => show_volume_info(&volume)?,
