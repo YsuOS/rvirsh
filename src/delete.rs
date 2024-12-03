@@ -13,9 +13,7 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
         let pool = StoragePool::lookup_by_name(&conn, &pool_name)?;
 
         // TODO: Delete only a volume that matches the domain name
-        let dom_name = dom.get_name()?;
-        let vol_name = dom_name.clone() + ".qcow2";
-        let volume = StorageVol::lookup_by_name(&pool, &vol_name)?;
+        let volume = StorageVol::lookup_by_name(&pool, &(dom.get_name()?.clone() + ".qcow2"))?;
 
         delete_instance(&dom, &volume)?;
     }

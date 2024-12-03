@@ -28,7 +28,7 @@ fn run() -> Result<()> {
             rvirsh::domain::main(&settings, &command)?
         }
         Clone => todo!(),
-        Delete(_) => todo!(),
+        Delete(_) => rvirsh::delete::main(&settings, &command)?,
         Console(_) => rvirsh::console::main(&settings, &command)?,
         NetList | NetUuid(_) | NetInfo(_) | NetDumpxml(_) | NetAutostart(_) | NetNoautostart(_)
         | NetStop(_) | NetStart(_) | NetUndefine(_) | NetClean(_) | NetDefine(_) | NetCreate(_) => {
@@ -58,7 +58,6 @@ fn run() -> Result<()> {
 
     //    match command.as_str() {
     //        "clone" => rvirsh::clone::main(&settings, &command)?,
-    //        "delete" => rvirsh::delete::main(&settings, &command)?,
     //        "snapshot-list" | "snapshot-delete" | "snapshot-info" | "snapshot-parent"
     //        | "snapshot-dumpxml" | "snapshot-current" | "snapshot-revert" | "snapshot-create" => {
     //            rvirsh::snapshot::main(&settings, &command)?
