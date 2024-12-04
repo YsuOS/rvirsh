@@ -47,7 +47,8 @@ fn run() -> Result<()> {
         | PoolDumpxml(_) | PoolStart(_) | PoolDefine(_) | PoolCreate(_) => {
             rvirsh::pool::main(&settings, &command)?
         }
-        TemplateList | TemplateCreate | TemplateDelete | TemplateInfo | Spawn | Deploy => todo!(),
+        TemplateList | TemplateCreate(_) | TemplateDelete(_) | TemplateInfo(_) | Spawn(_)
+        | Deploy(_) => rvirsh::template::main(&settings, &command)?,
         Version => rvirsh::version::main(&settings)?,
         Uri => rvirsh::uri::main(&settings)?,
         Hostname => rvirsh::hostname::main(&settings)?,
@@ -57,9 +58,6 @@ fn run() -> Result<()> {
         NetDestroy => deprecated_err(&command, "net-stop")?,
         PoolDestroy => deprecated_err(&command, "pool-stop")?,
     };
-
-    //        "template-list" | "template-create" | "template-delete" | "template-info" | "spawn"
-    //        | "deploy" => rvirsh::template::main(&settings, &command)?,
 
     Ok(())
 }

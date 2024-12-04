@@ -17,7 +17,7 @@ pub mod volume;
 use anyhow::{Context, Result};
 use clap::{Args, Subcommand};
 use config::Config;
-use std::{env, fs::File, io::Read};
+use std::{fs::File, io::Read};
 use virt::{connect::Connect, domain::Domain};
 fn get_conn(settings: &Config) -> Result<Connect> {
     let uri = settings.get_string("URI")?;
@@ -39,21 +39,10 @@ fn bytes_to_gbytes(mem: u64) -> Result<f64> {
     Ok((mem as f64) / 1024.0 / 1024.0 / 1024.0)
 }
 
-fn get_args(index: usize, msg: &str, cmd: &str, args: &Vec<&str>) -> Result<String> {
-    env::args()
-        .nth(index)
-        .with_context(|| format!("{}\nUsage: rv {} {}", msg, cmd, args.join(" ")))
-}
-
 fn get_temp_settings(settings: &Config) -> Result<String> {
-    if cfg!(debug_assertions) {
-        println!("Use test-templates pool");
-        Ok("test-templates".to_string())
-    } else {
-        settings
-            .get_string("TEMP_POOL")
-            .with_context(|| format!("Can not get TEMP_POOL from config file"))
-    }
+    settings
+        .get_string("TEMP_POOL")
+        .with_context(|| format!("Can not get TEMP_POOL from config file"))
 }
 
 #[derive(Debug, Subcommand, PartialEq)]
@@ -67,11 +56,11 @@ pub enum Commands {
     /// Create and run domain
     Create(Xml),
     /// Clone domain
-    Clone(CArgs),
+    Clone(CloneArgs),
     /// Create and run domain from template
-    Spawn,
+    Spawn(TArgs),
     /// Define domain from template
-    Deploy,
+    Deploy(TArgs),
     /// Start domain
     Start(Dom),
     /// Shutdown domain
@@ -127,13 +116,13 @@ pub enum Commands {
     /// Run 'pool-stop', 'pool-delete', and 'pool-undefine'
     PoolClean(Pool),
     /// Create template
-    TemplateCreate,
+    TemplateCreate(TCreateArgs),
     /// List all templates
     TemplateList,
     /// Delete template
-    TemplateDelete,
+    TemplateDelete(Temp),
     /// Print template information
-    TemplateInfo,
+    TemplateInfo(Temp),
     /// Print version
     Version,
     /// Print the hypervisor URI
@@ -282,11 +271,35 @@ pub struct SSArgs {
 }
 
 #[derive(Args, Debug, PartialEq)]
-pub struct CArgs {
+pub struct CloneArgs {
     /// Original dom name
     dom: String,
     /// New dom name
     newdom: String,
     /// New vol path
     newvol: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct TCreateArgs {
+    /// Temp name
+    temp: String,
+    /// Original xml name
+    orgxml: String,
+    /// Original vol path
+    orgvol: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct Temp {
+    /// Temp name
+    name: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct TArgs {
+    /// Temp name
+    temp: String,
+    /// New dom name
+    dom: String,
 }

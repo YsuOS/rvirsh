@@ -25,15 +25,15 @@ fn temporary_net_test() {
     Command::cargo_bin("rv")
         .unwrap()
         .arg("net-info")
-        .arg(net_name)
         .assert()
-        .success();
+        .failure();
 
     Command::cargo_bin("rv")
         .unwrap()
         .arg("net-info")
+        .arg(net_name)
         .assert()
-        .failure();
+        .success();
 
     Command::cargo_bin("rv")
         .unwrap()

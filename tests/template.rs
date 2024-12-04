@@ -33,6 +33,12 @@ const VM_XML: &str = r#"
 </domain>
 "#;
 
+const CONFIG: &str = r#"
+URI = "qemu:///system"
+POOL = "default"
+TEMP_POOL = "test-templates"
+"#;
+
 #[test]
 fn template_test() {
     let pool_name = "test-templates";
@@ -52,6 +58,9 @@ fn template_test() {
     let mut xml = File::create(Path::new("/tmp/test.xml")).unwrap();
     xml.write_all(VM_XML.as_bytes()).unwrap();
 
+    let mut config = File::create(Path::new("/tmp/config.toml")).unwrap();
+    config.write_all(CONFIG.as_bytes()).unwrap();
+
     std::process::Command::new("qemu-img")
         .arg("create")
         .arg("-f")
@@ -62,6 +71,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("template-create")
         .arg("test")
         .arg("/tmp/test.xml")
@@ -71,6 +82,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("template-list")
         .assert()
         .success()
@@ -85,6 +98,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("spawn")
         .arg("test")
         .arg(new_domain)
@@ -93,6 +108,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("poweroff")
         .arg(new_domain)
         .assert()
@@ -100,6 +117,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("vol-delete")
         .arg(&new_domain_vol)
         .assert()
@@ -107,6 +126,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("deploy")
         .arg("test")
         .arg(new_domain)
@@ -115,6 +136,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("delete")
         .arg(new_domain)
         .assert()
@@ -122,6 +145,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("template-info")
         .arg("test")
         .assert()
@@ -129,6 +154,8 @@ fn template_test() {
 
     Command::cargo_bin("rv")
         .unwrap()
+        .arg("-c")
+        .arg("/tmp/config.toml")
         .arg("template-delete")
         .arg("test")
         .assert()
@@ -138,4 +165,5 @@ fn template_test() {
     std::fs::remove_dir_all(&pool_path).unwrap();
     std::fs::remove_file(Path::new("/tmp/test.xml")).unwrap();
     std::fs::remove_file(Path::new("/tmp/test.qcow2")).unwrap();
+    std::fs::remove_file(Path::new("/tmp/config.toml")).unwrap();
 }

@@ -1,5 +1,8 @@
-use crate::{get_args, get_conn, get_temp_settings, get_xml};
-use anyhow::{bail, Context, Result};
+use crate::{
+    get_conn, get_temp_settings, get_xml,
+    Commands::{self, *},
+};
+use anyhow::{Context, Result};
 use config::Config;
 use quick_xml::{
     events::{attributes::Attribute, BytesStart, BytesText, Event},
@@ -36,15 +39,6 @@ pub fn get_pool_path(pool: &StoragePool) -> Result<String> {
         }
     }
     pool_path.with_context(|| format!("Can not find pool path"))
-}
-
-fn tmp_create_get_args(index: usize, msg: &str, cmd: &str) -> Result<String> {
-    let usage = vec![
-        "<template>",
-        "<original xml path>",
-        "<original volume path>",
-    ];
-    get_args(index, msg, cmd, &usage)
 }
 
 /// Get template components pair; xml data and StorageVol
@@ -143,6 +137,14 @@ fn create_component_from_tmp(
     Ok((xml, vol))
 }
 
+fn get_temp_pool(conn: &Connect, settings: &Config) -> Result<StoragePool> {
+    Ok(
+        StoragePool::lookup_by_name(&conn, &get_temp_settings(settings)?).with_context(|| {
+            format!("No template pool could not be found\nPlease create/define tempalte pool first")
+        })?,
+    )
+}
+
 /// `rv spawn`
 pub fn spawn_domain(
     conn: &Connect,
@@ -235,56 +237,28 @@ pub fn create_template(
     return Ok(());
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
-
-    let temp_pool = StoragePool::lookup_by_name(&conn, &get_temp_settings(settings)?)
-        .with_context(|| {
-            format!("No template pool could not be found\nPlease create/define tempalte pool first")
-        })?;
-
-    if cmd == "template-list" {
-        list_template(&temp_pool)?;
-        return Ok(());
-    }
-
-    let template = get_args(
-        2,
-        "Template name is required",
-        cmd,
-        &vec!["<template name>"],
-    )?;
-
-    if cmd == "template-create" {
-        let org_xml = tmp_create_get_args(3, "Original template xml path is required", cmd)?;
-        let org_vol = tmp_create_get_args(4, "Original template volume path is required", cmd)?;
-
-        create_template(&temp_pool, &template, &org_xml, &org_vol)?;
-        return Ok(());
-    } else if cmd == "spawn" || cmd == "deploy" {
-        let name = get_args(
-            3,
-            "New Domain name is required",
-            cmd,
-            &vec!["<template name>", "<new domain>"],
-        )?;
-
-        let (mut xml, vol) = get_template(&temp_pool, &template)?;
-        let pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
-
-        if cmd == "spawn" {
-            spawn_domain(&conn, &pool, &name, &template, &mut xml, &vol)?;
-        } else if cmd == "deploy" {
-            deploy_domain(&conn, &pool, &name, &template, &mut xml, &vol)?;
-        }
-
-        return Ok(());
-    }
+    let temp_pool = get_temp_pool(&conn, settings)?;
 
     match cmd {
-        "template-delete" => delete_template(&temp_pool, &template)?,
-        "template-info" => show_template_info(&temp_pool, &template)?,
-        _ => bail!("{} is not supported", cmd),
+        TemplateList => list_template(&temp_pool)?,
+        TemplateCreate(args) => {
+            create_template(&temp_pool, &args.temp, &args.orgxml, &args.orgvol)?;
+        }
+        Spawn(args) | Deploy(args) => {
+            let (mut xml, vol) = get_template(&temp_pool, &args.temp)?;
+            let pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
+
+            match cmd {
+                Spawn(_) => spawn_domain(&conn, &pool, &args.dom, &args.temp, &mut xml, &vol)?,
+                Deploy(_) => deploy_domain(&conn, &pool, &args.dom, &args.temp, &mut xml, &vol)?,
+                _ => unreachable!(),
+            }
+        }
+        TemplateDelete(temp) => delete_template(&temp_pool, &temp.name)?,
+        TemplateInfo(temp) => show_template_info(&temp_pool, &temp.name)?,
+        _ => unreachable!(),
     }
     Ok(())
 }

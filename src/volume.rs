@@ -1,5 +1,5 @@
 use crate::{
-    get_args, get_conn, get_xml,
+    get_conn, get_xml,
     Commands::{self, *},
 };
 use anyhow::Result;
@@ -18,8 +18,7 @@ fn get_vol_path(conn: &Connect, path: &str) -> Result<StorageVol> {
     Ok(StorageVol::lookup_by_path(conn, &path)?)
 }
 
-fn get_volume(pool: &StoragePool, cmd: &str) -> Result<StorageVol> {
-    let vol_name = get_args(2, "Volume name is required", cmd, &vec!["<volume>"])?;
+fn get_volume(pool: &StoragePool, vol_name: &str) -> Result<StorageVol> {
     Ok(StorageVol::lookup_by_name(pool, &vol_name)?)
 }
 
