@@ -67,7 +67,7 @@ pub enum Commands {
     /// Create and run domain
     Create(Xml),
     /// Clone domain
-    Clone,
+    Clone(CArgs),
     /// Create and run domain from template
     Spawn,
     /// Define domain from template
@@ -279,4 +279,14 @@ pub struct SSArgs {
     dom: String,
     /// Snapshot name
     ss: String,
+}
+
+#[derive(Args, Debug, PartialEq)]
+pub struct CArgs {
+    /// Original dom name
+    dom: String,
+    /// New dom name
+    newdom: String,
+    /// New vol path
+    newvol: String,
 }

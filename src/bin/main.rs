@@ -27,7 +27,7 @@ fn run() -> Result<()> {
         | Autostart(_) | Noautostart(_) | Domstate(_) | Dumpxml(_) | Define(_) | Create(_) => {
             rvirsh::domain::main(&settings, &command)?
         }
-        Clone => todo!(),
+        Clone(_) => rvirsh::clone::main(&settings, &command)?,
         Delete(_) => rvirsh::delete::main(&settings, &command)?,
         Console(_) => rvirsh::console::main(&settings, &command)?,
         NetList | NetUuid(_) | NetInfo(_) | NetDumpxml(_) | NetAutostart(_) | NetNoautostart(_)
@@ -58,11 +58,8 @@ fn run() -> Result<()> {
         PoolDestroy => deprecated_err(&command, "pool-stop")?,
     };
 
-    //    match command.as_str() {
-    //        "clone" => rvirsh::clone::main(&settings, &command)?,
     //        "template-list" | "template-create" | "template-delete" | "template-info" | "spawn"
     //        | "deploy" => rvirsh::template::main(&settings, &command)?,
-    //    };
 
     Ok(())
 }

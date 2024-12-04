@@ -1,4 +1,4 @@
-use crate::{get_args, get_conn, get_domain};
+use crate::{get_conn, get_domain, Commands};
 use anyhow::{Context, Result};
 use config::Config;
 use quick_xml::{events::Event, Reader};
@@ -71,11 +71,6 @@ fn create_new_domain_xml(
     remove_uuid_lines(&new_xml)
 }
 
-fn clone_get_args(index: usize, msg: &str, cmd: &str) -> Result<String> {
-    let usage = vec!["<org domain>", "<new domain>", "<new volume path>"];
-    get_args(index, msg, cmd, &usage)
-}
-
 /// `rv clone`
 pub fn clone_domain(
     conn: &Connect,
@@ -101,19 +96,18 @@ pub fn clone_domain(
     Ok(())
 }
 
-pub fn main(settings: &Config, cmd: &str) -> Result<()> {
+pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
     let conn = get_conn(settings)?;
-
     let new_pool = StoragePool::lookup_by_name(&conn, &settings.get_string("POOL")?)?;
-    let new_name = clone_get_args(3, "New domain name is required", cmd)?;
-    let new_vol_path = clone_get_args(4, "New volume path is required", cmd)?;
 
-    clone_domain(
-        &conn,
-        &get_domain(&conn, cmd)?,
-        &new_name,
-        &new_pool,
-        &new_vol_path,
-    )?;
+    if let Commands::Clone(args) = cmd {
+        clone_domain(
+            &conn,
+            &get_domain(&conn, &args.dom)?,
+            &args.newdom,
+            &new_pool,
+            &args.newvol,
+        )?;
+    }
     return Ok(());
 }

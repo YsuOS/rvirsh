@@ -3,7 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
-use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool};
+use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
 const XML: &str = r#"
 <domain type="kvm">
@@ -248,6 +248,9 @@ fn clone_test() {
     let conn = Connect::open(Some(CONN)).unwrap();
     let pool = StoragePool::lookup_by_name(&conn, POOL).unwrap();
 
+    if let Ok(vol) = StorageVol::lookup_by_name(&pool, vol_name) {
+        rvirsh::volume::delete_volume(&vol).unwrap();
+    }
     assert!(rvirsh::volume::create_vol(&pool, vol_xml).is_ok());
 
     let output = Command::cargo_bin("rv")
@@ -263,6 +266,9 @@ fn clone_test() {
     let vm_xml = &set_fname_xml(&vol_path, VM_XML);
     let vm_xml = &set_name_xml(&org_vm_name, vm_xml);
 
+    if let Ok(dom) = Domain::lookup_by_name(&conn, org_vm_name) {
+        rvirsh::domain::undefine_domain(&dom).unwrap();
+    }
     assert!(rvirsh::domain::define_domain(&conn, &vm_xml).is_ok());
 
     let new_vm_name = "test-vm4-clone";
