@@ -13,15 +13,6 @@ use virt::{
     },
 };
 
-//fn get_snapshot_name(dom: &Domain) -> Result<String> {
-//    Ok(get_args(
-//        3,
-//        "snapshot name is required",
-//        cmd,
-//        &vec!["<domain>", "<snapshot>"],
-//    )?)
-//}
-
 fn get_snapshot(dom: &Domain, ss: &str) -> Result<DomainSnapshot> {
     Ok(DomainSnapshot::lookup_by_name(dom, ss, 0)?)
 }
