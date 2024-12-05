@@ -3,7 +3,6 @@ pub mod console;
 pub mod delete;
 pub mod domain;
 pub mod event;
-pub mod help;
 pub mod hostinfo;
 pub mod hostname;
 pub mod net;
