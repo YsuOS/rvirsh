@@ -1,6 +1,7 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use serde_xml_rs::from_str;
+use serde_yml::to_string;
 use std::{fs::File, io::Read};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -260,13 +261,15 @@ struct Domain {
     devices: Devices,
 }
 
-pub fn test() -> Result<()> {
+pub fn xml_to_yaml() -> Result<()> {
     let mut xml_file = File::open("test.xml")?;
     let mut xml_contents = String::new();
     xml_file.read_to_string(&mut xml_contents)?;
 
     let domain: Domain = from_str(&xml_contents)?;
     println!("{:?}", domain);
+    let yaml = to_string(&domain)?.replace("$value", "value");
+    println!("{}", yaml);
 
     Ok(())
 }
