@@ -6,6 +6,7 @@ pub mod event;
 pub mod hostinfo;
 pub mod hostname;
 pub mod net;
+pub mod parser;
 pub mod pool;
 pub mod snapshot;
 pub mod template;

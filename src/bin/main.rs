@@ -1,7 +1,10 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use config::Config;
-use rvirsh::Commands::{self, *};
+use rvirsh::{
+    parser,
+    Commands::{self, *},
+};
 use std::{env, path::PathBuf};
 
 #[derive(Parser)]
@@ -15,6 +18,8 @@ struct Cli {
 }
 
 fn run() -> Result<()> {
+    parser::yaml_to_xml()?;
+    return Ok(());
     let cli = Cli::parse();
 
     let config_file = get_config_file(&cli.config)?;

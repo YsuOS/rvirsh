@@ -36,7 +36,8 @@ clap = { version = "4.5.21", features = ["derive"] }
 
 quickxml_to_serde = "0.6.0"
 serde = "=1.0.216"
-serde-xml-rs = "0.6.0"
+#serde-xml-rs = "0.6.0"
+serde-xml-rs = { git = "https://github.com/YsuOS/serde-xml-rs", branch = "master" }
 serde_yml = "0.0.12"
 
 [build-dependencies]
