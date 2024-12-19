@@ -302,10 +302,9 @@ struct Domain {
 }
 
 pub fn yaml_to_xml() -> Result<()> {
-    let mut yaml_file = File::open("test.yaml")?;
+    let mut yaml_file = File::open("resources/vm.yaml")?;
     let mut yaml_contents = String::new();
     yaml_file.read_to_string(&mut yaml_contents)?;
-    yaml_contents = yaml_contents.replace("value", "$value");
 
     let domain: Domain = serde_yml::from_str(&yaml_contents)?;
     println!("{:?}", domain);
@@ -315,13 +314,13 @@ pub fn yaml_to_xml() -> Result<()> {
 }
 
 pub fn xml_to_yaml() -> Result<()> {
-    let mut xml_file = File::open("test.xml")?;
+    let mut xml_file = File::open("resources/vm.xml")?;
     let mut xml_contents = String::new();
     xml_file.read_to_string(&mut xml_contents)?;
 
     let domain: Domain = serde_xml_rs::from_str(&xml_contents)?;
     println!("{:?}", domain);
-    let yaml = serde_yml::to_string(&domain)?.replace("$value", "value");
+    let yaml = serde_yml::to_string(&domain)?;
     println!("{}", yaml);
 
     Ok(())

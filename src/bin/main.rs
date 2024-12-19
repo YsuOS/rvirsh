@@ -18,8 +18,6 @@ struct Cli {
 }
 
 fn run() -> Result<()> {
-    parser::yaml_to_xml()?;
-    return Ok(());
     let cli = Cli::parse();
 
     let config_file = get_config_file(&cli.config)?;
