@@ -1,3 +1,4 @@
+type: kvm
 name:
   $value: NAME
 memory:
