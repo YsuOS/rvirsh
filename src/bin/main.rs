@@ -1,10 +1,7 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use config::Config;
-use rvirsh::{
-    parser,
-    Commands::{self, *},
-};
+use rvirsh::Commands::{self, *};
 use std::{env, path::PathBuf};
 
 #[derive(Parser)]
@@ -27,9 +24,8 @@ fn run() -> Result<()> {
     match command {
         List | Start(_) | Shutdown(_) | Reboot(_) | Suspend(_) | Resume(_) | Reset(_)
         | Poweroff(_) | Undefine(_) | Dominfo(_) | Info(_) | Domid(_) | Domuuid(_)
-        | Autostart(_) | Noautostart(_) | Domstate(_) | Dumpxml(_) | Define(_) | Create(_) => {
-            rvirsh::domain::main(&settings, &command)?
-        }
+        | Autostart(_) | Noautostart(_) | Domstate(_) | Dumpxml(_) | Define(_) | Create(_)
+        | CreateYaml(_) => rvirsh::domain::main(&settings, &command)?,
         Clone(_) => rvirsh::clone::main(&settings, &command)?,
         Delete(_) => rvirsh::delete::main(&settings, &command)?,
         Console(_) => rvirsh::console::main(&settings, &command)?,

@@ -1,5 +1,6 @@
 use crate::{
-    get_conn, get_domain, get_xml,
+    get_conn, get_domain, get_xml, get_yaml,
+    parser::yaml_to_xml,
     Commands::{self, *},
 };
 use anyhow::{bail, ensure, Result};
@@ -225,6 +226,10 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
                 Create(_) => create_domain(&conn, &xml)?,
                 _ => unreachable!(),
             }
+        }
+        CreateYaml(yaml) => {
+            let xml = yaml_to_xml(&get_yaml(&yaml.name)?)?;
+            create_domain(&conn, &xml)?
         }
         Start(dom) | Shutdown(dom) | Reboot(dom) | Suspend(dom) | Resume(dom) | Reset(dom)
         | Poweroff(dom) | Undefine(dom) | Dominfo(dom) | Info(dom) | Domid(dom) | Domuuid(dom)

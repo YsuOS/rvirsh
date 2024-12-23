@@ -294,23 +294,22 @@ struct Domain {
     current_memory: CurrentMemory,
     vcpu: Vcpu,
     os: Os,
-    features: Features,
-    cpu: CPU,
-    clock: Clock,
-    pm: PM,
-    devices: Devices,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    features: Option<Features>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    cpu: Option<CPU>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    clock: Option<Clock>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pm: Option<PM>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    devices: Option<Devices>,
 }
 
-pub fn yaml_to_xml() -> Result<()> {
-    let mut yaml_file = File::open("resources/vm.yaml")?;
-    let mut yaml_contents = String::new();
-    yaml_file.read_to_string(&mut yaml_contents)?;
-
-    let domain: Domain = serde_yml::from_str(&yaml_contents)?;
-    println!("{:?}", domain);
+pub fn yaml_to_xml(yaml_content: &str) -> Result<String> {
+    let domain: Domain = serde_yml::from_str(yaml_content)?;
     let xml = serde_xml_rs::to_string(&domain)?;
-    println!("{}", xml);
-    Ok(())
+    Ok(xml)
 }
 
 pub fn xml_to_yaml() -> Result<()> {

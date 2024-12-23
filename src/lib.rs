@@ -31,6 +31,12 @@ fn get_xml(xml_path: &str) -> Result<String> {
     Ok(content)
 }
 
+/// Get Yaml file contents
+fn get_yaml(yaml_path: &str) -> Result<String> {
+    let mut content = String::new();
+    File::open(yaml_path)?.read_to_string(&mut content)?;
+    Ok(content)
+}
 fn get_domain(conn: &Connect, name: &str) -> Result<Domain> {
     Ok(Domain::lookup_by_name(conn, name)?)
 }
@@ -55,6 +61,8 @@ pub enum Commands {
     Define(Xml),
     /// Create and run domain
     Create(Xml),
+    /// Create and run domain from yaml
+    CreateYaml(Yaml),
     /// Clone domain
     Clone(CloneArgs),
     /// Create and run domain from template
@@ -218,6 +226,12 @@ pub struct Xml {
     name: String,
 }
 
+#[derive(Args, Debug, PartialEq)]
+pub struct Yaml {
+    /// Yaml File containing a component's description
+    #[arg(value_name = "FILE")]
+    name: String,
+}
 #[derive(Args, Debug, PartialEq)]
 pub struct Net {
     /// Network name

@@ -3,6 +3,7 @@ mod common;
 use assert_cmd::Command;
 use common::*;
 use predicates::prelude::*;
+use rvirsh::parser::yaml_to_xml;
 use virt::{connect::Connect, domain::Domain, storage_pool::StoragePool, storage_vol::StorageVol};
 
 const XML: &str = r#"
@@ -13,6 +14,25 @@ const XML: &str = r#"
     <type arch="x86_64" machine="q35">hvm</type>
   </os>
 </domain>
+"#;
+
+const YAML: &str = r#"
+type: kvm
+name:
+  $value: test-vm
+memory:
+  $value: '1572864'
+currentMemory:
+  $value: '1572864'
+vcpu:
+  $value: '2'
+os:
+  type:
+    arch: x86_64
+    machine: q35
+    $value: hvm
+  boot:
+    dev: hd
 "#;
 
 #[test]
@@ -27,6 +47,7 @@ fn temporary_domain_test() {
         .assert()
         .failure();
 
+    println!("{}", vm_name);
     if let Ok(dom) = Domain::lookup_by_name(&conn, vm_name) {
         rvirsh::domain::poweroff_domain(&dom).unwrap();
     }
@@ -65,6 +86,23 @@ fn temporary_domain_test() {
         .arg(vm_name)
         .assert()
         .success();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("poweroff")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    let xml = yaml_to_xml(YAML).unwrap();
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("create-yaml")
+        .assert()
+        .failure();
+
+    assert!(rvirsh::domain::create_domain(&conn, &xml).is_ok());
 
     Command::cargo_bin("rv")
         .unwrap()
