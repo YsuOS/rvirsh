@@ -25,7 +25,7 @@ fn run() -> Result<()> {
         List | Start(_) | Shutdown(_) | Reboot(_) | Suspend(_) | Resume(_) | Reset(_)
         | Poweroff(_) | Undefine(_) | Dominfo(_) | Info(_) | Domid(_) | Domuuid(_)
         | Autostart(_) | Noautostart(_) | Domstate(_) | Dumpxml(_) | Define(_) | Create(_)
-        | CreateYaml(_) => rvirsh::domain::main(&settings, &command)?,
+        | CreateYaml(_) | DefineYaml(_) => rvirsh::domain::main(&settings, &command)?,
         Clone(_) => rvirsh::clone::main(&settings, &command)?,
         Delete(_) => rvirsh::delete::main(&settings, &command)?,
         Console(_) => rvirsh::console::main(&settings, &command)?,

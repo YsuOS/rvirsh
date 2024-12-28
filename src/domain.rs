@@ -227,9 +227,13 @@ pub fn main(settings: &Config, cmd: &Commands) -> Result<()> {
                 _ => unreachable!(),
             }
         }
-        CreateYaml(yaml) => {
+        DefineYaml(yaml) | CreateYaml(yaml) => {
             let xml = yaml_to_xml(&get_yaml(&yaml.name)?)?;
-            create_domain(&conn, &xml)?
+            match cmd {
+                DefineYaml(_) => define_domain(&conn, &xml)?,
+                CreateYaml(_) => create_domain(&conn, &xml)?,
+                _ => unreachable!(),
+            }
         }
         Start(dom) | Shutdown(dom) | Reboot(dom) | Suspend(dom) | Resume(dom) | Reset(dom)
         | Poweroff(dom) | Undefine(dom) | Dominfo(dom) | Info(dom) | Domid(dom) | Domuuid(dom)

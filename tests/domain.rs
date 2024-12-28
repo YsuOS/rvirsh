@@ -19,7 +19,7 @@ const XML: &str = r#"
 const YAML: &str = r#"
 type: kvm
 name:
-  $value: test-vm
+  $value: NAME
 memory:
   $value: '1572864'
 currentMemory:
@@ -94,7 +94,7 @@ fn temporary_domain_test() {
         .assert()
         .success();
 
-    let xml = yaml_to_xml(YAML).unwrap();
+    let xml = &set_name_xml(vm_name, &yaml_to_xml(YAML).unwrap());
 
     Command::cargo_bin("rv")
         .unwrap()
@@ -245,6 +245,23 @@ fn domain_test() {
     Command::cargo_bin("rv")
         .unwrap()
         .arg("poweroff")
+        .arg(vm_name)
+        .assert()
+        .success();
+
+    let xml = &set_name_xml(vm_name, &yaml_to_xml(YAML).unwrap());
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("define-yaml")
+        .assert()
+        .failure();
+
+    assert!(rvirsh::domain::define_domain(&conn, &xml).is_ok());
+
+    Command::cargo_bin("rv")
+        .unwrap()
+        .arg("undefine")
         .arg(vm_name)
         .assert()
         .success();

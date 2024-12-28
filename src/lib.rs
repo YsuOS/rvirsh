@@ -59,6 +59,8 @@ pub enum Commands {
     Info(Dom),
     /// Define domain
     Define(Xml),
+    /// Define domain from yaml
+    DefineYaml(Yaml),
     /// Create and run domain
     Create(Xml),
     /// Create and run domain from yaml
